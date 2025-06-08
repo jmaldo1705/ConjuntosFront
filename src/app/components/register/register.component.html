@@ -1,0 +1,164 @@
+<div class="register-container">
+  <div class="register-card">
+    <h2>Registro</h2>
+
+    <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
+      <div class="form-group">
+        <label for="username">Usuario</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          [(ngModel)]="registerRequest.username"
+          required
+          #username="ngModel"
+          class="form-control">
+        @if (username.invalid && (username.dirty || username.touched)) {
+          <div class="error-message">
+            El usuario es requerido
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="email">Correo Electrónico</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          [(ngModel)]="registerRequest.email"
+          required
+          email
+          #email="ngModel"
+          class="form-control">
+        @if (email.invalid && (email.dirty || email.touched)) {
+          <div class="error-message">
+            @if (email.errors?.['required']) {
+              <span>El correo electrónico es requerido</span>
+            }
+            @if (email.errors?.['email']) {
+              <span>Por favor ingresa un correo electrónico válido</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="fullName">Nombre Completo</label>
+        <input
+          type="text"
+          id="fullName"
+          name="fullName"
+          [(ngModel)]="registerRequest.fullName"
+          required
+          #fullName="ngModel"
+          class="form-control">
+        @if (fullName.invalid && (fullName.dirty || fullName.touched)) {
+          <div class="error-message">
+            El nombre completo es requerido
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="apartmentNumber">Número de Apartamento</label>
+        <input
+          type="text"
+          id="apartmentNumber"
+          name="apartmentNumber"
+          [(ngModel)]="registerRequest.apartmentNumber"
+          required
+          #apartmentNumber="ngModel"
+          class="form-control">
+        @if (apartmentNumber.invalid && (apartmentNumber.dirty || apartmentNumber.touched)) {
+          <div class="error-message">
+            El número de apartamento es requerido
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="phoneNumber">Número de Teléfono</label>
+        <input
+          type="text"
+          id="phoneNumber"
+          name="phoneNumber"
+          [(ngModel)]="registerRequest.phoneNumber"
+          required
+          #phoneNumber="ngModel"
+          class="form-control">
+        @if (phoneNumber.invalid && (phoneNumber.dirty || phoneNumber.touched)) {
+          <div class="error-message">
+            El número de teléfono es requerido
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="password">Contraseña</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          [(ngModel)]="registerRequest.password"
+          required
+          minlength="6"
+          #password="ngModel"
+          class="form-control">
+        @if (password.invalid && (password.dirty || password.touched)) {
+          <div class="error-message">
+            @if (password.errors?.['required']) {
+              <span>La contraseña es requerida</span>
+            }
+            @if (password.errors?.['minlength']) {
+              <span>La contraseña debe tener al menos 6 caracteres</span>
+            }
+          </div>
+        }
+      </div>
+
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          name="confirmPassword"
+          [(ngModel)]="confirmPassword"
+          required
+          #confirmPasswordField="ngModel"
+          class="form-control">
+        @if (confirmPasswordField.invalid && (confirmPasswordField.dirty || confirmPasswordField.touched)) {
+          <div class="error-message">
+            Por favor confirma tu contraseña
+          </div>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div class="alert alert-danger">
+          {{ errorMessage }}
+        </div>
+      }
+
+      @if (successMessage) {
+        <div class="alert alert-success">
+          {{ successMessage }}
+        </div>
+      }
+
+      <div class="form-actions">
+        <button type="submit" [disabled]="registerForm.invalid || isLoading" class="btn btn-primary">
+          @if (isLoading) {
+            <span>Cargando...</span>
+          }
+          @if (!isLoading) {
+            <span>Registrarse</span>
+          }
+        </button>
+        <p class="login-link">
+          ¿Ya tienes una cuenta? <a routerLink="/login">Iniciar Sesión</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

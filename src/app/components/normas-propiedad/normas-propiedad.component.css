@@ -1,0 +1,66 @@
+/* Custom styles for the normas de propiedad component */
+/* Most styling is handled by Tailwind CSS classes in the HTML */
+
+/* Add animations for content */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(30px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.prose h2 {
+  color: #2e7d32; /* Forest green color for headings */
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.prose h3 {
+  color: #388e3c; /* Slightly lighter green for subheadings */
+  animation: fadeIn 1s ease-in-out;
+}
+
+.prose ul li {
+  margin-bottom: 0.5rem;
+  animation: slideInFromRight 0.5s ease-in-out;
+  animation-fill-mode: both;
+}
+
+/* Staggered animation for list items */
+.prose ul li:nth-child(1) { animation-delay: 0.1s; }
+.prose ul li:nth-child(2) { animation-delay: 0.2s; }
+.prose ul li:nth-child(3) { animation-delay: 0.3s; }
+.prose ul li:nth-child(4) { animation-delay: 0.4s; }
+.prose ul li:nth-child(5) { animation-delay: 0.5s; }
+
+.prose strong {
+  color: #1b5e20; /* Darker green for emphasis */
+}
+
+/* Grid layout for rights and obligations */
+.grid {
+  animation: fadeIn 1.2s ease-in-out;
+}
+
+/* Ensure the content is readable on all screen sizes */
+@media (max-width: 640px) {
+  .prose {
+    font-size: 0.95rem;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}

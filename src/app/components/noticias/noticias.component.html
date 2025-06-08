@@ -1,0 +1,104 @@
+<div class="min-h-screen bg-gradient-to-b from-green-50 to-teal-100 py-12">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900">Noticias y Anuncios</h1>
+      <p class="mt-2 text-xl text-gray-600">Mantente informado sobre las últimas novedades del conjunto</p>
+    </div>
+
+    <!-- News Categories Filter -->
+    <div class="flex flex-wrap justify-center gap-2 mb-8">
+      <button class="px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 active-filter">
+        Todos
+      </button>
+      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
+        Administración
+      </button>
+      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
+        Mantenimiento
+      </button>
+      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
+        Eventos
+      </button>
+      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
+        Seguridad
+      </button>
+    </div>
+
+    <!-- News Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      @for (noticia of noticias; track noticia.id) {
+        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 news-card">
+          <div class="relative h-48 overflow-hidden">
+            <img [src]="noticia.imagen" [alt]="noticia.titulo" class="w-full h-full object-cover">
+            <div class="absolute top-0 right-0 mt-2 mr-2">
+              <span class="px-2 py-1 text-xs font-semibold rounded-full"
+                    [ngClass]="{
+                      'bg-blue-100 text-blue-800': noticia.categoria === 'Administración',
+                      'bg-yellow-100 text-yellow-800': noticia.categoria === 'Mantenimiento',
+                      'bg-purple-100 text-purple-800': noticia.categoria === 'Eventos',
+                      'bg-red-100 text-red-800': noticia.categoria === 'Seguridad'
+                    }">
+                {{ noticia.categoria }}
+              </span>
+            </div>
+          </div>
+          <div class="p-6">
+            <div class="text-sm text-gray-500 mb-2">{{ noticia.fecha }}</div>
+            <h2 class="text-xl font-bold text-gray-900 mb-2">{{ noticia.titulo }}</h2>
+            <p class="text-gray-600 mb-4">{{ noticia.resumen }}</p>
+            <button class="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors duration-200 read-more-btn">
+              Leer más
+              <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- News Modal (would be implemented with JavaScript in a real application) -->
+    <div id="newsModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
+      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
+        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
+          <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6">
+            <div class="flex justify-between items-center">
+              <h3 class="text-2xl font-bold text-white" id="modal-title">Título de la Noticia</h3>
+              <button class="text-white hover:text-green-200 focus:outline-none close-modal-btn">
+                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <p class="text-green-100 mt-1">Fecha de la noticia</p>
+          </div>
+          <div class="bg-white p-6">
+            <div class="prose prose-green max-w-none">
+              <p>Contenido detallado de la noticia...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="mt-12 flex justify-center">
+      <nav class="inline-flex rounded-md shadow">
+        <a href="#" class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          Anterior
+        </a>
+        <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-green-600 hover:bg-gray-50">
+          1
+        </a>
+        <a href="#" class="px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          2
+        </a>
+        <a href="#" class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
+          Siguiente
+        </a>
+      </nav>
+    </div>
+  </div>
+</div>

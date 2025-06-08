@@ -1,0 +1,95 @@
+/* Custom styles for the noticias component */
+/* Most styling is handled by Tailwind CSS classes in the HTML */
+
+/* Animations for news cards */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideUp {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+/* Apply staggered animations to news cards */
+.news-card {
+  animation: slideUp 0.6s ease-out forwards;
+  opacity: 0;
+}
+
+.news-card:nth-child(1) { animation-delay: 0.1s; }
+.news-card:nth-child(2) { animation-delay: 0.2s; }
+.news-card:nth-child(3) { animation-delay: 0.3s; }
+.news-card:nth-child(4) { animation-delay: 0.4s; }
+.news-card:nth-child(5) { animation-delay: 0.5s; }
+.news-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Category filter styles */
+.active-filter {
+  position: relative;
+  overflow: hidden;
+}
+
+.active-filter::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: white;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Read more button hover effect */
+.read-more-btn svg {
+  transition: transform 0.3s ease;
+}
+
+.read-more-btn:hover svg {
+  transform: translateX(5px);
+}
+
+/* Modal animation */
+#newsModal {
+  transition: opacity 0.3s ease;
+}
+
+#newsModal.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#newsModal .transform {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#newsModal.hidden .transform {
+  transform: scale(0.95);
+  opacity: 0;
+}
+
+/* Image hover effect */
+.news-card .relative {
+  overflow: hidden;
+}
+
+.news-card img {
+  transition: transform 0.5s ease;
+}
+
+.news-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Ensure responsive layout on smaller screens */
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+
+  .flex.flex-wrap {
+    justify-content: center;
+  }
+}

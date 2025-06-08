@@ -7,10 +7,12 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:ssr:ConjuntosFront": "node dist/ConjuntosFront/server/server.mjs"
+    "serve:ssr:ConjuntosFront": "node dist/ConjuntosFront/server/server.mjs",
+    "close-junie": "public\\close-junie-processes.bat"
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^20.0.2",
     "@angular/common": "^20.0.0",
     "@angular/compiler": "^20.0.0",
     "@angular/core": "^20.0.0",
@@ -19,8 +21,13 @@
     "@angular/platform-server": "^20.0.0",
     "@angular/router": "^20.0.0",
     "@angular/ssr": "^20.0.1",
+    "@tailwindcss/postcss": "^4.1.8",
+    "autoprefixer": "^10.4.21",
     "express": "^5.1.0",
+    "ngx-toastr": "^19.0.0",
+    "postcss": "^8.5.4",
     "rxjs": "~7.8.0",
+    "tailwindcss": "^3.4.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {

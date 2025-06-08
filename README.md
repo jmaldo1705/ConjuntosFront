@@ -54,6 +54,18 @@ ng e2e
 
 Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
 
+## Managing Development Server Processes
+
+To close all active Junie console processes (Angular development server), you can use:
+
+```bash
+npm run close-junie
+```
+
+This will terminate any running Angular development server processes and Node.js processes on port 4200.
+
+For more details, see the documentation in the [public/README.md](public/README.md) file.
+
 ## Additional Resources
 
 For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

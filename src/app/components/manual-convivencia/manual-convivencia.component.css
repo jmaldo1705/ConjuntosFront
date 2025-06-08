@@ -1,0 +1,44 @@
+/* Custom styles for the manual de convivencia component */
+/* Most styling is handled by Tailwind CSS classes in the HTML */
+
+/* Add animations for content */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.prose h2 {
+  color: #2e7d32; /* Forest green color for headings */
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 0.5rem;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+.prose h3 {
+  color: #388e3c; /* Slightly lighter green for subheadings */
+  animation: fadeIn 1s ease-in-out;
+}
+
+.prose ul li {
+  margin-bottom: 0.5rem;
+  transition: transform 0.2s ease;
+}
+
+.prose ul li:hover {
+  transform: translateX(5px);
+}
+
+/* Ensure the content is readable on all screen sizes */
+@media (max-width: 640px) {
+  .prose {
+    font-size: 0.95rem;
+  }
+
+  .prose h2 {
+    font-size: 1.5rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+  }
+}

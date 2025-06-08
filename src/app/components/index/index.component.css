@@ -1,0 +1,113 @@
+/* Custom styles for the index component */
+/* Most styling is handled by Tailwind CSS classes in the HTML */
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInFromBottom {
+  from { transform: translateY(50px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+/* Apply animations to elements */
+.hero-image-container img {
+  animation: fadeIn 1.5s ease-in-out;
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1s ease-in-out;
+}
+
+.animate-slideInFromLeft {
+  animation: slideInFromLeft 1s ease-in-out;
+}
+
+.animate-slideInFromRight {
+  animation: slideInFromRight 1s ease-in-out;
+}
+
+.animate-slideInFromBottom {
+  animation: slideInFromBottom 1s ease-in-out;
+}
+
+.animate-pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Staggered animations for features and testimonials */
+.feature-card:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.feature-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.feature-card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+.feature-card:nth-child(4) {
+  animation-delay: 0.8s;
+}
+
+.testimonial-card:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.testimonial-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.testimonial-card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+/* Hover effects */
+.hover-lift {
+  transition: transform 0.3s ease;
+}
+
+.hover-lift:hover {
+  transform: translateY(-5px);
+}
+
+/* Ensure responsive behavior for all screen sizes */
+@media (max-width: 640px) {
+  .hero-content {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+  }
+}
+
+/* Nature-themed scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4CAF50;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #2E7D32;
+}
