@@ -1,220 +1,466 @@
-<div class="min-h-screen bg-gradient-to-b from-green-50 to-teal-100">
-  <!-- Hero Section -->
-  <header class="relative overflow-hidden">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="relative z-10 py-8 sm:py-16 md:py-20 lg:py-28 lg:max-w-2xl lg:w-full hero-content">
-        <div class="text-center lg:text-left animate-fadeIn">
-          <h1 class="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-            <span class="block text-green-600">Conjunto Residencial</span>
-            <span class="block">Sistema de Administración</span>
-          </h1>
-          <p class="mt-3 text-base text-gray-600 sm:mt-5 sm:text-lg sm:max-w-xl sm:mx-auto lg:mx-0">
-            Una solución integral para administrar conjuntos residenciales, optimizar operaciones y mejorar la experiencia de vida para los residentes.
-          </p>
-          <div class="mt-5 sm:mt-8 sm:flex sm:justify-center lg:justify-start">
-            <div class="rounded-md shadow">
-              <button id="heroLoginBtn" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10 transition-all duration-300 transform hover:scale-105">
-                Iniciar Sesión
-              </button>
+<div class="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-teal-50">
+  <!-- Hero Section with Advanced Design -->
+  <header class="relative overflow-hidden min-h-screen flex items-center">
+    <!-- Animated Background Elements -->
+    <div class="absolute inset-0 z-0">
+      <!-- Geometric shapes for tech feel -->
+      <div class="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-emerald-400/20 to-teal-400/20 rounded-full animate-float"></div>
+      <div class="absolute top-40 right-20 w-24 h-24 bg-gradient-to-br from-green-400/15 to-emerald-400/15 rounded-lg rotate-45 animate-float-delayed"></div>
+      <div class="absolute bottom-40 left-1/4 w-16 h-16 bg-gradient-to-br from-teal-400/20 to-cyan-400/20 rounded-full animate-pulse"></div>
+
+      <!-- Nature-inspired elements -->
+      <div class="absolute inset-0 opacity-5">
+        <svg viewBox="0 0 100 100" class="w-full h-full">
+          <path d="M20,50 Q30,30 40,50 T60,50 T80,50" stroke="currentColor" stroke-width="0.5" fill="none" class="text-emerald-600"/>
+          <path d="M10,70 Q25,50 40,70 T70,70 T90,70" stroke="currentColor" stroke-width="0.3" fill="none" class="text-green-600"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <!-- Left Content -->
+        <div class="text-center lg:text-left space-y-8 animate-fade-in-up">
+          <!-- Logo and Branding -->
+          <div class="flex items-center justify-center lg:justify-start space-x-4">
+            <div class="relative">
+              <div class="h-20 w-20 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-300">
+                <div class="text-white font-bold text-4xl">W</div>
+              </div>
+              <div class="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full animate-pulse"></div>
             </div>
-            <div class="mt-3 sm:mt-0 sm:ml-3">
-              <a href="#contact" class="w-full flex items-center justify-center px-8 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 md:py-4 md:text-lg md:px-10 transition-all duration-300 transform hover:scale-105">
-                Contáctanos
-              </a>
+            <div>
+              <h1 class="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                WAKARI
+              </h1>
+              <p class="text-sm text-gray-600 font-medium">Conjunto Residencial</p>
+            </div>
+          </div>
+
+          <!-- Main Title -->
+          <div class="space-y-4">
+            <h2 class="text-5xl lg:text-6xl font-extrabold leading-tight">
+              <span class="block text-gray-900">Bienvenido a tu</span>
+              <span class="block bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 bg-clip-text text-transparent">
+                vida nueva
+              </span>
+              <span class="block text-gray-900">en</span>
+              <span class="block bg-gradient-to-r from-green-600 via-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                La Samaria
+              </span>
+            </h2>
+
+            <p class="text-xl text-gray-600 leading-relaxed max-w-2xl">
+              Descubre <strong>Wakari</strong>, tu conjunto residencial en Ibagué que combina
+              comodidad, seguridad y espacios verdes naturales. Un lugar diseñado para tu
+              bienestar y el de tu familia, donde cada día es una experiencia tranquila y placentera.
+            </p>
+          </div>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
+            <button id="heroLoginBtn" class="group relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+              <span class="relative z-10 flex items-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+                </svg>
+                Portal de Residentes
+              </span>
+              <div class="absolute inset-0 bg-gradient-to-r from-teal-600 to-emerald-600 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+            </button>
+
+            <a href="#descubrir" class="group border-2 border-emerald-600 text-emerald-600 px-8 py-4 rounded-xl font-semibold text-lg hover:bg-emerald-600 hover:text-white transition-all duration-300 text-center">
+              <span class="flex items-center justify-center">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                Conocer Amenidades
+              </span>
+            </a>
+          </div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-8 pt-8 border-t border-gray-200">
+            <div class="text-center">
+              <div class="text-3xl font-bold text-emerald-600">540</div>
+              <div class="text-sm text-gray-600 font-medium">Apartamentos</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-teal-600">24/7</div>
+              <div class="text-sm text-gray-600 font-medium">Seguridad</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl font-bold text-cyan-600">65%</div>
+              <div class="text-sm text-gray-600 font-medium">Zonas Verdes</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Content - Hero Image -->
+        <div class="relative lg:h-[600px] h-96 animate-fade-in-right">
+          <div class="absolute inset-0 bg-gradient-to-br from-emerald-100/50 to-teal-100/50 rounded-3xl"></div>
+          <img
+            class="w-full h-full object-cover rounded-3xl shadow-2xl"
+            src="../../../assets/images/wakari.png"
+            alt="Conjunto residencial Wakari en La Samaria, Ibagué">
+
+          <!-- Floating Cards -->
+          <div class="absolute -bottom-6 -left-6 bg-white p-4 rounded-2xl shadow-xl animate-float">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-gray-900">Espacios Verdes</div>
+                <div class="text-xs text-gray-600">Naturales</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="absolute -top-6 -right-6 bg-white p-4 rounded-2xl shadow-xl animate-float-delayed">
+            <div class="flex items-center space-x-3">
+              <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+                </svg>
+              </div>
+              <div>
+                <div class="text-sm font-bold text-gray-900">Seguridad</div>
+                <div class="text-xs text-gray-600">Control de Acceso</div>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-    <div class="lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2 hero-image-container">
-      <img class="h-56 w-full object-cover sm:h-72 md:h-96 lg:w-full lg:h-full" src="https://images.unsplash.com/photo-1587162146766-e06b1189b907?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80" alt="Conjunto residencial con áreas verdes">
+
+    <!-- Scroll Indicator -->
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 animate-bounce">
+      <div class="w-6 h-10 border-2 border-emerald-600 rounded-full flex justify-center">
+        <div class="w-1 h-3 bg-emerald-600 rounded-full mt-2 animate-pulse"></div>
+      </div>
     </div>
   </header>
 
-  <!-- Features Section -->
-  <section id="features" class="py-16 bg-white">
+  <!-- About Wakari Section -->
+  <section id="descubrir" class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="lg:text-center">
-        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Características</h2>
-        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Todo lo que necesitas para administrar tu conjunto
-        </p>
-        <p class="mt-4 max-w-2xl text-xl text-gray-600 lg:mx-auto">
-          Nuestra plataforma proporciona herramientas completas tanto para administradores como para residentes.
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">
+          ¿Por qué vivir en <span class="text-emerald-600">Wakari</span>?
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Un hogar donde la comodidad, la seguridad y la naturaleza se combinan para crear
+          el ambiente perfecto para ti y tu familia en el sector La Samaria de Ibagué.
         </p>
       </div>
 
-      <div class="mt-12">
-        <div class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-12">
-          @for (feature of features; track feature.title) {
-            <div class="relative p-6 bg-green-50 rounded-xl shadow-sm hover:shadow-md transition-all duration-300 transform hover:scale-105 feature-card animate-fadeIn">
-              <div class="absolute flex items-center justify-center h-14 w-14 rounded-full bg-gradient-to-r from-green-500 to-teal-500 text-white">
-                <svg class="h-7 w-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"></path>
-                </svg>
-              </div>
-              <div class="ml-20">
-                <h3 class="text-xl leading-6 font-bold text-gray-900">{{ feature.title }}</h3>
-                <p class="mt-2 text-base text-gray-600">{{ feature.description }}</p>
-              </div>
-            </div>
-          }
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Comfort Card -->
+        <div class="group relative bg-gradient-to-br from-blue-50 to-indigo-50 p-8 rounded-3xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2-2z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Comodidad Digital</h3>
+          <p class="text-gray-600 mb-6">
+            Portal en línea para residentes, pagos digitales, reservas de amenidades
+            y comunicación directa con la administración desde la comodidad de tu hogar.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+              Pagos en línea seguros
+            </li>
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+              Reservas de amenidades
+            </li>
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-blue-500 rounded-full mr-3"></div>
+              Comunicación directa
+            </li>
+          </ul>
+        </div>
+
+        <!-- Nature Card -->
+        <div class="group relative bg-gradient-to-br from-green-50 to-emerald-50 p-8 rounded-3xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Espacios Naturales</h3>
+          <p class="text-gray-600 mb-6">
+            Amplias zonas verdes en pasillos y áreas comunes que crean un ambiente
+            natural y relajante, perfecto para disfrutar en familia y respirar aire puro.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+              Jardines en pasillos
+            </li>
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+              Áreas verdes amplias
+            </li>
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
+              Ambiente natural tranquilo
+            </li>
+          </ul>
+        </div>
+
+        <!-- Security Card -->
+        <div class="group relative bg-gradient-to-br from-purple-50 to-pink-50 p-8 rounded-3xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+          <div class="absolute top-6 right-6 w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4">Seguridad Confiable</h3>
+          <p class="text-gray-600 mb-6">
+            Vigilancia 24/7 con control de acceso por reconocimiento facial,
+            garantizando tranquilidad total para ti y tu familia en todo momento.
+          </p>
+          <ul class="space-y-2">
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+              Vigilancia permanente
+            </li>
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+              Reconocimiento facial
+            </li>
+            <li class="flex items-center text-sm text-gray-600">
+              <div class="w-2 h-2 bg-purple-500 rounded-full mr-3"></div>
+              Control de acceso
+            </li>
+          </ul>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Testimonials Section -->
-  <section id="testimonials" class="py-16 bg-green-50">
+  <!-- Features Section with Enhanced Design -->
+  <section class="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="lg:text-center mb-12">
-        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Testimonios</h2>
-        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          Lo que dicen nuestros usuarios
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">
+          Amenidades para tu <span class="text-emerald-600">Bienestar</span>
+        </h2>
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Disfruta de espacios diseñados para el entretenimiento, el deporte y la relajación
         </p>
       </div>
 
-      <div class="mt-12 space-y-8 md:space-y-0 md:grid md:grid-cols-3 md:gap-x-8">
-        @for (testimonial of testimonials; track testimonial.name) {
-          <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-2 testimonial-card animate-slideInFromBottom">
-            <div class="flex items-center mb-6">
-              <div class="relative">
-                <img class="h-16 w-16 rounded-full object-cover border-2 border-green-400" [src]="testimonial.avatar" [alt]="testimonial.name">
-                <div class="absolute -bottom-1 -right-1 h-6 w-6 rounded-full bg-green-500 flex items-center justify-center">
-                  <svg class="h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                    <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                  </svg>
-                </div>
-              </div>
-              <div class="ml-4">
-                <h4 class="text-xl font-bold text-gray-900">{{ testimonial.name }}</h4>
-                <p class="text-sm text-green-600">{{ testimonial.role }}</p>
-              </div>
-            </div>
-            <div class="relative">
-              <svg class="absolute -top-4 -left-4 h-8 w-8 text-green-300 opacity-50" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M9.352 4C4.456 7.456 1 13.12 1 19.36c0 .64.08 3.52.48 3.52.32 0 .56-1.28 1.2-1.28 1.52 0 2.64 1.36 5.52 1.36 3.84 0 7.12-2.72 7.12-6.64 0-3.04-2.08-5.44-4.96-5.44-1.36 0-2.96.56-3.84 1.76.32-3.6 1.84-7.04 2.88-8.64.08-.08.08-.16.08-.24 0-.16-.08-.24-.16-.32-.08-.08-.24-.16-.32-.16H8.28c-.08 0-.16 0-.24.08-.08.08-.16.16-.16.32v.64c.16.08.16.16.24.16z" />
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+        @for (feature of enhancedFeatures; track feature.title) {
+          <div class="group relative bg-white p-6 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+            <div class="w-16 h-16 bg-gradient-to-br {{ feature.colorFrom }} {{ feature.colorTo }} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300">
+              <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"></path>
               </svg>
-              <p class="text-gray-700 italic text-lg leading-relaxed">"{{ testimonial.quote }}"</p>
             </div>
+            <h3 class="text-xl font-bold text-gray-900 mb-3">{{ feature.title }}</h3>
+            <p class="text-gray-600 text-sm">{{ feature.description }}</p>
           </div>
         }
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
-  <section class="py-16 bg-gradient-to-r from-green-600 to-teal-600">
+  <!-- Portal Features Section -->
+  <section class="py-20 bg-white">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="text-center animate-fadeIn">
-        <h2 class="text-3xl font-extrabold text-white sm:text-4xl">
-          <span class="block">¿Listo para comenzar?</span>
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-extrabold text-gray-900 mb-4">
+          Tu Portal de <span class="text-emerald-600">Residentes</span>
         </h2>
-        <p class="mt-4 text-lg leading-6 text-green-100">
-          Únete a nuestra plataforma hoy y experimenta los beneficios de nuestro sistema de administración de conjuntos residenciales.
-        </p>
-        <div class="mt-8 flex justify-center">
-          <div class="inline-flex rounded-md shadow">
-            <button id="ctaLoginBtn" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-green-700 bg-white hover:bg-green-50 transition-all duration-300 transform hover:scale-105 animate-pulse">
-              <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-8-3a1 1 0 00-.867.5 1 1 0 11-1.731-1A3 3 0 0113 8a3.001 3.001 0 01-2 2.83V11a1 1 0 11-2 0v-1a1 1 0 011-1 1 1 0 100-2zm0 8a1 1 0 100-2 1 1 0 000 2z" clip-rule="evenodd" />
-              </svg>
-              Iniciar Sesión
-            </button>
-          </div>
-          <div class="ml-3 inline-flex">
-            <a href="#contact" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-800 hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
-              <svg class="mr-2 h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z" />
-                <path d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z" />
-              </svg>
-              Contáctanos
-            </a>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Contact Section -->
-  <section id="contact" class="py-16 bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="lg:text-center mb-12">
-        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Contacto</h2>
-        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
-          ¿Necesitas más información?
-        </p>
-        <p class="mt-4 max-w-2xl text-xl text-gray-600 lg:mx-auto">
-          Ponte en contacto con nosotros y un administrador te ayudará con el proceso de registro o cualquier consulta.
+        <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+          Gestiona todo lo relacionado con tu hogar desde una sola plataforma
         </p>
       </div>
 
-      <div class="mt-12 grid grid-cols-1 gap-8 md:grid-cols-2">
-        <div class="bg-green-50 p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 animate-slideInFromLeft">
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">Información de contacto</h3>
-          <div class="space-y-4">
-            <div class="flex items-start">
-              <div class="flex-shrink-0">
-                <svg class="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8">
+          @for (feature of features; track feature.title) {
+            <div class="flex items-start space-x-4">
+              <div class="w-12 h-12 bg-emerald-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" [attr.d]="feature.icon"></path>
                 </svg>
               </div>
-              <div class="ml-3 text-gray-700">
-                <p class="text-lg font-medium">Teléfono</p>
-                <p>+57 (1) 234-5678</p>
+              <div>
+                <h4 class="text-xl font-bold text-gray-900 mb-2">{{ feature.title }}</h4>
+                <p class="text-gray-600">{{ feature.description }}</p>
               </div>
             </div>
-          </div>
+          }
         </div>
 
-        <div class="bg-white p-8 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 animate-slideInFromRight">
-          <h3 class="text-2xl font-bold text-gray-900 mb-4">Envíanos un mensaje</h3>
-          <form class="space-y-4">
-            <div>
-              <label for="name" class="block text-sm font-medium text-gray-700 mb-1">Nombre completo</label>
-              <input type="text" id="name" name="name" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-green-500 focus:border-green-500" placeholder="Tu nombre">
-            </div>
-            <div>
-              <button type="submit" class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-teal-600 hover:from-green-700 hover:to-teal-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-300">
-                Enviar mensaje
+        <div class="relative">
+          <div class="aspect-video bg-gray-100 rounded-3xl overflow-hidden shadow-2xl">
+            <img
+              class="w-full h-full object-cover"
+              src="https://images.unsplash.com/photo-1560472354-b33ff0c44a43?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80"
+              alt="Portal de residentes Wakari">
+
+            <!-- Play Button Overlay -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <button class="w-20 h-20 bg-white/90 rounded-full flex items-center justify-center hover:bg-white hover:scale-110 transition-all duration-300 shadow-2xl">
+                <svg class="w-8 h-8 text-emerald-600 ml-1" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M8 5v14l11-7z"/>
+                </svg>
               </button>
             </div>
-          </form>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
-  <footer class="bg-gray-900 text-white">
-    <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h3 class="text-xl font-bold mb-4">Conjunto Residencial</h3>
-          <p class="text-gray-400">
-            Sistema de administración moderno y eficiente para conjuntos residenciales.
-          </p>
+  <!-- CTA Section with Enhanced Design -->
+  <section class="py-20 bg-gradient-to-br from-emerald-600 via-teal-600 to-cyan-700 relative overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-10">
+      <div class="absolute inset-0" style="background-image: radial-gradient(circle at 25% 25%, white 2%, transparent 0%), radial-gradient(circle at 75% 75%, white 2%, transparent 0%); background-size: 50px 50px;"></div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div class="text-center space-y-8">
+        <h2 class="text-4xl lg:text-5xl font-extrabold text-white">
+          ¿Listo para ser parte de Wakari?
+        </h2>
+        <p class="text-xl text-emerald-100 max-w-3xl mx-auto">
+          Únete a nuestra comunidad de residentes y disfruta de la comodidad, seguridad
+          y tranquilidad que solo Wakari puede ofrecerte en La Samaria, Ibagué.
+        </p>
+
+        <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <button id="ctaLoginBtn" class="group bg-white text-emerald-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 transform hover:scale-105 shadow-xl">
+            <span class="flex items-center">
+              <svg class="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
+              </svg>
+              Acceder al Portal
+            </span>
+          </button>
+
+          <a href="#contacto" class="border-2 border-white text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-emerald-600 transition-all duration-300 transform hover:scale-105">
+            Contactar Administración
+          </a>
         </div>
-        <div>
-          <h3 class="text-xl font-bold mb-4">Enlaces rápidos</h3>
-          <ul class="space-y-2">
-            <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Inicio</a></li>
-            <li><a href="#features" class="text-gray-400 hover:text-white transition-colors duration-200">Características</a></li>
-            <li><a href="#testimonials" class="text-gray-400 hover:text-white transition-colors duration-200">Testimonios</a></li>
-          </ul>
-        </div>
-        <div>
-          <h3 class="text-xl font-bold mb-4">Horario de atención</h3>
-          <ul class="text-gray-400 space-y-2">
-            <li>Lunes - Viernes: 8:00 AM - 6:00 PM</li>
-            <li>Sábados: 9:00 AM - 1:00 PM</li>
-            <li>Domingos: Cerrado</li>
-          </ul>
+
+        <!-- Contact Info -->
+        <div class="grid md:grid-cols-3 gap-8 pt-12 border-t border-emerald-500/30">
+          <div class="text-center text-emerald-100">
+            <div class="text-2xl font-bold text-white">+57 321 456 7890</div>
+            <div>Línea administrativa</div>
+          </div>
+          <div class="text-center text-emerald-100">
+            <div class="text-2xl font-bold text-white">administracion&#64;wakari.co</div>
+            <div>Correo electrónico</div>
+          </div>
+          <div class="text-center text-emerald-100">
+            <div class="text-2xl font-bold text-white">Lun - Vie</div>
+            <div>8:00 AM - 5:00 PM</div>
+          </div>
         </div>
       </div>
-      <div class="mt-8 pt-8 border-t border-gray-700 text-center">
-        <p class="text-base text-gray-400">
-          &copy; 2025 Sistema de Administración de Conjuntos Residenciales. Todos los derechos reservados.
+    </div>
+  </section>
+
+  <!-- Enhanced Footer -->
+  <footer class="bg-gray-900 text-white">
+    <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:px-8">
+      <div class="grid md:grid-cols-4 gap-8">
+        <!-- Brand Section -->
+        <div class="col-span-2 md:col-span-1">
+          <div class="flex items-center space-x-3 mb-4">
+            <div class="h-12 w-12 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl flex items-center justify-center">
+              <div class="text-white font-bold text-xl">W</div>
+            </div>
+            <div>
+              <h3 class="text-2xl font-bold">WAKARI</h3>
+              <p class="text-gray-400 text-sm">Conjunto Residencial</p>
+            </div>
+          </div>
+          <p class="text-gray-400 leading-relaxed mb-4">
+            Tu hogar en La Samaria, Ibagué. Donde la comodidad y la naturaleza se encuentran
+            para crear el ambiente perfecto para tu familia.
+          </p>
+          <p class="text-gray-400 text-sm">
+            <strong>Dirección:</strong><br>
+            Cll 95 # 13 - 175 Sur<br>
+            Sector La Samaria, Ibagué - Tolima
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Enlaces Rápidos</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Inicio</a></li>
+            <li><a href="#descubrir" class="hover:text-emerald-400 transition-colors duration-200">Sobre Wakari</a></li>
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Amenidades</a></li>
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Noticias</a></li>
+            <li><a href="#contacto" class="hover:text-emerald-400 transition-colors duration-200">Contacto</a></li>
+          </ul>
+        </div>
+
+        <!-- Services -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Servicios</h4>
+          <ul class="space-y-2 text-gray-400">
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Portal Residentes</a></li>
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Pagos en Línea</a></li>
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Reservas</a></li>
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Mantenimiento</a></li>
+            <li><a href="#" class="hover:text-emerald-400 transition-colors duration-200">Administración</a></li>
+          </ul>
+        </div>
+
+        <!-- Contact Info -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4">Contacto</h4>
+          <div class="space-y-3 text-gray-400">
+            <div class="flex items-start space-x-3">
+              <svg class="w-5 h-5 text-emerald-400 mt-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+              <span>Cll 95 # 13 - 175 Sur<br>La Samaria, Ibagué - Tolima</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+              </svg>
+              <span>+57 321 456 7890</span>
+            </div>
+            <div class="flex items-center space-x-3">
+              <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+              </svg>
+              <span>administracion&#64;wakari.co</span>
+            </div>
+            <div class="text-sm">
+              <strong>Horario de atención:</strong><br>
+              Lun - Vie: 8:00 AM - 5:00 PM<br>
+              Sáb: 8:00 AM - 12:00 PM
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 pt-8 border-t border-gray-700 text-center">
+        <p class="text-gray-400">
+          &copy; 2025 Wakari Conjunto Residencial. Todos los derechos reservados. |
+          <a href="#" class="text-emerald-400 hover:text-emerald-300">Política de Privacidad</a> |
+          <a href="#" class="text-emerald-400 hover:text-emerald-300">Términos de Servicio</a>
         </p>
       </div>
     </div>

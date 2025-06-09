@@ -1,186 +1,131 @@
 import { Component, OnInit } from '@angular/core';
-import { RouterOutlet, RouterLink, Router } from '@angular/router';
+import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { filter } from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { LoginRequest } from './models/auth.model';
+import { finalize } from 'rxjs/operators';
+import { ChangeDetectorRef } from '@angular/core';
+
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, RouterLink, CommonModule],
   templateUrl: './app.html',
+  imports: [
+    RouterOutlet,
+    RouterModule,
+    CommonModule,
+    ReactiveFormsModule
+  ],
   styleUrl: './app.css'
 })
 export class App implements OnInit {
-  protected title = 'ConjuntosFront';
+  isWelcomePage = false;
+  showLoginModal = false;
+  showMobileMenu = false;
+  loginForm: FormGroup;
+  isLoading = false;
+  errorMessage = '';
 
   constructor(
+    private router: Router,
     private authService: AuthService,
-    private router: Router
-  ) {}
+    private cdr: ChangeDetectorRef
+  ) {
+    // Crear el formulario manualmente sin FormBuilder
+    this.loginForm = new FormGroup({
+      username: new FormControl('', [Validators.required]),
+      password: new FormControl('', [Validators.required])
+    });
+  }
 
   ngOnInit() {
-    // Check if we're in a browser environment
-    if (typeof document !== 'undefined') {
-      // Add event listeners after component initialization
-      // Use a longer timeout to ensure DOM is fully loaded
-      setTimeout(() => {
-        this.setupEventListeners();
+    // Detectar la ruta actual al cargar la página
+    this.checkCurrentRoute();
 
-        // If elements weren't found on first try, retry with increasing delays
-        const retrySetup = (attempts = 1) => {
-          if (attempts <= 3) {
-            // Check if the CTA button exists yet
-            const ctaLoginBtn = document.getElementById('ctaLoginBtn');
-            if (!ctaLoginBtn) {
-              console.log(`Retry attempt ${attempts} to set up event listeners`);
-              setTimeout(() => {
-                this.setupEventListeners();
-                retrySetup(attempts + 1);
-              }, 500 * attempts); // Increasing delay with each attempt
-            }
-          }
-        };
-
-        retrySetup();
-      }, 300);
-    }
+    // Escuchar cambios de navegación
+    this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((event: NavigationEnd) => {
+        this.isWelcomePage = event.url === '/welcome';
+      });
   }
 
-  private setupEventListeners() {
-    // Check if we're in a browser environment
-    if (typeof document === 'undefined') {
-      return;
-    }
-
-    // Toggle mobile menu
-    const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-    const mobileMenu = document.getElementById('mobileMenu');
-
-    if (mobileMenuBtn && mobileMenu) {
-      mobileMenuBtn.addEventListener('click', () => {
-        mobileMenu.classList.toggle('hidden');
-      });
-    }
-
-    // Toggle login modal
-    const loginBtn = document.getElementById('loginBtn');
-    const heroLoginBtn = document.getElementById('heroLoginBtn');
-    const ctaLoginBtn = document.getElementById('ctaLoginBtn');
-    const closeLoginModal = document.getElementById('closeLoginModal');
-    const loginModal = document.getElementById('loginModal');
-
-    if (loginBtn && loginModal) {
-      loginBtn.addEventListener('click', () => {
-        loginModal.classList.remove('hidden');
-        this.resetLoginForm();
-      });
-    }
-
-    if (heroLoginBtn && loginModal) {
-      heroLoginBtn.addEventListener('click', () => {
-        loginModal.classList.remove('hidden');
-        this.resetLoginForm();
-      });
-    }
-
-    if (ctaLoginBtn && loginModal) {
-      ctaLoginBtn.addEventListener('click', () => {
-        loginModal.classList.remove('hidden');
-        this.resetLoginForm();
-      });
-    }
-
-    if (closeLoginModal && loginModal) {
-      closeLoginModal.addEventListener('click', () => {
-        loginModal.classList.add('hidden');
-      });
-    }
-
-    // Close modal when clicking outside
-    if (loginModal) {
-      loginModal.addEventListener('click', (event) => {
-        if (event.target === loginModal) {
-          loginModal.classList.add('hidden');
-        }
-      });
-    }
-
-    // Handle login form submission
-    const loginForm = document.getElementById('loginForm');
-    if (loginForm) {
-      loginForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-        this.handleLoginFormSubmit();
-      });
-    }
+  private checkCurrentRoute() {
+    this.isWelcomePage = this.router.url === '/welcome';
   }
 
-  private resetLoginForm() {
-    // Reset form fields and error message
-    const usernameInput = document.getElementById('modalUsername') as HTMLInputElement;
-    const passwordInput = document.getElementById('modalPassword') as HTMLInputElement;
-    const errorMessage = document.getElementById('loginErrorMessage');
-
-    if (usernameInput) usernameInput.value = '';
-    if (passwordInput) passwordInput.value = '';
-    if (errorMessage) errorMessage.classList.add('hidden');
+  openLoginModal() {
+    this.showLoginModal = true;
+    this.errorMessage = '';
+    this.loginForm.reset();
   }
 
-  private handleLoginFormSubmit() {
-    const usernameInput = document.getElementById('modalUsername') as HTMLInputElement;
-    const passwordInput = document.getElementById('modalPassword') as HTMLInputElement;
-    const errorMessage = document.getElementById('loginErrorMessage');
-    const errorText = document.getElementById('errorText');
-    const loginBtnText = document.getElementById('loginBtnText');
-    const loginBtnLoading = document.getElementById('loginBtnLoading');
-    const loginModal = document.getElementById('loginModal');
+  closeLoginModal() {
+    this.showLoginModal = false;
+    this.errorMessage = '';
+    this.loginForm.reset();
+  }
 
-    if (!usernameInput || !passwordInput || !errorMessage || !errorText || !loginBtnText || !loginBtnLoading) {
-      console.error('Form elements not found');
-      return;
-    }
+  toggleMobileMenu() {
+    this.showMobileMenu = !this.showMobileMenu;
+  }
 
-    // Show loading state
-    loginBtnText.classList.add('hidden');
-    loginBtnLoading.classList.remove('hidden');
-    errorMessage.classList.add('hidden');
-
-    const loginRequest: LoginRequest = {
-      username: usernameInput.value,
-      password: passwordInput.value
-    };
-
-    this.authService.login(loginRequest).subscribe({
-      next: () => {
-        // Hide loading state
-        loginBtnText.classList.remove('hidden');
-        loginBtnLoading.classList.add('hidden');
-
-        // Close modal
-        if (loginModal) {
-          loginModal.classList.add('hidden');
-        }
-
-        // Navigate to welcome page
-        this.router.navigate(['/welcome']);
-      },
-      error: (error) => {
-        // Hide loading state
-        loginBtnText.classList.remove('hidden');
-        loginBtnLoading.classList.add('hidden');
-
-        // Show error message
-        errorMessage.classList.remove('hidden');
-
-        // Handle specific error cases
-        if (error.status === 401) {
-          errorText.textContent = 'Credenciales incorrectas. Por favor, verifica tu usuario y contraseña.';
-        } else if (error.status === 403) {
-          errorText.textContent = 'Tu cuenta no tiene permisos para acceder. Contacta al administrador.';
-        } else {
-          errorText.textContent = error.error?.message || 'Error al iniciar sesión. Por favor, inténtalo de nuevo.';
-        }
+  onSubmitLogin() {
+    if (this.loginForm.valid) {
+      // Prevenir múltiples submissions
+      if (this.isLoading) {
+        console.log('⚠️ Login ya en proceso, ignorando...');
+        return;
       }
-    });
+
+      console.log('🔄 Iniciando login desde modal...');
+      this.isLoading = true;
+      this.errorMessage = '';
+
+      // Timeout de emergencia para resetear el estado
+      const emergencyTimeout = setTimeout(() => {
+        console.log('🚨 TIMEOUT EMERGENCIA: Reseteando isLoading');
+        this.isLoading = false;
+        this.errorMessage = 'La solicitud tardó demasiado. Inténtalo de nuevo.';
+        this.cdr.detectChanges(); // Asegurar que Angular detecte el cambio
+      }, 15000);
+
+      const loginRequest: LoginRequest = {
+        username: this.loginForm.get('username')?.value,
+        password: this.loginForm.get('password')?.value
+      };
+
+      this.authService.login(loginRequest)
+        .pipe(
+          finalize(() => {
+            // ESTE BLOQUE SIEMPRE SE EJECUTA
+            console.log('🏁 FINALIZE: Reseteando isLoading');
+            clearTimeout(emergencyTimeout);
+            this.isLoading = false;
+            this.cdr.detectChanges(); // Forzar detección de cambios
+          })
+        )
+        .subscribe({
+          next: (response) => {
+            console.log('✅ Login exitoso desde modal');
+            this.closeLoginModal();
+            this.router.navigate(['/welcome']);
+          },
+          error: (error) => {
+            console.error('❌ Error de login desde modal:', error);
+
+            // Triple seguridad: resetear aquí también
+            this.isLoading = false;
+            this.cdr.detectChanges();
+
+            this.errorMessage = 'Usuario o contraseña incorrectos';
+          }
+        });
+    } else {
+      this.errorMessage = 'Por favor, completa todos los campos';
+    }
   }
 }

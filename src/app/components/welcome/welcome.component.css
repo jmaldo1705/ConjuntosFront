@@ -36,6 +36,15 @@ button {
   transition: all 0.3s ease;
 }
 
+/* Responsive sidebar */
+@media (max-width: 768px) {
+  .md\:w-64 {
+    width: 100%;
+    max-height: calc(100vh - 60px);
+    overflow-y: auto;
+  }
+}
+
 /* Ensure responsive layout on smaller screens */
 @media (max-width: 640px) {
   .flex.justify-between {
@@ -46,5 +55,22 @@ button {
   button {
     width: 100%;
     justify-content: center;
+  }
+
+  /* Improve touch targets on mobile */
+  .h-screen {
+    height: auto;
+    min-height: 100vh;
+  }
+
+  /* Ensure images don't overflow on small screens */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Improve spacing for stacked elements */
+  .space-y-2 {
+    margin-bottom: 0.5rem;
   }
 }

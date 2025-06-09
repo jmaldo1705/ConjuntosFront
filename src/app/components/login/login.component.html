@@ -1,90 +1,140 @@
 <div class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-100 to-purple-100 p-4">
   <div class="w-full max-w-md bg-white rounded-xl shadow-2xl overflow-hidden">
+
+    <!-- Header -->
     <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-6">
       <h2 class="text-2xl font-bold text-white text-center">Bienvenido de Nuevo</h2>
       <p class="text-blue-100 text-center mt-1">Inicia sesión en tu cuenta</p>
     </div>
 
     <div class="p-6">
+
+      <!-- Debug Panel -->
+      <div class="mb-4 p-3 bg-gray-100 rounded-lg text-xs">
+        <div class="flex justify-between items-center mb-2">
+          <strong>Debug Info:</strong>
+          <button (click)="clearDebug()" class="text-red-600 underline">Clear</button>
+        </div>
+        <div class="max-h-32 overflow-y-auto space-y-1">
+          @for (info of debugInfo; track $index) {
+            <div class="text-gray-700">{{ info }}</div>
+          }
+          @empty {
+            <div class="text-gray-500">No debug info yet...</div>
+          }
+        </div>
+        <div class="mt-2 pt-2 border-t border-gray-300">
+          <strong>Estado actual:</strong>
+          <span [class]="isLoading ? 'text-red-600 font-bold' : 'text-green-600'">
+            isLoading = {{ isLoading }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Emergency Controls -->
+      <div class="mb-4 flex gap-2">
+        <button
+          (click)="forceReset()"
+          class="px-3 py-1 text-xs bg-red-600 text-white rounded hover:bg-red-700">
+          🚨 Force Reset
+        </button>
+        <button
+          (click)="toggleLoading()"
+          class="px-3 py-1 text-xs bg-blue-600 text-white rounded hover:bg-blue-700">
+          🔄 Toggle Loading
+        </button>
+      </div>
+
+      <!-- Form -->
       <form (ngSubmit)="onSubmit()" #loginForm="ngForm" class="space-y-4">
+
+        <!-- Username -->
         <div>
-          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Usuario</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              [(ngModel)]="loginRequest.username"
-              required
-              #username="ngModel"
-              class="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ingresa tu usuario">
-          </div>
+          <label for="username" class="block text-sm font-medium text-gray-700 mb-1">Jefe</label>
+          <input
+            type="text"
+            id="username"
+            name="username"
+            [(ngModel)]="loginRequest.username"
+            (input)="onInputChange()"
+            required
+            #username="ngModel"
+            [disabled]="isLoading"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:opacity-50"
+            placeholder="Ingresa tu usuario">
+
           @if (username.invalid && (username.dirty || username.touched)) {
-            <div class="mt-1 text-sm text-red-600">
-              El usuario es requerido
-            </div>
+            <div class="mt-1 text-sm text-red-600">El usuario es requerido</div>
           }
         </div>
 
+        <!-- Password -->
         <div>
           <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
-          <div class="relative">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd" />
-              </svg>
-            </div>
-            <input
-              type="password"
-              id="password"
-              name="password"
-              [(ngModel)]="loginRequest.password"
-              required
-              #password="ngModel"
-              class="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Ingresa tu contraseña">
-          </div>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            [(ngModel)]="loginRequest.password"
+            (input)="onInputChange()"
+            required
+            #password="ngModel"
+            [disabled]="isLoading"
+            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 disabled:bg-gray-100 disabled:opacity-50"
+            placeholder="Ingresa tu contraseña">
+
           @if (password.invalid && (password.dirty || password.touched)) {
-            <div class="mt-1 text-sm text-red-600">
-              La contraseña es requerida
-            </div>
+            <div class="mt-1 text-sm text-red-600">La contraseña es requerida</div>
           }
         </div>
 
+        <!-- Error Message -->
         @if (errorMessage) {
-          <div class="p-4 bg-red-100 text-red-700 rounded-lg flex items-start">
-            <svg class="h-5 w-5 text-red-500 mr-2 mt-0.5 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-              <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
-            </svg>
-            <span>{{ errorMessage }}</span>
+          <div class="p-4 bg-red-100 text-red-700 rounded-lg border border-red-300">
+            <strong>Error:</strong> {{ errorMessage }}
           </div>
         }
 
+        <!-- Submit Button -->
         <div class="pt-2">
           <button
             type="submit"
             [disabled]="loginForm.invalid || isLoading"
-            class="w-full flex justify-center py-2 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200">
+            class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all duration-200"
+            [class.bg-gray-400]="isLoading"
+            [class.cursor-not-allowed]="isLoading"
+            [class.bg-gradient-to-r]="!isLoading"
+            [class.from-blue-600]="!isLoading"
+            [class.to-purple-600]="!isLoading"
+            [class.hover:from-blue-700]="!isLoading"
+            [class.hover:to-purple-700]="!isLoading">
+
             @if (isLoading) {
-              <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              <span>Iniciando sesión...</span>
-            }
-            @if (!isLoading) {
+              <div class="flex items-center">
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                  <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Iniciando sesión...</span>
+              </div>
+            } @else {
               <span>Iniciar Sesión</span>
             }
           </button>
         </div>
       </form>
 
+      <!-- Visual State Indicator -->
+      <div class="mt-4 p-2 bg-yellow-50 border border-yellow-200 rounded text-xs text-center">
+        <strong>Estado Visual:</strong>
+        @if (isLoading) {
+          <span class="text-red-600 font-bold">🔄 CARGANDO</span>
+        } @else {
+          <span class="text-green-600">✅ LISTO</span>
+        }
+      </div>
+
+      <!-- Register Link -->
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600">
           ¿No tienes una cuenta?

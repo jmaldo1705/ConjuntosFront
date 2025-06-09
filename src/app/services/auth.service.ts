@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { HttpClient, HttpHeaders, HttpErrorResponse } from '@angular/common/http';
+import { Observable, throwError } from 'rxjs';
+import { tap, catchError } from 'rxjs/operators';
 import {
   LoginRequest,
   LoginResponse,
@@ -21,14 +21,25 @@ export class AuthService {
   constructor(private http: HttpClient) { }
 
   register(request: RegisterRequest): Observable<RegisterResponse> {
-    return this.http.post<RegisterResponse>(`${this.AUTH_URL}/register`, request);
+    return this.http.post<RegisterResponse>(`${this.AUTH_URL}/register`, request)
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   login(request: LoginRequest): Observable<LoginResponse> {
+    console.log('AuthService: Enviando solicitud de login...', request);
+
     return this.http.post<LoginResponse>(`${this.AUTH_URL}/login`, request)
       .pipe(
         tap(response => {
+          console.log('AuthService: Login exitoso, guardando token...', response);
           this.setToken(response.token);
+        }),
+        catchError((error: HttpErrorResponse) => {
+          console.error('AuthService: Error en login:', error);
+          // Asegurar que el error se propague correctamente
+          return throwError(() => error);
         })
       );
   }
@@ -38,7 +49,10 @@ export class AuthService {
       'Authorization': `Bearer ${this.getToken()}`
     });
 
-    return this.http.get<User>(`${this.API_URL}/users/me`, { headers });
+    return this.http.get<User>(`${this.API_URL}/users/me`, { headers })
+      .pipe(
+        catchError(this.handleError)
+      );
   }
 
   logout(): void {
@@ -62,5 +76,25 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  private handleError(error: HttpErrorResponse): Observable<never> {
+    console.error('AuthService: Error HTTP:', error);
+
+    let errorMessage = 'Error desconocido';
+
+    if (error.error instanceof ErrorEvent) {
+      // Error del lado del cliente
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Error del lado del servidor
+      errorMessage = error.error?.message || `Error del servidor: ${error.status}`;
+    }
+
+    return throwError(() => ({
+      status: error.status,
+      message: errorMessage,
+      error: error.error
+    }));
   }
 }
