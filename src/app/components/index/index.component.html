@@ -59,7 +59,7 @@
 
           <!-- CTA Buttons -->
           <div class="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-            <button id="heroLoginBtn" class="group relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
+            <button id="heroLoginBtn" (click)="openLoginModal()" class="group relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-4 rounded-xl font-semibold text-lg shadow-xl hover:shadow-2xl transform hover:scale-105 transition-all duration-300">
               <span class="relative z-10 flex items-center">
                 <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>
@@ -98,7 +98,7 @@
 
         <!-- Right Content - Hero Image -->
         <div class="relative lg:h-[600px] h-96 animate-fade-in-right">
-          <div class="absolute inset-0 bg-gradient-to-br from-emerald-100/50 to-teal-100/50 rounded-3xl"></div>
+          <div class="absolute inset-0 rounded-3xl"></div>
           <img
             class="w-full h-full object-cover rounded-3xl shadow-2xl"
             src="../../../assets/images/wakari.png"
@@ -341,7 +341,7 @@
         </p>
 
         <div class="flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <button id="ctaLoginBtn" class="group bg-white text-emerald-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 transform hover:scale-105 shadow-xl">
+          <button id="ctaLoginBtn" (click)="openLoginModal()" class="group bg-white text-emerald-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-emerald-50 transition-all duration-300 transform hover:scale-105 shadow-xl">
             <span class="flex items-center">
               <svg class="w-5 h-5 mr-2 group-hover:animate-pulse" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"></path>

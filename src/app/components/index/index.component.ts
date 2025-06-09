@@ -1,6 +1,6 @@
-
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { LoginModalService } from '../../services/login-modal.service';
 
 @Component({
   selector: 'app-index',
@@ -10,6 +10,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './index.component.css'
 })
 export class IndexComponent {
+
+  constructor(private loginModalService: LoginModalService) {}
+
+  // Method to handle login button click
+  openLoginModal(): void {
+    this.loginModalService.openLoginModal();
+  }
+
   // Enhanced features for Wakari residential complex
   enhancedFeatures = [
     {
@@ -91,7 +99,6 @@ export class IndexComponent {
     }
   ];
 
-
   // Features focused on resident portal and administration
   features = [
     {
@@ -106,41 +113,13 @@ export class IndexComponent {
     },
     {
       title: 'Reserva de Amenidades',
-      description: 'Reserva fácilmente el salón social, cancha de fútbol, básquetball o la sala de cine desde tu portal.',
+      description: 'Reserva fácilmente el salón social, cancha de fútbol, BBQ, fogata o la sala de cine desde tu portal.',
       icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z'
     },
     {
       title: 'Solicitudes de Mantenimiento',
       description: 'Reporta problemas y solicita mantenimiento de forma rápida, con seguimiento en tiempo real del estado.',
       icon: 'M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z M15 12a3 3 0 11-6 0 3 3 0 016 0z'
-    }
-  ];
-
-  // Realistic testimonials for Wakari residents
-  testimonials = [
-    {
-      name: 'Carmen Elena Rodríguez',
-      role: 'Residente Torre A',
-      quote: 'Vivir en Wakari es maravilloso. Los espacios verdes y la tranquilidad del sector La Samaria han sido perfectos para mi familia. El portal en línea facilita mucho la vida.',
-      avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b1c5?w=150&h=150&fit=crop&crop=face'
-    },
-    {
-      name: 'Luis Fernando Martínez',
-      role: 'Presidente del Consejo',
-      quote: 'La administración ha mejorado mucho desde que implementamos el sistema digital. Los residentes están más informados y la comunicación es más efectiva.',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face'
-    },
-    {
-      name: 'María José Herrera',
-      role: 'Administradora',
-      quote: 'El sistema nos ha permitido ser más organizados y transparentes. Los residentes pueden hacer todo desde casa y nosotros tenemos mejor control de las actividades.',
-      avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face'
-    },
-    {
-      name: 'Andrés Camilo Torres',
-      role: 'Residente Torre B',
-      quote: 'Las amenidades son excelentes. La cancha de fútbol sintética y el gimnasio están siempre disponibles. Es como tener un club privado en casa.',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face'
     }
   ];
 
@@ -163,31 +142,4 @@ export class IndexComponent {
       address: 'Cll 95 # 13 - 175 Sur, Sector La Samaria'
     }
   };
-
-  // Method to handle login button click
-  onLoginClick(): void {
-    // This would typically open a login modal or navigate to login page
-    console.log('Login button clicked');
-  }
-
-  // Method to handle contact form
-  onContactClick(): void {
-    // This would typically scroll to contact section or open contact modal
-    const contactSection = document.getElementById('contacto');
-    if (contactSection) {
-      contactSection.scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  // Method to start virtual tour
-  startVirtualTour(): void {
-    // This would typically open virtual tour functionality
-    console.log('Virtual tour started');
-  }
-
-  // Method to handle feature interaction
-  onFeatureClick(feature: any): void {
-    // This would typically show more details about the feature
-    console.log('Feature clicked:', feature.title);
-  }
 }

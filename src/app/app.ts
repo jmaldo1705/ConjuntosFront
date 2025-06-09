@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { LoginModalService } from './services/login-modal.service';
 import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -21,7 +23,8 @@ import { ChangeDetectorRef } from '@angular/core';
   ],
   styleUrl: './app.css'
 })
-export class App implements OnInit {
+export class App implements OnInit, OnDestroy {
+  private loginModalSubscription?: Subscription;
   isWelcomePage = false;
   showLoginModal = false;
   showMobileMenu = false;
@@ -30,6 +33,7 @@ export class App implements OnInit {
   errorMessage = '';
 
   constructor(
+    private loginModalService: LoginModalService,
     private router: Router,
     private authService: AuthService,
     private cdr: ChangeDetectorRef
@@ -42,6 +46,10 @@ export class App implements OnInit {
   }
 
   ngOnInit() {
+    this.loginModalSubscription = this.loginModalService.loginModal$.subscribe(() => {
+      this.openLoginModal();
+    });
+
     // Detectar la ruta actual al cargar la página
     this.checkCurrentRoute();
 
@@ -51,6 +59,12 @@ export class App implements OnInit {
       .subscribe((event: NavigationEnd) => {
         this.isWelcomePage = event.url === '/welcome';
       });
+  }
+
+  ngOnDestroy(): void {
+    if (this.loginModalSubscription) {
+      this.loginModalSubscription.unsubscribe();
+    }
   }
 
   private checkCurrentRoute() {
@@ -121,7 +135,17 @@ export class App implements OnInit {
             this.isLoading = false;
             this.cdr.detectChanges();
 
-            this.errorMessage = 'Usuario o contraseña incorrectos';
+            if (error.status === 401) {
+              this.errorMessage = 'Usuario o contraseña incorrectos';
+            } else if (error.status === 500) {
+              this.errorMessage = 'Error interno del sistema. Por favor, intenta más tarde o contacta al administrador';
+            } else if (error.status === 503) {
+              this.errorMessage = 'Servicio temporalmente no disponible. Intenta nuevamente en unos minutos';
+            } else if (error.status === 0 || error.status === 'timeout') {
+              this.errorMessage = 'Error de conexión. Verifica tu conexión a internet';
+            } else {
+              this.errorMessage = 'Error técnico del sistema. Si el problema persiste, contacta al administrador';
+            }
           }
         });
     } else {

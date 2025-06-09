@@ -9,10 +9,12 @@ import { ReservasComponent } from './components/reservas/reservas.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { ContactComponent } from './components/contact/contact.component';
 import {ApartamentosComponent} from './components/apartamentos/apartamentos.component';
+import {AmenidadesComponent} from './components/amenidades/amenidades.component';
 
 export const routes: Routes = [
   { path: '', component: IndexComponent, pathMatch: 'full' },
   { path: 'home', component: IndexComponent },
+  { path: 'amenidades', component: AmenidadesComponent },
   { path: 'apartamentos', component: ApartamentosComponent },
   { path: 'normas-propiedad', component: NormasPropiedadComponent },
   { path: 'noticias', component: NoticiasComponent },

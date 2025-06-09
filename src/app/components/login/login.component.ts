@@ -95,9 +95,15 @@ export class LoginComponent {
         this.resetLoadingState('Error en login');
 
         if (error.status === 401) {
-          this.errorMessage = 'Credenciales incorrectas';
+          this.errorMessage = 'Usuario o contraseña incorrectos';
+        } else if (error.status === 500) {
+          this.errorMessage = 'Error interno del sistema. Por favor, intenta más tarde o contacta al administrador';
+        } else if (error.status === 503) {
+          this.errorMessage = 'Servicio temporalmente no disponible. Intenta nuevamente en unos minutos';
+        } else if (error.status === 0) {
+          this.errorMessage = 'Error de conexión. Verifica tu conexión a internet';
         } else {
-          this.errorMessage = 'Error de conexión';
+          this.errorMessage = 'Error técnico del sistema. Si el problema persiste, contacta al administrador';
         }
         this.toastr.error(this.errorMessage, 'Error');
       },
