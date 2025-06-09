@@ -291,18 +291,23 @@ export class ApartamentosComponent {
   }
 
   // Contactar para más información
-  contactarInfo(apartamento: Apartamento): void {
+  contactarInfo(apartamento: Apartamento | null): void {
+    if (!apartamento) return;
+
     const mensaje = `Hola, estoy interesado en el ${apartamento.titulo} (${apartamento.torre}${apartamento.apartamento}) en Wakari. ¿Podrían darme más información?`;
     const numeroWhatsApp = '+573214567890';
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
 
-  // Programar visita
-  programarVisita(apartamento: Apartamento): void {
+// Programar visita
+  programarVisita(apartamento: Apartamento | null): void {
+    if (!apartamento) return;
+
     const mensaje = `Hola, me gustaría programar una visita al ${apartamento.titulo} (${apartamento.torre}${apartamento.apartamento}) en Wakari. ¿Cuándo sería posible?`;
     const numeroWhatsApp = '+573214567890';
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
+
 }
