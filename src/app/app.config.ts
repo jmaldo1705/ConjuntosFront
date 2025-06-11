@@ -1,13 +1,42 @@
-import { ApplicationConfig, provideBrowserGlobalErrorListeners, provideZonelessChangeDetection } from '@angular/core';
+import { ApplicationConfig,
+  provideBrowserGlobalErrorListeners,
+  provideZonelessChangeDetection,
+  importProvidersFrom } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
-import { importProvidersFrom } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
+
+import { provideIcons } from '@ng-icons/core';
+import {
+  tablerCheck,
+  tablerLock,
+  tablerSearch,
+  tablerClock,
+  tablerMapPin,
+  tablerEye,
+  tablerCalendarPlus,
+  tablerX,
+  tablerCalendar,
+  tablerUsers,
+  tablerPool,
+  tablerBarbell,
+  tablerMovie,
+  tablerMoodSmile,
+  tablerBallFootball,
+  tablerBallBasketball,
+  tablerGrill,
+  tablerFlame,
+  tablerTrash,
+  tablerShield,
+  tablerBuilding,
+  tablerCreditCard,
+  tablerTool
+} from '@ng-icons/tabler-icons';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +52,31 @@ export const appConfig: ApplicationConfig = {
       preventDuplicates: true,
       closeButton: true
     }),
-    importProvidersFrom(ReactiveFormsModule)
+    importProvidersFrom(ReactiveFormsModule),
+    provideIcons({
+      tablerCheck,
+      tablerLock,
+      tablerSearch,
+      tablerClock,
+      tablerMapPin,
+      tablerEye,
+      tablerCalendarPlus,
+      tablerX,
+      tablerCalendar,
+      tablerUsers,
+      tablerPool,
+      tablerBarbell,
+      tablerMovie,
+      tablerMoodSmile,
+      tablerBallFootball,
+      tablerBallBasketball,
+      tablerGrill,
+      tablerFlame,
+      tablerTrash,
+      tablerShield,
+      tablerBuilding,
+      tablerCreditCard,
+      tablerTool
+    })
   ]
 };

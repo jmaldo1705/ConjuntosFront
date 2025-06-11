@@ -1,6 +1,7 @@
 
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 interface Apartamento {
   id: number;
@@ -13,6 +14,7 @@ interface Apartamento {
   piso: number;
   torre: string;
   apartamento: string;
+  conjunto: string;
   descripcion: string;
   caracteristicas: string[];
   imagenes: string[];
@@ -23,12 +25,25 @@ interface Apartamento {
 @Component({
   selector: 'app-apartamentos',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './apartamentos.component.html',
   styleUrl: './apartamentos.component.css'
 })
 export class ApartamentosComponent {
-  // Apartamentos disponibles en Wakari
+  // Filtros
+  filtroActivo = 'todos';
+  filtroConjunto = '';
+  busquedaTexto = '';
+  apartamentosFiltrados: Apartamento[] = [];
+
+  // Apartamento seleccionado para vista detallada
+  apartamentoSeleccionado: Apartamento | null = null;
+  imagenActual = 0;
+
+  // Lista de conjuntos disponibles
+  conjuntos = ['Wakari', 'Torres del Bosque', 'Villa Verde', 'Los Almendros'];
+
+  // Apartamentos disponibles
   apartamentos: Apartamento[] = [
     {
       id: 1,
@@ -41,6 +56,7 @@ export class ApartamentosComponent {
       piso: 4,
       torre: 'A',
       apartamento: '401',
+      conjunto: 'Wakari',
       descripcion: 'Hermoso apartamento con vista a las zonas verdes del conjunto. Cocina integral, closets empotrados y amplio balcón.',
       caracteristicas: [
         'Cocina integral con mesón en granito',
@@ -71,6 +87,7 @@ export class ApartamentosComponent {
       piso: 2,
       torre: 'B',
       apartamento: '203',
+      conjunto: 'Torres del Bosque',
       descripcion: 'Cómodo apartamento ideal para pareja o familia pequeña. Ubicado en piso bajo con fácil acceso.',
       caracteristicas: [
         'Sala-comedor amplia',
@@ -101,6 +118,7 @@ export class ApartamentosComponent {
       piso: 6,
       torre: 'C',
       apartamento: '602',
+      conjunto: 'Villa Verde',
       descripcion: 'Apartamento en piso alto con excelente vista panorámica de Ibagué. Acabados de primera calidad.',
       caracteristicas: [
         'Vista panorámica de la ciudad',
@@ -131,6 +149,7 @@ export class ApartamentosComponent {
       piso: 3,
       torre: 'A',
       apartamento: '305',
+      conjunto: 'Los Almendros',
       descripcion: 'Perfecto para persona soltera o pareja joven. Funcional y bien distribuido con todas las comodidades.',
       caracteristicas: [
         'Sala-comedor integrada',
@@ -161,6 +180,7 @@ export class ApartamentosComponent {
       piso: 5,
       torre: 'B',
       apartamento: '501',
+      conjunto: 'Wakari',
       descripcion: 'Excelente oportunidad de inversión. Apartamento bien conservado con vista a las amenidades del conjunto.',
       caracteristicas: [
         'Vista a la piscina',
@@ -191,6 +211,7 @@ export class ApartamentosComponent {
       piso: 1,
       torre: 'C',
       apartamento: '102',
+      conjunto: 'Torres del Bosque',
       descripcion: 'Apartamento en primer piso con jardín privado. Ideal para familias con niños pequeños o mascotas.',
       caracteristicas: [
         'Jardín privado',
@@ -212,13 +233,9 @@ export class ApartamentosComponent {
     }
   ];
 
-  // Filtros
-  filtroActivo = 'todos';
-  apartamentosFiltrados: Apartamento[] = [...this.apartamentos];
-
-  // Apartamento seleccionado para vista detallada
-  apartamentoSeleccionado: Apartamento | null = null;
-  imagenActual = 0;
+  constructor() {
+    this.aplicarFiltros();
+  }
 
   // Computed properties para evitar cálculos en el template
   get apartamentosVenta(): number {
@@ -234,14 +251,57 @@ export class ApartamentosComponent {
     return apartamento.id;
   }
 
+  // Aplicar todos los filtros
+  aplicarFiltros(): void {
+    let resultado = [...this.apartamentos];
+
+    // Filtro por tipo
+    if (this.filtroActivo !== 'todos') {
+      resultado = resultado.filter(apt => apt.tipo === this.filtroActivo);
+    }
+
+    // Filtro por conjunto
+    if (this.filtroConjunto && this.filtroConjunto !== '') {
+      resultado = resultado.filter(apt => apt.conjunto === this.filtroConjunto);
+    }
+
+    // Filtro por búsqueda de texto
+    if (this.busquedaTexto.trim()) {
+      const busqueda = this.busquedaTexto.toLowerCase().trim();
+      resultado = resultado.filter(apt =>
+        apt.titulo.toLowerCase().includes(busqueda) ||
+        apt.descripcion.toLowerCase().includes(busqueda) ||
+        apt.conjunto.toLowerCase().includes(busqueda) ||
+        apt.torre.toLowerCase().includes(busqueda) ||
+        apt.apartamento.toLowerCase().includes(busqueda)
+      );
+    }
+
+    this.apartamentosFiltrados = resultado;
+  }
+
   // Métodos de filtrado
   filtrarPor(tipo: string): void {
     this.filtroActivo = tipo;
-    if (tipo === 'todos') {
-      this.apartamentosFiltrados = [...this.apartamentos];
-    } else {
-      this.apartamentosFiltrados = this.apartamentos.filter(apt => apt.tipo === tipo);
-    }
+    this.aplicarFiltros();
+  }
+
+  // Cambiar filtro de conjunto
+  onConjuntoChange(): void {
+    this.aplicarFiltros();
+  }
+
+  // Búsqueda por texto
+  onBusquedaChange(): void {
+    this.aplicarFiltros();
+  }
+
+  // Limpiar filtros
+  limpiarFiltros(): void {
+    this.filtroActivo = 'todos';
+    this.filtroConjunto = '';
+    this.busquedaTexto = '';
+    this.aplicarFiltros();
   }
 
   // Formatear precio
@@ -294,20 +354,19 @@ export class ApartamentosComponent {
   contactarInfo(apartamento: Apartamento | null): void {
     if (!apartamento) return;
 
-    const mensaje = `Hola, estoy interesado en el ${apartamento.titulo} (${apartamento.torre}${apartamento.apartamento}) en Wakari. ¿Podrían darme más información?`;
+    const mensaje = `Hola, estoy interesado en el ${apartamento.titulo} (${apartamento.torre}${apartamento.apartamento}) en ${apartamento.conjunto}. ¿Podrían darme más información?`;
     const numeroWhatsApp = '+573214567890';
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
 
-// Programar visita
+  // Programar visita
   programarVisita(apartamento: Apartamento | null): void {
     if (!apartamento) return;
 
-    const mensaje = `Hola, me gustaría programar una visita al ${apartamento.titulo} (${apartamento.torre}${apartamento.apartamento}) en Wakari. ¿Cuándo sería posible?`;
+    const mensaje = `Hola, me gustaría programar una visita al ${apartamento.titulo} (${apartamento.torre}${apartamento.apartamento}) en ${apartamento.conjunto}. ¿Cuándo sería posible?`;
     const numeroWhatsApp = '+573214567890';
     const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
     window.open(url, '_blank');
   }
-
 }

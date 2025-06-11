@@ -1,3 +1,5 @@
+import type { ConfiguracionSistema } from './shared.model';
+
 export interface RegisterRequest {
   username: string;
   email: string;
@@ -5,6 +7,7 @@ export interface RegisterRequest {
   fullName: string;
   apartmentNumber: string;
   phoneNumber: string;
+  conjuntoId?: string; // Agregar conjunto ID
 }
 
 export interface LoginRequest {
@@ -31,4 +34,6 @@ export interface User {
   phoneNumber: string;
   roles: string[];
   isActive: boolean;
+  conjuntoId: string; // ID del conjunto al que pertenece
+  conjunto?: ConfiguracionSistema; // Información del conjunto
 }

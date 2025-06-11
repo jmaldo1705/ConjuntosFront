@@ -1,104 +1,450 @@
-<div class="min-h-screen bg-gradient-to-b from-green-50 to-teal-100 py-12">
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-900">Noticias y Anuncios</h1>
-      <p class="mt-2 text-xl text-gray-600">Mantente informado sobre las últimas novedades del conjunto</p>
-    </div>
-
-    <!-- News Categories Filter -->
-    <div class="flex flex-wrap justify-center gap-2 mb-8">
-      <button class="px-4 py-2 rounded-full bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 active-filter">
-        Todos
-      </button>
-      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
-        Administración
-      </button>
-      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
-        Mantenimiento
-      </button>
-      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
-        Eventos
-      </button>
-      <button class="px-4 py-2 rounded-full bg-green-100 text-green-800 hover:bg-green-200 transition-colors duration-200">
-        Seguridad
-      </button>
-    </div>
-
-    <!-- News Grid -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      @for (noticia of noticias; track noticia.id) {
-        <div class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 news-card">
-          <div class="relative h-48 overflow-hidden">
-            <img [src]="noticia.imagen" [alt]="noticia.titulo" class="w-full h-full object-cover">
-            <div class="absolute top-0 right-0 mt-2 mr-2">
-              <span class="px-2 py-1 text-xs font-semibold rounded-full"
-                    [ngClass]="{
-                      'bg-blue-100 text-blue-800': noticia.categoria === 'Administración',
-                      'bg-yellow-100 text-yellow-800': noticia.categoria === 'Mantenimiento',
-                      'bg-purple-100 text-purple-800': noticia.categoria === 'Eventos',
-                      'bg-red-100 text-red-800': noticia.categoria === 'Seguridad'
-                    }">
-                {{ noticia.categoria }}
-              </span>
+<div class="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
+  <!-- Header Hero Section -->
+  <div class="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 text-white">
+    <div class="container mx-auto px-6 py-12">
+      <div class="flex items-center justify-between flex-wrap">
+        <div class="w-full lg:w-2/3">
+          <h1 class="text-4xl md:text-5xl font-bold mb-4 bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-100">
+            Centro de Noticias
+          </h1>
+          <p class="text-xl text-blue-100 mb-6 leading-relaxed">
+            Mantente informado sobre todas las novedades y eventos
+          </p>
+          <div class="flex items-center space-x-4 text-sm">
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+              <span>{{ getTotalConjuntosActivos() }} conjuntos activos</span>
             </div>
-          </div>
-          <div class="p-6">
-            <div class="text-sm text-gray-500 mb-2">{{ noticia.fecha }}</div>
-            <h2 class="text-xl font-bold text-gray-900 mb-2">{{ noticia.titulo }}</h2>
-            <p class="text-gray-600 mb-4">{{ noticia.resumen }}</p>
-            <button class="text-green-600 hover:text-green-800 font-medium flex items-center transition-colors duration-200 read-more-btn">
-              Leer más
-              <svg class="ml-1 h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M12.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd" />
-              </svg>
-            </button>
+            <div class="flex items-center space-x-2">
+              <div class="w-3 h-3 bg-blue-400 rounded-full"></div>
+              <span>Comunicación unificada</span>
+            </div>
           </div>
         </div>
-      }
-    </div>
-
-    <!-- News Modal (would be implemented with JavaScript in a real application) -->
-    <div id="newsModal" class="fixed inset-0 z-50 overflow-y-auto hidden">
-      <div class="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-        <div class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"></div>
-        <div class="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-2xl sm:w-full">
-          <div class="bg-gradient-to-r from-green-600 to-teal-600 p-6">
-            <div class="flex justify-between items-center">
-              <h3 class="text-2xl font-bold text-white" id="modal-title">Título de la Noticia</h3>
-              <button class="text-white hover:text-green-200 focus:outline-none close-modal-btn">
-                <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+        <div class="w-full lg:w-1/3 mt-8 lg:mt-0 flex justify-center">
+          <div class="relative">
+            <div class="w-32 h-32 bg-white bg-opacity-20 rounded-full flex items-center justify-center backdrop-blur-sm">
+              <span class="text-6xl">️</span>
             </div>
-            <p class="text-green-100 mt-1">Fecha de la noticia</p>
+            <div class="absolute -top-2 -right-2 w-8 h-8 bg-red-500 rounded-full flex items-center justify-center text-white text-sm font-bold animate-bounce">
+              {{ getTotalNoticiasCount() }}
+            </div>
           </div>
-          <div class="bg-white p-6">
-            <div class="prose prose-green max-w-none">
-              <p>Contenido detallado de la noticia...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-6 -mt-8 relative z-10">
+    <!-- Estadísticas Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8">
+      <!-- Total de noticias -->
+      <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 stats-card">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-12 h-12 bg-gradient-to-r from-blue-500 to-blue-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                  <span class="text-2xl"></span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Total</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ getTotalNoticiasCount() }}</p>
+                </div>
+              </div>
+              <p class="text-gray-600 text-sm">Noticias activas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Conjuntos activos -->
+      <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 stats-card">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-12 h-12 bg-gradient-to-r from-purple-500 to-purple-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                  <span class="text-2xl">️</span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Conjuntos</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ getTotalConjuntosActivos() }}</p>
+                </div>
+              </div>
+              <p class="text-gray-600 text-sm">Con noticias activas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alta prioridad -->
+      <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 stats-card">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-12 h-12 bg-gradient-to-r from-red-500 to-red-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                  <span class="text-2xl"></span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Urgentes</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ getNoticiasPorPrioridad('alta') }}</p>
+                </div>
+              </div>
+              <p class="text-gray-600 text-sm">Alta prioridad</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mantenimiento -->
+      <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 stats-card">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                  <span class="text-2xl"></span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Mantenimiento</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ getNoticiasPorCategoria('Mantenimiento') }}</p>
+                </div>
+              </div>
+              <p class="text-gray-600 text-sm">Trabajos programados</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Eventos -->
+      <div class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 stats-card">
+        <div class="p-6">
+          <div class="flex items-center justify-between">
+            <div class="flex-1">
+              <div class="flex items-center space-x-3 mb-3">
+                <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-green-600 rounded-xl flex items-center justify-center text-white shadow-lg">
+                  <span class="text-2xl"></span>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-gray-500 uppercase tracking-wider">Eventos</p>
+                  <p class="text-2xl font-bold text-gray-900">{{ getNoticiasPorCategoria('Eventos') }}</p>
+                </div>
+              </div>
+              <p class="text-gray-600 text-sm">Actividades próximas</p>
             </div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Pagination -->
-    <div class="mt-12 flex justify-center">
-      <nav class="inline-flex rounded-md shadow">
-        <a href="#" class="px-4 py-2 rounded-l-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-          Anterior
-        </a>
-        <a href="#" class="px-4 py-2 border-t border-b border-gray-300 bg-white text-sm font-medium text-green-600 hover:bg-gray-50">
-          1
-        </a>
-        <a href="#" class="px-4 py-2 border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-          2
-        </a>
-        <a href="#" class="px-4 py-2 rounded-r-md border border-gray-300 bg-white text-sm font-medium text-gray-500 hover:bg-gray-50">
-          Siguiente
-        </a>
-      </nav>
+    <!-- Panel de filtros -->
+    <div class="bg-white rounded-2xl shadow-lg border border-gray-100 mb-8 overflow-hidden filter-panel">
+      <div class="bg-gradient-to-r from-gray-50 to-blue-50 px-6 py-4 border-b border-gray-200">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-blue-500 rounded-lg flex items-center justify-center">
+              <span class="text-white text-sm"></span>
+            </div>
+            <h2 class="text-lg font-semibold text-gray-800">Filtros y Búsqueda Multiconjunto</h2>
+          </div>
+          <button
+            (click)="toggleFiltrosAvanzados()"
+            class="flex items-center space-x-2 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm font-medium"
+          >
+            <span>{{ mostrarFiltrosAvanzados ? 'Ocultar' : 'Mostrar' }} filtros</span>
+            <svg class="w-4 h-4 transform transition-transform" [ngClass]="{'rotate-180': mostrarFiltrosAvanzados}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="p-6">
+        <!-- Filtros principales -->
+        <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-6">
+          <!-- Búsqueda -->
+          <div class="md:col-span-2">
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Buscar noticias</label>
+            <div class="relative">
+              <input
+                type="text"
+                [(ngModel)]="filtros.busqueda"
+                (input)="onFiltroChange()"
+                placeholder="Título, contenido, conjunto, ubicación..."
+                class="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+              />
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+
+          <!-- Conjunto -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Conjunto</label>
+            <select
+              [(ngModel)]="filtros.conjunto"
+              (change)="onFiltroChange()"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+            >
+              @for (conjunto of conjuntosDisponibles; track conjunto.value) {
+                <option [value]="conjunto.value">{{ conjunto.label }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Categoría -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Categoría</label>
+            <select
+              [(ngModel)]="filtros.categoria"
+              (change)="onFiltroChange()"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+            >
+              @for (categoria of categorias; track categoria) {
+                <option [value]="categoria">{{ categoria }}</option>
+              }
+            </select>
+          </div>
+
+          <!-- Prioridad -->
+          <div>
+            <label class="block text-sm font-semibold text-gray-700 mb-2">Prioridad</label>
+            <select
+              [(ngModel)]="filtros.prioridad"
+              (change)="onFiltroChange()"
+              class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+            >
+              @for (prioridad of prioridades; track prioridad.value) {
+                <option [value]="prioridad.value">{{ prioridad.label }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Filtros avanzados -->
+        @if (mostrarFiltrosAvanzados) {
+          <div class="pt-6 border-t border-gray-200 animate-fadeIn">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <!-- Alcance -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Alcance</label>
+                <select
+                  [(ngModel)]="filtros.alcance"
+                  (change)="onFiltroChange()"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                >
+                  @for (alcance of alcances; track alcance.value) {
+                    <option [value]="alcance.value">{{ alcance.label }}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Ubicación específica -->
+              <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-2">Ubicación</label>
+                <select
+                  [(ngModel)]="filtros.ubicacion"
+                  (change)="onFiltroChange()"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all bg-white"
+                >
+                  @for (ubicacion of ubicacionesDisponibles; track ubicacion) {
+                    <option [value]="ubicacion">{{ ubicacion }}</option>
+                  }
+                </select>
+              </div>
+
+              <!-- Botón limpiar filtros -->
+              <div class="flex items-end md:col-span-2">
+                <button
+                  (click)="limpiarFiltros()"
+                  class="w-full px-6 py-3 bg-gray-100 text-gray-700 rounded-xl hover:bg-gray-200 transition-colors font-medium flex items-center justify-center space-x-2"
+                >
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                  </svg>
+                  <span>Limpiar todos los filtros</span>
+                </button>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
     </div>
+
+    <!-- Loading -->
+    @if (cargando) {
+      <div class="flex justify-center items-center py-16">
+        <div class="text-center">
+          <div class="custom-spinner mx-auto mb-4"></div>
+          <p class="mt-4 text-gray-600 font-medium">Cargando noticias de todos los conjuntos...</p>
+          <p class="text-sm text-gray-500">Obteniendo las últimas actualizaciones</p>
+        </div>
+      </div>
+    }
+
+    <!-- Lista de noticias -->
+    @if (!cargando) {
+      <div class="space-y-8">
+        @for (noticia of noticiasFiltradas; track noticia.id; let i = $index) {
+          <div
+            class="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-1 border border-gray-100 overflow-hidden news-card stagger-animation"
+            [ngClass]="getPrioridadClass(noticia.prioridad)"
+          >
+            <div class="flex flex-col lg:flex-row">
+              <!-- Imagen -->
+              @if (noticia.imagen) {
+                <div class="lg:w-2/5 relative overflow-hidden image-overlay">
+                  <img
+                    [src]="noticia.imagen"
+                    [alt]="noticia.titulo"
+                    class="w-full h-64 lg:h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                  />
+
+                  <!-- Badge de prioridad en la imagen -->
+                  @if (noticia.prioridad && noticia.prioridad !== 'baja') {
+                    <div class="absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-bold text-white shadow-lg"
+                         [ngClass]="{
+                           'bg-red-500 animate-pulse': noticia.prioridad === 'alta',
+                           'bg-yellow-500': noticia.prioridad === 'media'
+                         }">
+                      {{ noticia.prioridad === 'alta' ? ' URGENTE' : ' IMPORTANTE' }}
+                    </div>
+                  }
+
+                  <!-- Badge del conjunto -->
+                  <div class="absolute top-4 right-4 px-3 py-1 bg-blue-600 bg-opacity-90 text-white rounded-full text-xs font-bold shadow-lg">
+                    ️ {{ getNombreConjunto(noticia.conjuntoId) }}
+                  </div>
+                </div>
+              }
+
+              <!-- Contenido -->
+              <div class="p-8 flex-1">
+                <!-- Metadatos superiores -->
+                <div class="flex flex-wrap items-center gap-2 mb-4">
+                  <!-- Conjunto (si no hay imagen) -->
+                  @if (!noticia.imagen) {
+                    <span class="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-800 text-xs font-medium rounded-full">
+                      {{ getConjuntoIcon() }} {{ getNombreConjunto(noticia.conjuntoId) }}
+                    </span>
+                  }
+
+                  <!-- Prioridad -->
+                  <span class="inline-flex items-center px-3 py-1 text-xs font-medium rounded-full"
+                        [ngClass]="{
+                          'bg-red-100 text-red-800': noticia.prioridad === 'alta',
+                          'bg-yellow-100 text-yellow-800': noticia.prioridad === 'media',
+                          'bg-green-100 text-green-800': noticia.prioridad === 'baja',
+                          'bg-blue-100 text-blue-800': !noticia.prioridad
+                        }">
+                    {{ getPrioridadIcon(noticia.prioridad) }} {{ getPrioridadLabel(noticia.prioridad) }}
+                  </span>
+
+                  <!-- Categoría -->
+                  <span class="inline-flex items-center px-3 py-1 bg-purple-100 text-purple-800 text-xs font-medium rounded-full">
+                    {{ getCategoriaIcon(noticia.categoria) }} {{ noticia.categoria }}
+                  </span>
+
+                  <!-- Alcance -->
+                  <span class="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-800 text-xs font-medium rounded-full">
+                    {{ getAlcanceIcon(noticia.alcance) }} {{ noticia.alcance || 'General' }}
+                  </span>
+
+                  <!-- Ubicación -->
+                  @if (noticia.ubicacion) {
+                    <span class="inline-flex items-center px-3 py-1 bg-orange-100 text-orange-800 text-xs font-medium rounded-full">
+                       {{ noticia.ubicacion }}
+                    </span>
+                  }
+                </div>
+
+                <!-- Título y fecha -->
+                <div class="mb-4">
+                  <h3 class="text-2xl font-bold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors">
+                    {{ noticia.titulo }}
+                  </h3>
+                  <div class="flex items-center space-x-4 text-sm text-gray-500">
+                    <span class="flex items-center space-x-1">
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                      </svg>
+                      <span>{{ noticia.fecha }}</span>
+                    </span>
+                    @if (noticia.autor) {
+                      <span class="flex items-center space-x-1">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                        </svg>
+                        <span>{{ noticia.autor }}</span>
+                      </span>
+                    }
+                  </div>
+                </div>
+
+                <!-- Resumen -->
+                <p class="text-gray-600 leading-relaxed mb-6">
+                  {{ noticia.resumen }}
+                </p>
+
+                <!-- Etiquetas -->
+                @if (noticia.etiquetas && noticia.etiquetas.length > 0) {
+                  <div class="flex flex-wrap gap-2 mb-6">
+                    @for (etiqueta of noticia.etiquetas; track etiqueta) {
+                      <span class="inline-block px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded-md">
+                        #{{ etiqueta }}
+                      </span>
+                    }
+                  </div>
+                }
+
+                <!-- Botones de acción -->
+                <div class="flex items-center space-x-4">
+                  <button class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-blue-500 to-blue-600 text-white font-medium rounded-xl hover:from-blue-600 hover:to-blue-700 transition-all duration-300 transform hover:-translate-y-1 shadow-lg hover:shadow-xl">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path>
+                    </svg>
+                    Leer más
+                  </button>
+
+                  <button class="inline-flex items-center px-4 py-3 text-gray-600 hover:text-blue-600 transition-colors">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"></path>
+                    </svg>
+                    Compartir
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+
+        <!-- Mensaje cuando no hay noticias -->
+        @if (noticiasFiltradas.length === 0) {
+          <div class="text-center py-16">
+            <div class="max-w-md mx-auto">
+              <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <span class="text-4xl text-gray-400"></span>
+              </div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">No se encontraron noticias</h3>
+              <p class="text-gray-600 mb-6">
+                No hay noticias que coincidan con los filtros seleccionados.
+              </p>
+              <button
+                (click)="limpiarFiltros()"
+                class="inline-flex items-center px-6 py-3 bg-blue-500 text-white font-medium rounded-xl hover:bg-blue-600 transition-colors"
+              >
+                Ver todas las noticias
+              </button>
+            </div>
+          </div>
+        }
+      </div>
+    }
   </div>
 </div>
