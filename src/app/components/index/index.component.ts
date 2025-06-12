@@ -1,13 +1,12 @@
-
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { LoginModalService } from '../../services/login-modal.service';
+import {CommonModule} from '@angular/common';
 import {NgIcon} from '@ng-icons/core';
+import {Component} from '@angular/core';
+import {LoginModalService} from '../../services/login-modal.service';
 
 @Component({
   selector: 'app-index',
   standalone: true,
-  imports: [CommonModule, NgIcon], // Agregamos NgIcon aquí
+  imports: [CommonModule, NgIcon],
   templateUrl: './index.component.html',
   styleUrl: './index.component.css'
 })
@@ -20,128 +19,155 @@ export class IndexComponent {
     this.loginModalService.openLoginModal();
   }
 
-  // Enhanced features for Wakari residential complex
-  enhancedFeatures = [
+  // Servicios principales de la plataforma
+  serviciosPrincipales = [
     {
-      title: 'Gimnasio Completo',
-      description: 'Espacio equipado con máquinas de cardio y pesas para mantenerte en forma.',
-      icon: 'tablerBarbell',
-      colorFrom: 'from-red-500',
-      colorTo: 'to-pink-600'
+      title: 'Portal de Administración',
+      description: 'Sistema completo para la gestión administrativa de conjuntos residenciales con herramientas avanzadas.',
+      icon: 'tablerBuilding',
+      features: ['Gestión de residentes', 'Control de pagos', 'Reportes detallados', 'Comunicación directa']
     },
     {
-      title: 'Piscina',
-      description: 'Amplia piscina para disfrutar en familia y relajarte después del trabajo.',
-      icon: 'tablerPool',
+      title: 'Marketplace Inmobiliario',
+      description: 'Plataforma de compra, venta y arriendo de apartamentos con búsqueda avanzada y filtros.',
+      icon: 'tablerHome',
+      features: ['Listados premium', 'Búsqueda avanzada', 'Tours virtuales', 'Asesoría especializada']
+    }
+  ];
+
+  // Características del sistema de gestión
+  caracteristicasGestion = [
+    {
+      title: 'Gestión de Residentes',
+      description: 'Administra la información de propietarios e inquilinos de forma centralizada.',
+      icon: 'tablerUsers',
       colorFrom: 'from-blue-500',
       colorTo: 'to-cyan-600'
     },
     {
-      title: 'Sala de Cine',
-      description: 'Disfruta de películas y eventos especiales en nuestra cómoda sala de cine.',
-      icon: 'tablerMovie',
-      colorFrom: 'from-purple-500',
-      colorTo: 'to-indigo-600'
-    },
-    {
-      title: 'Zona de Juegos Infantiles',
-      description: 'Área segura y divertida donde los niños pueden jugar y socializar.',
-      icon: 'tablerMoodSmile',
-      colorFrom: 'from-yellow-500',
-      colorTo: 'to-orange-600'
-    },
-    {
-      title: 'Cancha de Fútbol Sintética',
-      description: 'Cancha de fútbol con césped sintético para partidos y entrenamientos.',
-      icon: 'tablerBallFootball',
+      title: 'Pagos en Línea',
+      description: 'Sistema de pagos integrado para administración, servicios y multas.',
+      icon: 'tablerCreditCard',
       colorFrom: 'from-green-500',
       colorTo: 'to-emerald-600'
     },
     {
-      title: 'Cancha de Básquetball',
-      description: 'Cancha reglamentaria para practicar básquetball y organizar torneos.',
-      icon: 'tablerBallBasketball',
-      colorFrom: 'from-orange-500',
-      colorTo: 'to-red-600'
+      title: 'Reservas de Amenidades',
+      description: 'Gestión completa de reservas de espacios comunes y amenidades.',
+      icon: 'tablerCalendar',
+      colorFrom: 'from-purple-500',
+      colorTo: 'to-indigo-600'
     },
     {
-      title: 'Zona BBQ',
-      description: 'Espacio equipado con parrillas para asados familiares y reuniones al aire libre.',
-      icon: 'tablerGrill',
-      colorFrom: 'from-amber-500',
-      colorTo: 'to-yellow-600'
-    },
-    {
-      title: 'Zona de Fogata',
-      description: 'Área especial para fogatas nocturnas, perfecta para momentos únicos en familia.',
-      icon: 'tablerFlame',
-      colorFrom: 'from-red-500',
+      title: 'Comunicación Efectiva',
+      description: 'Sistema de notificaciones y comunicados para mantener informados a los residentes.',
+      icon: 'tablerBell',
+      colorFrom: 'from-yellow-500',
       colorTo: 'to-orange-600'
     },
     {
-      title: 'Salón Social',
-      description: 'Espacio amplio y versátil para celebraciones familiares y eventos comunitarios.',
-      icon: 'tablerUsers',
-      colorFrom: 'from-teal-500',
-      colorTo: 'to-blue-600'
+      title: 'Mantenimiento y Solicitudes',
+      description: 'Gestión de solicitudes de mantenimiento con seguimiento en tiempo real.',
+      icon: 'tablerTool',
+      colorFrom: 'from-red-500',
+      colorTo: 'to-pink-600'
     },
     {
-      title: 'Shut para Basuras',
-      description: 'Sistema centralizado de recolección de basuras que facilita la disposición de residuos de manera cómoda y ordenada para todos los residentes.',
-      icon: 'tablerTrash',
+      title: 'Reportes y Analytics',
+      description: 'Dashboards y reportes detallados para la toma de decisiones.',
+      icon: 'tablerChartBar',
+      colorFrom: 'from-indigo-500',
+      colorTo: 'to-purple-600'
+    },
+    {
+      title: 'Seguridad Integrada',
+      description: 'Control de acceso y registro de visitantes digitalizado.',
+      icon: 'tablerShield',
       colorFrom: 'from-gray-500',
       colorTo: 'to-slate-600'
     },
     {
-      title: 'Seguridad 24/7',
-      description: 'Vigilancia permanente con acceso controlado por reconocimiento facial.',
-      icon: 'tablerShield',
-      colorFrom: 'from-gray-500',
-      colorTo: 'to-gray-700'
+      title: 'Portal Móvil',
+      description: 'Acceso completo desde dispositivos móviles para residentes y administradores.',
+      icon: 'tablerDeviceMobile',
+      colorFrom: 'from-teal-500',
+      colorTo: 'to-blue-600'
     }
   ];
 
-  // Features focused on resident portal and administration
-  features = [
+  // Características del marketplace inmobiliario
+  caracteristicasMarketplace = [
     {
-      title: 'Portal de Residentes',
-      description: 'Accede fácilmente a la información del conjunto, realiza pagos online y comunícate directamente con la administración.',
-      icon: 'tablerBuilding'
+      title: 'Búsqueda Avanzada',
+      description: 'Filtros inteligentes por ubicación, precio, características y amenidades.',
+      icon: 'tablerSearch',
+      colorFrom: 'from-blue-500',
+      colorTo: 'to-indigo-600'
     },
     {
-      title: 'Pagos en Línea',
-      description: 'Paga tu administración, servicios adicionales y multas de forma segura desde casa, con recordatorios automáticos.',
-      icon: 'tablerCreditCard'
+      title: 'Tours Virtuales',
+      description: 'Recorridos virtuales 360° de los apartamentos disponibles.',
+      icon: 'tablerEye',
+      colorFrom: 'from-purple-500',
+      colorTo: 'to-pink-600'
     },
     {
-      title: 'Reserva de Amenidades',
-      description: 'Reserva fácilmente el salón social, cancha de fútbol, BBQ, fogata o la sala de cine desde tu portal.',
-      icon: 'tablerCalendar'
+      title: 'Asesoría Especializada',
+      description: 'Acompañamiento profesional en todo el proceso de compra o arriendo.',
+      icon: 'tablerUserCheck',
+      colorFrom: 'from-green-500',
+      colorTo: 'to-teal-600'
     },
     {
-      title: 'Solicitudes de Mantenimiento',
-      description: 'Reporta problemas y solicita mantenimiento de forma rápida, con seguimiento en tiempo real del estado.',
-      icon: 'tablerTool'
+      title: 'Documentación Digital',
+      description: 'Gestión completa de contratos y documentos de forma digital.',
+      icon: 'tablerFileText',
+      colorFrom: 'from-orange-500',
+      colorTo: 'to-red-600'
     }
   ];
 
-  // Wakari specific information - updated for Ibagué
-  wakariInfo = {
-    name: 'Wakari',
-    tagline: 'Tranquilidad y Bienestar en La Samaria',
-    description: 'Un conjunto residencial diseñado para brindarte comodidad, seguridad y espacios verdes en el corazón de Ibagué.',
-    stats: {
-      apartments: '120',
-      security: '24/7',
-      greenAreas: '65%',
-      satisfaction: '96%'
-    },
-    contact: {
-      phone: '+57 321 456 7890',
-      email: 'administracion@wakari.co',
-      schedule: 'Lun - Vie: 8:00 AM - 5:00 PM, Sáb: 8:00 AM - 12:00 PM',
-      location: 'Ibagué, Tolima',
-      address: 'Cll 95 # 13 - 175 Sur, Sector La Samaria'
-    }
+  // Estadísticas de la plataforma
+  estadisticasPlataforma = {
+    conjuntos: '50+',
+    apartamentos: '2,500+',
+    residentes: '8,000+',
+    transacciones: '99.9%'
   };
+
+  // Información de contacto
+  contactoInfo = {
+    telefono: '+57 300 123 4567',
+    email: 'info@gestionresidencial.co',
+    horario: 'Lun - Vie: 8:00 AM - 6:00 PM',
+    soporte: 'Soporte 24/7 disponible'
+  };
+
+  // Testimonios de clientes
+  testimonios = [
+    {
+      nombre: 'María González',
+      cargo: 'Administradora',
+      conjunto: 'Conjunto Las Flores',
+      testimonio: 'La plataforma ha revolucionado la gestión de nuestro conjunto. Todo es más eficiente y transparente.',
+      foto: 'https://randomuser.me/api/portraits/women/32.jpg',
+      rating: 5
+    },
+    {
+      nombre: 'Carlos Rodríguez',
+      cargo: 'Propietario',
+      conjunto: 'Conjunto Los Pinos',
+      testimonio: 'Encontré mi apartamento ideal a través del marketplace. El proceso fue muy fácil y rápido.',
+      foto: 'https://randomuser.me/api/portraits/men/45.jpg',
+      rating: 5
+    },
+    {
+      nombre: 'Ana Martínez',
+      cargo: 'Tesorera',
+      conjunto: 'Villa del Sol',
+      testimonio: 'Los reportes financieros y el control de pagos nos han facilitado enormemente la administración.',
+      foto: 'https://randomuser.me/api/portraits/women/28.jpg',
+      rating: 5
+    }
+  ];
 }

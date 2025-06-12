@@ -35,7 +35,19 @@ import {
   tablerShield,
   tablerBuilding,
   tablerCreditCard,
-  tablerTool
+  tablerTool,
+  tablerHome,
+  tablerBell,
+  tablerChartBar,
+  tablerStar,
+  tablerDeviceMobile,
+  tablerUserCheck,
+  tablerFileText,
+  tablerMail,
+  tablerHeadphones,
+  tablerChevronDown,
+  tablerLogin,
+  tablerPhone
 } from '@ng-icons/tabler-icons';
 
 export const appConfig: ApplicationConfig = {
@@ -76,7 +88,19 @@ export const appConfig: ApplicationConfig = {
       tablerShield,
       tablerBuilding,
       tablerCreditCard,
-      tablerTool
+      tablerTool,
+      tablerHome,
+      tablerBell,
+      tablerChartBar,
+      tablerStar,
+      tablerDeviceMobile,
+      tablerUserCheck,
+      tablerFileText,
+      tablerMail,
+      tablerHeadphones,
+      tablerChevronDown,
+      tablerLogin,
+      tablerPhone
     })
   ]
 };

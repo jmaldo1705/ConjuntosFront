@@ -1,44 +1,118 @@
-import { Component } from '@angular/core';
+
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
+import { ToastrService } from 'ngx-toastr';
+
+interface ContactFormData {
+  nombreConjunto: string;
+  numeroUnidades: string;
+  nombreContacto: string;
+  cargo: string;
+  telefono: string;
+  email: string;
+  ciudad: string;
+  comunicacion: boolean;
+  pagos: boolean;
+  reservas: boolean;
+  seguridad: boolean;
+  mantenimiento: boolean;
+  reportes: boolean;
+  mensaje: string;
+  aceptaTerminos: boolean;
+}
 
 @Component({
   selector: 'app-contact',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule],
+  imports: [CommonModule, FormsModule],
   templateUrl: './contact.component.html',
   styleUrls: ['./contact.component.css']
 })
 export class ContactComponent {
-  contactForm: FormGroup;
-  submitted = false;
-  success = false;
+  @ViewChild('contactForm') contactFormElement!: ElementRef;
+  @ViewChild('featuresSection') featuresSection!: ElementRef;
 
-  constructor(private fb: FormBuilder) {
-    this.contactForm = this.fb.group({
-      name: ['', [Validators.required]],
-      email: ['', [Validators.required, Validators.email]],
-      phone: ['', [Validators.required]],
-      visitorType: ['', [Validators.required]],
-      message: ['', [Validators.required]]
+  isSubmitting = false;
+
+  formData: ContactFormData = {
+    nombreConjunto: '',
+    numeroUnidades: '',
+    nombreContacto: '',
+    cargo: '',
+    telefono: '',
+    email: '',
+    ciudad: '',
+    comunicacion: false,
+    pagos: false,
+    reservas: false,
+    seguridad: false,
+    mantenimiento: false,
+    reportes: false,
+    mensaje: '',
+    aceptaTerminos: false
+  };
+
+  constructor(private toastr: ToastrService) {}
+
+  scrollToForm(): void {
+    this.contactFormElement.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
     });
   }
 
-  onSubmit() {
-    this.submitted = true;
+  scrollToFeatures(): void {
+    this.featuresSection.nativeElement.scrollIntoView({
+      behavior: 'smooth',
+      block: 'start'
+    });
+  }
 
-    if (this.contactForm.valid) {
-      // Here you would typically send the form data to a backend service
-      console.log('Form submitted:', this.contactForm.value);
-      this.success = true;
-      this.contactForm.reset();
-      this.submitted = false;
-
-      // Reset success message after 5 seconds
-      setTimeout(() => {
-        this.success = false;
-      }, 5000);
+  onSubmit(): void {
+    if (!this.formData.aceptaTerminos) {
+      this.toastr.error('Debes aceptar los términos y condiciones', 'Error');
+      return;
     }
+
+    this.isSubmitting = true;
+
+    // Simular envío de formulario
+    setTimeout(() => {
+      console.log('Formulario enviado:', this.formData);
+
+      this.toastr.success(
+        '¡Gracias por tu interés! Un especialista se contactará contigo en las próximas 24 horas.',
+        '¡Solicitud Enviada!',
+        {
+          timeOut: 5000,
+          progressBar: true
+        }
+      );
+
+      // Resetear formulario
+      this.resetForm();
+      this.isSubmitting = false;
+    }, 2000);
+  }
+
+  private resetForm(): void {
+    this.formData = {
+      nombreConjunto: '',
+      numeroUnidades: '',
+      nombreContacto: '',
+      cargo: '',
+      telefono: '',
+      email: '',
+      ciudad: '',
+      comunicacion: false,
+      pagos: false,
+      reservas: false,
+      seguridad: false,
+      mantenimiento: false,
+      reportes: false,
+      mensaje: '',
+      aceptaTerminos: false
+    };
   }
 }
