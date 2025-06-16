@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { RegisterRequest, RegisterResponse } from '../../models/auth.model';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-register',
@@ -21,33 +20,28 @@ export class RegisterComponent {
     fullName: '',
     apartmentNumber: '',
     phoneNumber: '',
-    conjuntoId: '' // Se determinará automáticamente
+    conjuntoId: ''
   };
 
   confirmPassword = '';
   isLoading = false;
   showPassword = false;
   showConfirmPassword = false;
-
-  // Mensajes para el template
   errorMessage = '';
   successMessage = '';
-
-  // Errores de validación
   validationErrors: { [key: string]: string } = {};
 
   constructor(
     private authService: AuthService,
-    private router: Router,
-    private toastr: ToastrService
+    private router: Router
   ) {}
 
   onSubmit() {
-    // Limpiar mensajes previos
     this.clearMessages();
 
     if (!this.validateForm()) {
       this.errorMessage = 'Por favor, corrija los errores en el formulario.';
+
       return;
     }
 
@@ -57,10 +51,9 @@ export class RegisterComponent {
       next: (response: RegisterResponse) => {
         this.isLoading = false;
         this.successMessage = 'Usuario registrado exitosamente. Redirigiendo al login...';
-        this.toastr.success('Usuario registrado exitosamente', 'Registro Completo');
+
         console.log('Usuario registrado:', response);
 
-        // Redirigir al login después de registro exitoso
         setTimeout(() => {
           this.router.navigate(['/login']);
         }, 2000);
@@ -69,19 +62,24 @@ export class RegisterComponent {
         this.isLoading = false;
         console.error('Error en registro:', error);
 
+        let errorMessage = '';
+        let toastMessage = '';
+
         if (error.status === 400) {
-          this.errorMessage = 'Datos inválidos. Verifique la información ingresada.';
-          this.toastr.error('Datos inválidos. Verifique la información ingresada.', 'Error de Registro');
+          errorMessage = 'Datos inválidos. Verifique la información ingresada.';
+          toastMessage = 'Datos inválidos. Revise el formulario.';
         } else if (error.status === 409) {
-          this.errorMessage = 'El usuario o email ya existe. Por favor, use datos diferentes.';
-          this.toastr.error('El usuario o email ya existe.', 'Usuario Duplicado');
+          errorMessage = 'El usuario o email ya existe. Por favor, use datos diferentes.';
+          toastMessage = 'Usuario o email ya existe.';
         } else if (error.status === 500) {
-          this.errorMessage = 'Error interno del servidor. Intente nuevamente más tarde.';
-          this.toastr.error('Error del servidor. Intente nuevamente.', 'Error del Servidor');
+          errorMessage = 'Error interno del servidor. Intente nuevamente más tarde.';
+          toastMessage = 'Error del servidor. Intente más tarde.';
         } else {
-          this.errorMessage = 'Error al registrar usuario. Verifique su conexión e intente nuevamente.';
-          this.toastr.error('Error al registrar usuario. Intente nuevamente.', 'Error de Conexión');
+          errorMessage = 'Error al registrar usuario. Verifique su conexión e intente nuevamente.';
+          toastMessage = 'Error de conexión. Intente nuevamente.';
         }
+
+        this.errorMessage = errorMessage;
       }
     });
   }
@@ -159,15 +157,12 @@ export class RegisterComponent {
     return isValid;
   }
 
-  // Método para limpiar mensajes
   clearMessages() {
     this.errorMessage = '';
     this.successMessage = '';
   }
 
-  // Método que se ejecuta cuando el usuario empieza a escribir en cualquier campo
   onFieldChange() {
-    // Limpiar mensajes cuando el usuario interactúa con el formulario
     if (this.errorMessage || this.successMessage) {
       this.clearMessages();
     }
@@ -181,18 +176,13 @@ export class RegisterComponent {
     this.showConfirmPassword = !this.showConfirmPassword;
   }
 
-  // Método para obtener el conjunto automáticamente basado en el apartamento
   onApartmentNumberChange() {
-    // Limpiar error previo
     if (this.validationErrors['apartmentNumber']) {
       delete this.validationErrors['apartmentNumber'];
     }
 
-    // Limpiar mensajes generales
     this.onFieldChange();
 
-    // El conjunto se determinará automáticamente en el servicio
-    // pero podemos mostrar una vista previa al usuario
     if (this.registerRequest.apartmentNumber) {
       const conjunto = this.determinarConjuntoVisual(this.registerRequest.apartmentNumber);
       console.log('Conjunto determinado:', conjunto);
@@ -233,17 +223,14 @@ export class RegisterComponent {
     return '';
   }
 
-  // Método para obtener el mensaje de error de un campo específico
   getFieldError(fieldName: string): string {
     return this.validationErrors[fieldName] || '';
   }
 
-  // Método para verificar si un campo tiene error
   hasFieldError(fieldName: string): boolean {
     return !!this.validationErrors[fieldName];
   }
 
-  // Método para limpiar error de un campo específico
   clearFieldError(fieldName: string) {
     if (this.validationErrors[fieldName]) {
       delete this.validationErrors[fieldName];

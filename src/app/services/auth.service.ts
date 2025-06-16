@@ -9,7 +9,7 @@ import { User, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } 
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'http://localhost:8080/api';
 
   constructor(
     private http: HttpClient,
@@ -108,7 +108,7 @@ export class AuthService {
     }
 
     // Si no hay usuario en storage, intentar obtener del servidor
-    return this.http.get<User>(`${this.apiUrl}/auth/me`);
+    return this.http.get<User>(`${this.apiUrl}/users/me`);
   }
 
   // Verificar si el usuario está logueado

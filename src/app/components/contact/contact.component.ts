@@ -1,8 +1,7 @@
-
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
+import { ToastService } from '../../services/toast.service';
 
 interface ContactFormData {
   nombreConjunto: string;
@@ -53,7 +52,7 @@ export class ContactComponent {
     aceptaTerminos: false
   };
 
-  constructor(private toastr: ToastrService) {}
+  constructor(private toastService: ToastService) {}
 
   scrollToForm(): void {
     this.contactFormElement.nativeElement.scrollIntoView({
@@ -71,7 +70,7 @@ export class ContactComponent {
 
   onSubmit(): void {
     if (!this.formData.aceptaTerminos) {
-      this.toastr.error('Debes aceptar los términos y condiciones', 'Error');
+      this.toastService.error('Debes aceptar los términos y condiciones', 'Error de validación');
       return;
     }
 
@@ -81,16 +80,12 @@ export class ContactComponent {
     setTimeout(() => {
       console.log('Formulario enviado:', this.formData);
 
-      this.toastr.success(
-        '¡Gracias por tu interés! Un especialista se contactará contigo en las próximas 24 horas.',
+      this.toastService.success(
+        'Un especialista se contactará contigo en las próximas 24 horas.',
         '¡Solicitud Enviada!',
-        {
-          timeOut: 5000,
-          progressBar: true
-        }
+        { timeOut: 6000 }
       );
 
-      // Resetear formulario
       this.resetForm();
       this.isSubmitting = false;
     }, 2000);

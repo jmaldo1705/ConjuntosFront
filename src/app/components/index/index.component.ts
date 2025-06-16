@@ -137,8 +137,8 @@ export class IndexComponent {
 
   // Información de contacto
   contactoInfo = {
-    telefono: '+57 300 123 4567',
-    email: 'info@gestionresidencial.co',
+    telefono: '+57 316 666 3666',
+    email: 'info@vecinosconectados.com',
     horario: 'Lun - Vie: 8:00 AM - 6:00 PM',
     soporte: 'Soporte 24/7 disponible'
   };

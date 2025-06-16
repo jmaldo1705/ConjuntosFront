@@ -1,233 +1,240 @@
 
-<!-- Hero Section -->
-<section class="relative min-h-screen bg-gradient-to-br from-blue-900 via-indigo-800 to-purple-700 overflow-hidden">
-  <!-- Background Pattern -->
-  <div class="absolute inset-0 opacity-10">
-    <div class="absolute top-10 left-10 w-72 h-72 bg-white rounded-full blur-3xl"></div>
-    <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-300 rounded-full blur-3xl"></div>
-    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-blue-300 rounded-full blur-3xl"></div>
+<!-- Hero Section con Diseño Moderno -->
+<section class="relative min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800 overflow-hidden">
+  <!-- Sistema geométrico moderno en lugar de partículas -->
+  <div class="absolute inset-0">
+    <!-- Hexágonos flotantes -->
+    <div class="absolute top-20 left-20 w-32 h-32 transform rotate-45 bg-gradient-to-br from-purple-500/10 to-indigo-500/10 animate-pulse"></div>
+    <div class="absolute top-40 right-32 w-24 h-24 bg-gradient-to-br from-indigo-400/15 to-purple-400/15 transform rotate-12 animate-pulse delay-1000"></div>
+
+    <!-- Triángulos dinámicos -->
+    <div class="absolute bottom-32 left-40 w-0 h-0 border-l-[60px] border-r-[60px] border-b-[100px] border-l-transparent border-r-transparent border-b-purple-300/10 animate-pulse delay-2000"></div>
+    <div class="absolute top-1/3 right-20 w-0 h-0 border-l-[40px] border-r-[40px] border-b-[70px] border-l-transparent border-r-transparent border-b-indigo-400/15 animate-pulse delay-3000"></div>
+
+    <!-- Rombos modernos -->
+    <div class="absolute bottom-20 right-1/4 w-20 h-20 bg-gradient-to-br from-purple-600/10 to-indigo-600/10 transform rotate-45 animate-pulse delay-1500"></div>
+    <div class="absolute top-1/4 left-1/3 w-16 h-16 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 transform rotate-45 animate-pulse delay-2500"></div>
+
+    <!-- Líneas geométricas -->
+    <div class="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-400/20 to-transparent"></div>
+    <div class="absolute top-1/3 left-0 w-full h-px bg-gradient-to-r from-transparent via-indigo-400/15 to-transparent"></div>
   </div>
 
-  <!-- Hero Content -->
-  <div class="relative z-10 container mx-auto px-6 py-20 flex flex-col items-center justify-center min-h-screen text-center text-white">
-    <div class="mb-8 animate-pulse">
-      <div class="w-24 h-24 mx-auto mb-6 bg-gradient-to-r from-purple-400 to-blue-400 rounded-full flex items-center justify-center">
-        <ng-icon name="tablerBuilding" size="40" class="text-white"></ng-icon>
+  <!-- Patrón geométrico renovado -->
+  <div class="absolute inset-0 opacity-5">
+    <svg class="w-full h-full" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <pattern id="modernGrid" width="60" height="60" patternUnits="userSpaceOnUse">
+          <polygon points="30,0 60,30 30,60 0,30" fill="none" stroke="white" stroke-width="0.5"/>
+          <circle cx="30" cy="30" r="3" fill="white" opacity="0.3"/>
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#modernGrid)" />
+    </svg>
+  </div>
+
+  <!-- Contenido principal del Hero -->
+  <div class="relative z-10 container mx-auto px-6 flex flex-col items-center justify-center min-h-screen text-center text-white">
+    <!-- Logo animado -->
+    <div class="mb-12 relative">
+      <div class="relative group">
+        <div class="absolute -inset-4 bg-gradient-to-r from-purple-400 to-indigo-400 rounded-full blur-lg group-hover:blur-xl transition-all duration-300"></div>
+        <div class="relative w-32 h-32 bg-gradient-to-br from-indigo-100 via-white to-purple-400 rounded-full flex items-center justify-center shadow-2xl transform group-hover:scale-110 transition-all duration-500">
+          <img src="assets/images/logo.png" alt="Logo de Conjuntos" class="w-20">
+        </div>
       </div>
     </div>
 
-    <h1 class="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white to-purple-200 bg-clip-text text-transparent">
-      Vecinos Conectados
+    <!-- Título principal con efecto de escritura -->
+    <h1 class="text-4xl md:text-7xl font-black mb-8 leading-tight">
+      <span class="bg-gradient-to-r from-white via-purple-200 to-indigo-200 bg-clip-text text-transparent">
+        Vecinos
+      </span>
+      <br>
+      <span class="bg-gradient-to-r from-purple-300 via-indigo-300 to-purple-400 bg-clip-text text-transparent">
+        Conectados
+      </span>
     </h1>
 
-    <p class="text-2xl md:text-3xl font-light mb-8 text-purple-100">
-      La Plataforma Integral para Conjuntos Residenciales
+    <!-- Subtítulo -->
+    <p class="text-2xl md:text-4xl font-light mb-8 text-purple-100 max-w-4xl">
+      Transformando la Gestión Residencial
     </p>
 
-    <p class="text-lg md:text-xl max-w-4xl mb-12 text-gray-200 leading-relaxed">
-      Sistema completo de gestión administrativa y marketplace inmobiliario.
-      Administra tu conjunto residencial y encuentra tu hogar ideal en un solo lugar.
+    <!-- Descripción mejorada -->
+    <p class="text-xl md:text-2xl max-w-5xl mb-16 text-indigo-100 leading-relaxed font-light">
+      La plataforma más avanzada para conjuntos residenciales inteligentes.
+      Conectamos comunidades, simplificamos la administración y creamos experiencias excepcionales.
     </p>
 
-    <!-- CTA Buttons -->
-    <div class="flex flex-col sm:flex-row gap-6 mb-16">
+    <!-- Botones de acción renovados -->
+    <div class="flex flex-col sm:flex-row gap-6 mb-20">
       <button
         (click)="openLoginModal()"
-        class="px-8 py-4 bg-gradient-to-r from-purple-500 to-blue-500 text-white font-semibold rounded-full hover:from-purple-600 hover:to-blue-600 transform hover:scale-105 transition-all duration-300 shadow-2xl">
-        <div class="flex items-center gap-3">
-          <ng-icon name="tablerLogin" size="20"></ng-icon>
-          Acceder al Sistema
+        class="group relative px-10 py-5 bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold text-lg rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300 overflow-hidden">
+        <div class="absolute inset-0 bg-gradient-to-r from-purple-600 to-indigo-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+        <div class="relative flex items-center gap-4">
+          <ng-icon name="tablerLogin" size="24"></ng-icon>
+          <span>Acceder Ahora</span>
+          <div class="w-2 h-2 bg-white rounded-full group-hover:animate-ping"></div>
         </div>
       </button>
 
-      <button class="px-8 py-4 border-2 border-white text-white font-semibold rounded-full hover:bg-white hover:text-indigo-900 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center gap-3">
-          <ng-icon name="tablerHome" size="20"></ng-icon>
-          Ver Apartamentos
-        </div>
-      </button>
-
-      <button class="px-8 py-4 bg-gradient-to-r from-transparent to-transparent border-2 border-purple-300 text-white font-semibold rounded-full hover:bg-purple-300 hover:border-purple-300 transform hover:scale-105 transition-all duration-300">
-        <div class="flex items-center gap-3">
-          <ng-icon name="tablerPhone" size="20"></ng-icon>
-          Contactar
+      <button class="group px-10 py-5 border-2 border-white/30 text-white font-bold text-lg rounded-2xl backdrop-blur-md hover:bg-white/10 transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center gap-4">
+          <ng-icon name="tablerHome" size="24"></ng-icon>
+          <span>Explorar Apartamentos</span>
+          <ng-icon name="tablerArrowRight" size="20" class="group-hover:translate-x-1 transition-transform duration-300"></ng-icon>
         </div>
       </button>
     </div>
 
-    <!-- Servicios Principales -->
-    <div class="grid md:grid-cols-2 gap-8 max-w-6xl">
-      @for (servicio of serviciosPrincipales; track servicio.title) {
-        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-8 hover:bg-white/15 transition-all duration-300">
-          <div class="w-16 h-16 mx-auto mb-6 bg-gradient-to-r from-white/20 to-white/10 rounded-xl flex items-center justify-center">
-            <ng-icon [name]="servicio.icon" size="28" class="text-white"></ng-icon>
-          </div>
-          <h3 class="text-2xl font-bold mb-4">{{ servicio.title }}</h3>
-          <p class="text-purple-100 mb-6">{{ servicio.description }}</p>
-          <ul class="space-y-2">
-            @for (feature of servicio.features; track feature) {
-              <li class="flex items-center text-sm text-purple-200">
-                <ng-icon name="tablerCheck" size="16" class="mr-2 text-green-400"></ng-icon>
-                {{ feature }}
-              </li>
-            }
-          </ul>
-        </div>
-      }
-    </div>
-  </div>
-
-  <!-- Scroll Indicator -->
-  <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-    <ng-icon name="tablerChevronDown" size="24" class="text-white opacity-70"></ng-icon>
-  </div>
-</section>
-
-<!-- Stats Section -->
-<section class="py-20 bg-white">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mb-4">Confianza que Respalda Nuestra Plataforma</h2>
-      <p class="text-xl text-gray-600">Miles de residentes y administradores confían en nosotros</p>
-    </div>
-
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
-      <div class="text-center group hover:scale-105 transition-transform duration-300">
-        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-          <ng-icon name="tablerBuilding" size="24" class="text-white"></ng-icon>
-        </div>
-        <div class="text-4xl font-bold text-gray-800 mb-2">{{ estadisticasPlataforma.conjuntos }}</div>
-        <div class="text-gray-600">Conjuntos Residenciales</div>
+    <!-- Estadísticas impactantes -->
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-6xl">
+      <div class="text-center group">
+        <div class="text-4xl md:text-5xl font-black text-white mb-2 group-hover:text-purple-300 transition-colors duration-300">{{ estadisticasPlataforma.conjuntos }}</div>
+        <div class="text-purple-200 font-medium">Conjuntos Activos</div>
       </div>
-
-      <div class="text-center group hover:scale-105 transition-transform duration-300">
-        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-green-500 to-teal-500 rounded-full flex items-center justify-center">
-          <ng-icon name="tablerHome" size="24" class="text-white"></ng-icon>
-        </div>
-        <div class="text-4xl font-bold text-gray-800 mb-2">{{ estadisticasPlataforma.apartamentos }}</div>
-        <div class="text-gray-600">Apartamentos Gestionados</div>
+      <div class="text-center group">
+        <div class="text-4xl md:text-5xl font-black text-white mb-2 group-hover:text-indigo-300 transition-colors duration-300">{{ estadisticasPlataforma.apartamentos }}</div>
+        <div class="text-purple-200 font-medium">Apartamentos</div>
       </div>
-
-      <div class="text-center group hover:scale-105 transition-transform duration-300">
-        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full flex items-center justify-center">
-          <ng-icon name="tablerUsers" size="24" class="text-white"></ng-icon>
-        </div>
-        <div class="text-4xl font-bold text-gray-800 mb-2">{{ estadisticasPlataforma.residentes }}</div>
-        <div class="text-gray-600">Residentes Activos</div>
+      <div class="text-center group">
+        <div class="text-4xl md:text-5xl font-black text-white mb-2 group-hover:text-purple-300 transition-colors duration-300">{{ estadisticasPlataforma.residentes }}</div>
+        <div class="text-purple-200 font-medium">Residentes</div>
       </div>
-
-      <div class="text-center group hover:scale-105 transition-transform duration-300">
-        <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center">
-          <ng-icon name="tablerShield" size="24" class="text-white"></ng-icon>
-        </div>
-        <div class="text-4xl font-bold text-gray-800 mb-2">{{ estadisticasPlataforma.transacciones }}</div>
-        <div class="text-gray-600">Confiabilidad</div>
+      <div class="text-center group">
+        <div class="text-4xl md:text-5xl font-black text-white mb-2 group-hover:text-indigo-300 transition-colors duration-300">{{ estadisticasPlataforma.transacciones }}</div>
+        <div class="text-purple-200 font-medium">Confiabilidad</div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Sistema de Gestión Section -->
-<section class="py-20 bg-gradient-to-r from-gray-50 to-blue-50">
+<!-- Sección de Servicios Premium - Rediseñada -->
+<section class="py-24 bg-gradient-to-br from-white via-purple-50/30 to-indigo-50/30">
   <div class="container mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-        Sistema de Gestión Integral
+    <!-- Encabezado de sección -->
+    <div class="text-center mb-20">
+      <div class="inline-block px-6 py-3 bg-gradient-to-r from-purple-100 to-indigo-100 rounded-full mb-6">
+        <span class="text-purple-700 font-semibold">✨ Servicios Premium</span>
+      </div>
+      <h2 class="text-5xl md:text-6xl font-black text-gray-900 mb-6">
+        <span class="bg-gradient-to-r from-purple-600 to-indigo-600 bg-clip-text text-transparent">
+          Ecosistema Completo
+        </span>
       </h2>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Herramientas avanzadas para la administración eficiente de conjuntos residenciales
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+        Cuatro pilares fundamentales que transforman la experiencia residencial moderna
       </p>
     </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <!-- Grid de servicios destacados -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      <!-- Marketplace Inmobiliario -->
+      <div class="group relative bg-gradient-to-br from-blue-50 to-indigo-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-blue-200">
+        <div class="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+
+        <div class="relative z-10 text-center">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transform transition-all duration-300">
+            <ng-icon name="tablerHome" size="32" class="text-white"></ng-icon>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-blue-700 transition-colors duration-300">
+            Marketplace Inmobiliario
+          </h3>
+          <p class="text-gray-600 leading-relaxed">
+            Plataforma especializada para compra, venta y arriendo de propiedades con tecnología avanzada
+          </p>
+        </div>
+      </div>
+
+      <!-- Emprendimientos Locales -->
+      <div class="group relative bg-gradient-to-br from-green-50 to-emerald-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-green-200">
+        <div class="absolute inset-0 bg-gradient-to-br from-green-500/5 to-emerald-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+
+        <div class="relative z-10 text-center">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-green-500 to-emerald-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transform transition-all duration-300">
+            <ng-icon name="tablerBuildingStore" size="32" class="text-white"></ng-icon>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-green-700 transition-colors duration-300">
+            Emprendimientos Locales
+          </h3>
+          <p class="text-gray-600 leading-relaxed">
+            Directorio de negocios locales y servicios especializados para la comunidad residencial
+          </p>
+        </div>
+      </div>
+
+      <!-- Noticias del Sector -->
+      <div class="group relative bg-gradient-to-br from-orange-50 to-red-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-orange-200">
+        <div class="absolute inset-0 bg-gradient-to-br from-orange-500/5 to-red-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+
+        <div class="relative z-10 text-center">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-orange-500 to-red-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transform transition-all duration-300">
+            <ng-icon name="tablerNews" size="32" class="text-white"></ng-icon>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-orange-700 transition-colors duration-300">
+            Noticias del Sector
+          </h3>
+          <p class="text-gray-600 leading-relaxed">
+            Información actualizada sobre temas de interés y tendencias del sector residencial
+          </p>
+        </div>
+      </div>
+
+      <!-- Portal de Administración -->
+      <div class="group relative bg-gradient-to-br from-purple-50 to-indigo-100 rounded-3xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border-2 border-purple-200">
+        <div class="absolute inset-0 bg-gradient-to-br from-purple-500/5 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-3xl"></div>
+
+        <div class="relative z-10 text-center">
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-2xl flex items-center justify-center group-hover:scale-110 transform transition-all duration-300">
+            <ng-icon name="tablerBuilding" size="32" class="text-white"></ng-icon>
+          </div>
+          <h3 class="text-2xl font-bold text-gray-900 mb-4 group-hover:text-purple-700 transition-colors duration-300">
+            Portal de Administración
+          </h3>
+          <p class="text-gray-600 leading-relaxed">
+            Sistema integral de gestión administrativa con herramientas avanzadas de control
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Sección de Características del Sistema -->
+<section class="py-24 bg-gradient-to-br from-purple-900 via-indigo-900 to-purple-800">
+  <div class="container mx-auto px-6">
+    <!-- Encabezado -->
+    <div class="text-center mb-20">
+      <div class="inline-block px-6 py-3 bg-white/10 backdrop-blur-md rounded-full mb-6">
+        <span class="text-purple-200 font-semibold">🚀 Tecnología Avanzada</span>
+      </div>
+      <h2 class="text-5xl md:text-6xl font-black text-white mb-6">
+        Sistema de Gestión
+        <span class="bg-gradient-to-r from-purple-300 to-indigo-300 bg-clip-text text-transparent block">
+          Eficiente
+        </span>
+      </h2>
+      <p class="text-xl text-purple-100 max-w-4xl mx-auto leading-relaxed">
+        Herramientas innovadoras diseñadas para simplificar, automatizar y optimizar cada aspecto de la administración residencial
+      </p>
+    </div>
+
+    <!-- Grid de características -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
       @for (caracteristica of caracteristicasGestion; track caracteristica.title) {
-        <div class="group relative bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 border border-gray-100">
-          <!-- Gradient Background -->
-          <div class="absolute inset-0 bg-gradient-to-br {{ caracteristica.colorFrom }} {{ caracteristica.colorTo }} opacity-0 group-hover:opacity-5 transition-opacity duration-300"></div>
-
-          <div class="relative p-6">
-            <div class="w-14 h-14 mb-4 bg-gradient-to-r {{ caracteristica.colorFrom }} {{ caracteristica.colorTo }} rounded-xl flex items-center justify-center">
-              <ng-icon [name]="caracteristica.icon" size="20" class="text-white"></ng-icon>
-            </div>
-            <h3 class="text-lg font-bold text-gray-800 mb-3">{{ caracteristica.title }}</h3>
-            <p class="text-gray-600 text-sm leading-relaxed">{{ caracteristica.description }}</p>
-          </div>
-        </div>
-      }
-    </div>
-  </div>
-</section>
-
-<!-- Marketplace Section -->
-<section class="py-20 bg-white">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-        Marketplace Inmobiliario
-      </h2>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Encuentra tu hogar ideal o vende tu propiedad con nuestra plataforma especializada
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-      @for (caracteristica of caracteristicasMarketplace; track caracteristica.title) {
-        <div class="text-center group hover:scale-105 transition-all duration-300">
-          <div class="w-16 h-16 mx-auto mb-4 bg-gradient-to-r {{ caracteristica.colorFrom }} {{ caracteristica.colorTo }} rounded-xl flex items-center justify-center">
+        <div class="group bg-white/10 backdrop-blur-md rounded-2xl p-8 hover:bg-white/15 transition-all duration-300 transform hover:-translate-y-2 border border-white/10">
+          <!-- Icono con gradiente -->
+          <div class="w-16 h-16 bg-gradient-to-br {{ caracteristica.colorFrom }} {{ caracteristica.colorTo }} rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transform transition-all duration-300">
             <ng-icon [name]="caracteristica.icon" size="24" class="text-white"></ng-icon>
           </div>
-          <h3 class="text-xl font-bold text-gray-800 mb-3">{{ caracteristica.title }}</h3>
-          <p class="text-gray-600 leading-relaxed">{{ caracteristica.description }}</p>
-        </div>
-      }
-    </div>
 
-    <div class="text-center">
-      <button class="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-full hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300 shadow-xl">
-        <div class="flex items-center gap-3">
-          <ng-icon name="tablerSearch" size="20"></ng-icon>
-          Explorar Apartamentos
-        </div>
-      </button>
-    </div>
-  </div>
-</section>
-
-<!-- Testimonials Section -->
-<section class="py-20 bg-gradient-to-r from-indigo-50 to-purple-50">
-  <div class="container mx-auto px-6">
-    <div class="text-center mb-16">
-      <h2 class="text-4xl md:text-5xl font-bold text-gray-800 mb-6">
-        Lo que Dicen Nuestros Clientes
-      </h2>
-      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
-        Experiencias reales de administradores y residentes que confían en nuestra plataforma
-      </p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8">
-      @for (testimonio of testimonios; track testimonio.nombre) {
-        <div class="bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300">
-          <div class="flex items-center mb-6">
-            <img [src]="testimonio.foto" [alt]="testimonio.nombre"
-                 class="w-12 h-12 rounded-full mr-4 object-cover">
-            <div>
-              <h4 class="font-bold text-gray-800">{{ testimonio.nombre }}</h4>
-              <p class="text-sm text-gray-600">{{ testimonio.cargo }}</p>
-              <p class="text-xs text-purple-600">{{ testimonio.conjunto }}</p>
-            </div>
-          </div>
-
-          <div class="flex mb-4">
-            @for (star of [1,2,3,4,5]; track star) {
-              <ng-icon name="tablerStar"
-                       size="16"
-                       class="text-yellow-400 fill-current"></ng-icon>
-            }
-          </div>
-
-          <p class="text-gray-600 italic leading-relaxed">
-            "{{ testimonio.testimonio }}"
+          <h3 class="text-xl font-bold text-white mb-4 group-hover:text-purple-200 transition-colors duration-300">
+            {{ caracteristica.title }}
+          </h3>
+          <p class="text-purple-100 leading-relaxed">
+            {{ caracteristica.description }}
           </p>
         </div>
       }
@@ -235,147 +242,192 @@
   </div>
 </section>
 
-<!-- Contact Section -->
-<section class="py-20 bg-gradient-to-r from-indigo-900 to-purple-800">
+<!-- Sección Marketplace Renovada -->
+<section class="py-24 bg-gradient-to-br from-white via-indigo-50/30 to-purple-50/30">
   <div class="container mx-auto px-6">
-    <div class="grid lg:grid-cols-2 gap-12 items-center">
-      <div class="text-white">
-        <h2 class="text-4xl md:text-5xl font-bold mb-6">
-          ¿Listo para Transformar tu Gestión?
-        </h2>
-        <p class="text-xl text-indigo-100 mb-8">
-          Únete a los miles de conjuntos residenciales que ya confían en nuestra plataforma integral.
-        </p>
-
-        <div class="space-y-6">
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-              <ng-icon name="tablerPhone" size="20" class="text-white"></ng-icon>
-            </div>
-            <div>
-              <div class="font-semibold">Teléfono</div>
-              <div class="text-indigo-200">{{ contactoInfo.telefono }}</div>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-              <ng-icon name="tablerMail" size="20" class="text-white"></ng-icon>
-            </div>
-            <div>
-              <div class="font-semibold">Email</div>
-              <div class="text-indigo-200">{{ contactoInfo.email }}</div>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-              <ng-icon name="tablerClock" size="20" class="text-white"></ng-icon>
-            </div>
-            <div>
-              <div class="font-semibold">Horarios</div>
-              <div class="text-indigo-200">{{ contactoInfo.horario }}</div>
-            </div>
-          </div>
-
-          <div class="flex items-center gap-4">
-            <div class="w-12 h-12 bg-purple-500 rounded-lg flex items-center justify-center">
-              <ng-icon name="tablerHeadphones" size="20" class="text-white"></ng-icon>
-            </div>
-            <div>
-              <div class="font-semibold">Soporte</div>
-              <div class="text-indigo-200">{{ contactoInfo.soporte }}</div>
-            </div>
-          </div>
-        </div>
+    <!-- Encabezado -->
+    <div class="text-center mb-20">
+      <div class="inline-block px-6 py-3 bg-gradient-to-r from-indigo-100 to-purple-100 rounded-full mb-6">
+        <span class="text-indigo-700 font-semibold">🏠 Marketplace</span>
       </div>
+      <h2 class="text-5xl md:text-6xl font-black text-gray-900 mb-6">
+        <span class="bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
+          Tu Hogar Ideal
+        </span>
+        <span class="block text-gray-900">Te Está Esperando</span>
+      </h2>
+      <p class="text-xl text-gray-600 max-w-4xl mx-auto leading-relaxed">
+        Conectamos sueños con realidades. Descubre, explora y encuentra el apartamento perfecto con nuestra tecnología de búsqueda inteligente
+      </p>
+    </div>
 
-      <div class="bg-white rounded-3xl p-8 shadow-2xl">
-        <h3 class="text-2xl font-bold text-gray-800 mb-6">Solicita una Demo</h3>
-        <form class="space-y-6">
-          <div class="grid md:grid-cols-2 gap-4">
-            <input type="text" placeholder="Nombre"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
-            <input type="text" placeholder="Apellido"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
+    <!-- Características del marketplace -->
+    <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+      @for (caracteristica of caracteristicasMarketplace; track caracteristica.title) {
+        <div class="group text-center bg-white rounded-2xl p-8 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 border border-indigo-100">
+          <!-- Icono -->
+          <div class="w-20 h-20 mx-auto mb-6 bg-gradient-to-br {{ caracteristica.colorFrom }} {{ caracteristica.colorTo }} rounded-2xl flex items-center justify-center group-hover:scale-110 transform transition-all duration-300">
+            <ng-icon [name]="caracteristica.icon" size="28" class="text-white"></ng-icon>
           </div>
-          <div>
-            <input type="email" placeholder="Correo electrónico"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
+
+          <h3 class="text-xl font-bold text-gray-900 mb-4 group-hover:text-indigo-700 transition-colors duration-300">
+            {{ caracteristica.title }}
+          </h3>
+          <p class="text-gray-600 leading-relaxed">
+            {{ caracteristica.description }}
+          </p>
+        </div>
+      }
+    </div>
+
+    <!-- CTA del marketplace -->
+    <div class="text-center">
+      <div class="inline-flex items-center gap-4">
+        <button class="group px-12 py-6 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-bold text-xl rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300">
+          <div class="flex items-center gap-4">
+            <ng-icon name="tablerSearch" size="24"></ng-icon>
+            <span>Buscar Apartamentos</span>
+            <ng-icon name="tablerSparkles" size="20" class="group-hover:rotate-12 transition-transform duration-300"></ng-icon>
           </div>
-          <div>
-            <input type="tel" placeholder="Teléfono"
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
-          </div>
-          <div>
-            <select class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all">
-              <option>Tipo de servicio</option>
-              <option>Sistema de Gestión</option>
-              <option>Marketplace Inmobiliario</option>
-              <option>Ambos servicios</option>
-            </select>
-          </div>
-          <div>
-            <textarea rows="4" placeholder="Cuéntanos sobre tu conjunto o necesidad"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent outline-none transition-all resize-none"></textarea>
-          </div>
-          <button type="submit"
-                  class="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 text-white font-semibold rounded-lg hover:from-purple-700 hover:to-blue-700 transform hover:scale-105 transition-all duration-300">
-            Solicitar Demo Gratuita
-          </button>
-        </form>
+        </button>
       </div>
     </div>
   </div>
 </section>
 
-<!-- Footer -->
-<footer class="bg-gray-900 text-white py-12">
-  <div class="container mx-auto px-6">
-    <div class="grid md:grid-cols-4 gap-8 mb-8">
-      <div>
-        <div class="w-16 h-16 mb-6 bg-gradient-to-r from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-          <ng-icon name="tablerBuilding" size="24" class="text-white"></ng-icon>
+<!-- Call to Action Final -->
+<section class="py-24 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700">
+  <div class="container mx-auto px-6 text-center">
+    <div class="max-w-4xl mx-auto">
+      <!-- Icono central -->
+      <div class="w-24 h-24 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center mx-auto mb-8">
+        <ng-icon name="tablerRocket" size="48" class="text-white"></ng-icon>
+      </div>
+
+      <h2 class="text-5xl md:text-6xl font-black text-white mb-8">
+        ¿Listo para la
+        <span class="bg-gradient-to-r from-yellow-300 to-orange-300 bg-clip-text text-transparent">
+          Transformación?
+        </span>
+      </h2>
+
+      <p class="text-2xl text-purple-100 mb-12 leading-relaxed">
+        Únete a miles de conjuntos residenciales que ya han evolucionado su gestión y experiencia comunitaria
+      </p>
+
+      <!-- Información de contacto mejorada -->
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <ng-icon name="tablerPhone" size="24" class="text-white"></ng-icon>
+          </div>
+          <div class="text-white font-semibold">{{ contactoInfo.telefono }}</div>
+          <div class="text-purple-200 text-sm">Llámanos</div>
         </div>
-        <h3 class="text-2xl font-bold mb-4">Gestión Residencial</h3>
-        <p class="text-gray-400">
-          La plataforma integral para la gestión de conjuntos residenciales y marketplace inmobiliario.
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <ng-icon name="tablerMail" size="24" class="text-white"></ng-icon>
+          </div>
+          <div class="text-white font-semibold">Escríbenos</div>
+          <div class="text-purple-200 text-sm">{{ contactoInfo.email }}</div>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <ng-icon name="tablerClock" size="24" class="text-white"></ng-icon>
+          </div>
+          <div class="text-white font-semibold">Horarios</div>
+          <div class="text-purple-200 text-sm">{{ contactoInfo.horario }}</div>
+        </div>
+
+        <div class="bg-white/10 backdrop-blur-md rounded-2xl p-6 text-center">
+          <div class="w-12 h-12 bg-white/20 rounded-xl flex items-center justify-center mx-auto mb-4">
+            <ng-icon name="tablerHeadphones" size="24" class="text-white"></ng-icon>
+          </div>
+          <div class="text-white font-semibold">Soporte</div>
+          <div class="text-purple-200 text-sm">{{ contactoInfo.soporte }}</div>
+        </div>
+      </div>
+
+      <!-- Botón de acción principal -->
+      <button
+        (click)="openLoginModal()"
+        class="group px-16 py-6 bg-white text-purple-700 font-black text-xl rounded-2xl shadow-2xl hover:shadow-3xl transform hover:scale-105 transition-all duration-300">
+        <div class="flex items-center gap-4">
+          <ng-icon name="tablerSparkles" size="24" class="group-hover:rotate-12 transition-transform duration-300"></ng-icon>
+          <span>Comenzar Ahora</span>
+          <ng-icon name="tablerArrowRight" size="24" class="group-hover:translate-x-2 transition-transform duration-300"></ng-icon>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer Modernizado -->
+<footer class="bg-gray-900 text-white py-16">
+  <div class="container mx-auto px-6">
+    <div class="grid md:grid-cols-4 gap-12 mb-12">
+      <!-- Branding -->
+      <div class="md:col-span-2">
+        <div class="flex items-center gap-4 mb-6">
+          <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center">
+            <ng-icon name="tablerBuilding" size="24" class="text-white"></ng-icon>
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold bg-gradient-to-r from-purple-400 to-indigo-400 bg-clip-text text-transparent">
+              Vecinos Conectados
+            </h3>
+            <p class="text-gray-400 text-sm">Transformando la gestión residencial</p>
+          </div>
+        </div>
+        <p class="text-gray-400 leading-relaxed max-w-md">
+          La plataforma más avanzada para conjuntos residenciales inteligentes. Conectamos comunidades y simplificamos la administración.
         </p>
       </div>
 
+      <!-- Enlaces -->
       <div>
-        <h4 class="text-lg font-semibold mb-4">Servicios</h4>
-        <ul class="space-y-2 text-gray-400">
-          <li>Sistema de Gestión</li>
-          <li>Marketplace Inmobiliario</li>
-          <li>Portal de Residentes</li>
-          <li>Asesoría Especializada</li>
+        <h4 class="text-lg font-semibold mb-6 text-purple-300">Servicios</h4>
+        <ul class="space-y-3 text-gray-400">
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Sistema de Gestión</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Marketplace Inmobiliario</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Portal de Residentes</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Asesoría Especializada</li>
         </ul>
       </div>
 
       <div>
-        <h4 class="text-lg font-semibold mb-4">Soporte</h4>
-        <ul class="space-y-2 text-gray-400">
-          <li>Centro de Ayuda</li>
-          <li>Documentación</li>
-          <li>Capacitación</li>
-          <li>Soporte Técnico</li>
-        </ul>
-      </div>
-
-      <div>
-        <h4 class="text-lg font-semibold mb-4">Contacto</h4>
-        <ul class="space-y-2 text-gray-400">
-          <li>{{ contactoInfo.telefono }}</li>
-          <li>{{ contactoInfo.email }}</li>
-          <li>{{ contactoInfo.horario }}</li>
+        <h4 class="text-lg font-semibold mb-6 text-indigo-300">Soporte</h4>
+        <ul class="space-y-3 text-gray-400">
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Centro de Ayuda</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Documentación</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Capacitación</li>
+          <li class="hover:text-white transition-colors duration-300 cursor-pointer">Soporte Técnico</li>
         </ul>
       </div>
     </div>
 
-    <div class="border-t border-gray-800 pt-8 text-center">
-      <div class="text-sm text-gray-500">
-        © 2024 Gestión Residencial. Todos los derechos reservados.
+    <!-- Línea divisoria -->
+    <div class="border-t border-gray-800 pt-8">
+      <div class="flex flex-col md:flex-row justify-between items-center">
+        <div class="text-gray-500 text-sm mb-4 md:mb-0">
+          © 2024 Vecinos Conectados. Todos los derechos reservados.
+        </div>
+        <div class="flex gap-6">
+          <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">
+            <ng-icon name="tablerBrandFacebook" size="20"></ng-icon>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-indigo-400 transition-colors duration-300">
+            <ng-icon name="tablerBrandTwitter" size="20"></ng-icon>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-purple-400 transition-colors duration-300">
+            <ng-icon name="tablerBrandInstagram" size="20"></ng-icon>
+          </a>
+          <a href="#" class="text-gray-400 hover:text-indigo-400 transition-colors duration-300">
+            <ng-icon name="tablerBrandLinkedin" size="20"></ng-icon>
+          </a>
+        </div>
       </div>
     </div>
   </div>

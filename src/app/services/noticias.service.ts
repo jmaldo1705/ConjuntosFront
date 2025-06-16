@@ -11,7 +11,7 @@ import { AuthService } from './auth.service';
   providedIn: 'root'
 })
 export class NoticiasService {
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = 'http://localhost:8080/api';
 
   // Configuraciones de ejemplo para múltiples conjuntos
   private configuracionesSistema: ConfiguracionSistema[] = [

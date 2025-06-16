@@ -1,12 +1,15 @@
-import { ApplicationConfig,
+
+import {
+  ApplicationConfig,
   provideBrowserGlobalErrorListeners,
-  provideZonelessChangeDetection,
-  importProvidersFrom } from '@angular/core';
+  importProvidersFrom,
+  provideZonelessChangeDetection
+} from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideHttpClient, withFetch } from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
-import { provideToastr } from 'ngx-toastr';
 import { ReactiveFormsModule } from '@angular/forms';
+import { provideToastr } from 'ngx-toastr';
 
 import { routes } from './app.routes';
 import { provideClientHydration, withEventReplay } from '@angular/platform-browser';
@@ -47,7 +50,16 @@ import {
   tablerHeadphones,
   tablerChevronDown,
   tablerLogin,
-  tablerPhone
+  tablerPhone,
+  tablerRocket,
+  tablerBuildingStore,
+  tablerNews,
+  tablerArrowRight,
+  tablerSparkles,
+  tablerBrandFacebook,
+  tablerBrandTwitter,
+  tablerBrandInstagram,
+  tablerBrandLinkedin
 } from '@ng-icons/tabler-icons';
 
 export const appConfig: ApplicationConfig = {
@@ -59,10 +71,19 @@ export const appConfig: ApplicationConfig = {
     provideClientHydration(withEventReplay()),
     provideAnimations(),
     provideToastr({
-      timeOut: 3000,
+      timeOut: 4000,
       positionClass: 'toast-top-right',
       preventDuplicates: true,
-      closeButton: true
+      progressBar: true,
+      closeButton: true,
+      enableHtml: true,
+      tapToDismiss: true,
+      maxOpened: 5,
+      autoDismiss: true,
+      newestOnTop: true,
+      toastClass: 'ngx-toastr',
+      titleClass: 'toast-title',
+      messageClass: 'toast-message'
     }),
     importProvidersFrom(ReactiveFormsModule),
     provideIcons({
@@ -100,7 +121,16 @@ export const appConfig: ApplicationConfig = {
       tablerHeadphones,
       tablerChevronDown,
       tablerLogin,
-      tablerPhone
+      tablerPhone,
+      tablerRocket,
+      tablerBuildingStore,
+      tablerNews,
+      tablerArrowRight,
+      tablerSparkles,
+      tablerBrandFacebook,
+      tablerBrandTwitter,
+      tablerBrandInstagram,
+      tablerBrandLinkedin
     })
   ]
 };

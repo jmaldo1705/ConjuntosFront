@@ -1,17 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {Component, OnInit, OnDestroy, PLATFORM_ID, Inject, ChangeDetectorRef} from '@angular/core';
 import {of, Subscription, timeout} from 'rxjs';
 import { LoginModalService } from './services/login-modal.service';
-import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
+import { Router, NavigationEnd, RouterOutlet, RouterModule } from '@angular/router';
+import {CommonModule, isPlatformBrowser} from '@angular/common';
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
-import {catchError, filter} from 'rxjs/operators';
+import {catchError, filter, finalize} from 'rxjs/operators';
 import { AuthService } from './services/auth.service';
 import { LoginRequest } from './models/auth.model';
-import { finalize } from 'rxjs/operators';
-import { ChangeDetectorRef } from '@angular/core';
-import {ToastrService} from 'ngx-toastr';
-
+import { ToastService } from './services/toast.service';
 
 @Component({
   selector: 'app-root',
@@ -32,14 +28,15 @@ export class App implements OnInit, OnDestroy {
   loginForm: FormGroup;
   isLoading = false;
   errorMessage = '';
-  private loginInProgress = false; // Flag adicional para prevenir doble click
+  private loginInProgress = false;
 
   constructor(
     private loginModalService: LoginModalService,
     private router: Router,
     private authService: AuthService,
     private cdr: ChangeDetectorRef,
-    private toastr: ToastrService // Agregado para notificaciones
+    private toastService: ToastService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.loginForm = new FormGroup({
       username: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -128,7 +125,7 @@ export class App implements OnInit, OnDestroy {
       console.log('🚨 SAFETY TIMEOUT: Reseteando estados después de 20 segundos');
       this.resetLoginState();
       this.errorMessage = 'La solicitud tardó demasiado tiempo. Por favor, inténtalo de nuevo.';
-      this.toastr.error('Timeout de conexión', 'Error');
+      this.toastService.error('Timeout de conexión');
     }, 20000);
 
     this.authService.login(loginRequest)
@@ -165,7 +162,7 @@ export class App implements OnInit, OnDestroy {
           }
 
           this.errorMessage = errorMsg;
-          this.toastr.error(errorMsg, 'Error de Login');
+          this.toastService.error(errorMsg);
 
           // Retornar un observable vacío para completar el flujo
           return of(null);
@@ -182,16 +179,34 @@ export class App implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           if (response) {
-            console.log('✅ Login exitoso');
-            this.toastr.success('¡Bienvenido a Vecinos Conectados!', 'Login Exitoso');
+            console.log('✅ Login exitoso:', response);
 
-            // Cerrar modal y navegar
-            this.closeLoginModal();
+            // ⭐ AQUÍ ESTÁ EL CAMBIO PRINCIPAL ⭐
+            // Verificar que tenemos token y usuario en la respuesta
+            if (response.token && response.user) {
+              // Guardar datos del usuario en localStorage
+              this.authService.saveUserData(response.token, response.user);
 
-            // Pequeño delay para mejor UX
-            setTimeout(() => {
-              this.router.navigate(['/welcome']);
-            }, 300);
+              // Verificar que se guardó correctamente
+              console.log('🔑 Token guardado:', this.authService.getToken());
+              console.log('👤 Usuario logueado:', this.authService.isLoggedIn());
+              console.log('📊 Datos usuario:', this.authService.getCurrentUserSync());
+
+              this.toastService.success('¡Bienvenido a Vecinos Conectados!');
+
+              // Cerrar modal
+              this.closeLoginModal();
+
+              // Navegar después de guardar los datos
+              setTimeout(() => {
+                this.router.navigate(['/welcome']);
+              }, 300);
+            } else {
+              // Si no tenemos los datos necesarios en la respuesta
+              console.error('❌ Respuesta incompleta del servidor:', response);
+              this.errorMessage = 'Error en la respuesta del servidor. Datos incompletos.';
+              this.toastService.error('Error en la respuesta del servidor');
+            }
           }
         },
         error: (error) => {
@@ -200,7 +215,7 @@ export class App implements OnInit, OnDestroy {
           this.isLoading = false;
           this.loginInProgress = false;
           this.errorMessage = 'Error inesperado. Por favor, inténtalo de nuevo.';
-          this.toastr.error(this.errorMessage, 'Error');
+          this.toastService.error(this.errorMessage);
           this.cdr.detectChanges();
         }
       });
