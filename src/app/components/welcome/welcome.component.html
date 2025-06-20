@@ -1,390 +1,254 @@
-<!-- Dashboard Layout Principal - Versión Moderna -->
-<div class="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+<!-- Layout con Sidebar -->
+<div class="min-h-screen bg-gray-50">
 
-  <!-- Header Superior Moderno -->
-  <header class="bg-white/80 backdrop-blur-xl border-b border-white/20 shadow-lg sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
+  <!-- Sidebar Component -->
+  <app-sidebar></app-sidebar>
 
-        <!-- Logo y Título -->
-        <div class="flex items-center space-x-4">
-          <div class="w-10 h-10 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center shadow-lg">
-            <span class="text-white text-xl font-bold">🏢</span>
-          </div>
-          <div class="hidden sm:block">
-            <h1 class="text-xl font-bold bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent">
-              Mi Conjunto
-            </h1>
-            <p class="text-xs text-gray-500">Panel de Control</p>
-          </div>
-        </div>
+  <!-- Main Content Area - Responsive mejorado -->
+  <div class="transition-all duration-300 lg:ml-20"
+       [class.lg:ml-80]="sidebarExpanded()">
 
-        <!-- Botón menú móvil -->
+    <!-- Header Component con botón de menú móvil -->
+    <div class="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">
+      <div class="flex items-center justify-between h-16 px-4 lg:px-6">
+
+        <!-- Botón de menú móvil -->
         <button
-          (click)="toggleSidebar()"
-          class="lg:hidden p-2 text-gray-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all duration-200">
+          class="lg:hidden p-2 text-gray-500 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-colors duration-200"
+          (click)="toggleMobileSidebar()">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
           </svg>
         </button>
 
-        <!-- Información de tiempo y menú de usuario -->
+        <!-- Título de la Página Actual -->
         <div class="flex items-center space-x-4">
-          <!-- Hora actual -->
-          <div class="hidden md:block text-right">
-            <p class="text-sm font-semibold text-gray-900">{{ getCurrentTime() }}</p>
-            <p class="text-xs text-gray-500">{{ getCurrentDate() }}</p>
-          </div>
-
-          <!-- Menú de Usuario Desplegable -->
-          <div class="relative" *ngIf="user">
-            <button
-              (click)="toggleUserMenu()"
-              class="flex items-center space-x-3 p-2 hover:bg-gray-50 rounded-xl transition-all duration-200 group">
-
-              <!-- Avatar del usuario -->
-              <div class="w-10 h-10 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold shadow-lg group-hover:shadow-xl transition-shadow duration-200">
-                {{ getUserInitials() }}
-              </div>
-
-              <!-- Información del usuario (oculta en móvil) -->
-              <div class="hidden lg:block text-left">
-                <p class="text-sm font-medium text-gray-900">{{ getUserFirstName() }}</p>
-                <p class="text-xs text-gray-500" *ngIf="getUserApartmentNumber()">Apto {{ getUserApartmentNumber() }}</p>
-              </div>
-
-              <!-- Icono de dropdown -->
-              <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 transition-colors duration-200"
-                   [class.rotate-180]="showUserMenu"
-                   fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </button>
-
-            <!-- Menú desplegable del usuario -->
-            <div
-              *ngIf="showUserMenu"
-              class="absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border border-gray-100 py-2 z-50 animate-fadeIn"
-              (click)="$event.stopPropagation()">
-
-              <!-- Información del usuario en el menú -->
-              <div class="px-4 py-3 border-b border-gray-100">
-                <div class="flex items-center space-x-3">
-                  <div class="w-12 h-12 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                    {{ getUserInitials() }}
-                  </div>
-                  <div>
-                    <p class="font-semibold text-gray-900">{{ getUserFullName() }}</p>
-                    <p class="text-sm text-gray-500">{{ getUserEmail() }}</p>
-                    <p class="text-xs text-indigo-600" *ngIf="getUserApartmentNumber()">
-                      🏠 Apartamento {{ getUserApartmentNumber() }}
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Opciones del menú -->
-              <div class="py-2">
-                <button
-                  (click)="openUserSettings()"
-                  class="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200">
-                  <span class="text-lg">⚙️</span>
-                  <div class="text-left">
-                    <p class="font-medium">Configuración</p>
-                    <p class="text-xs text-gray-500">Ajustes de tu cuenta</p>
-                  </div>
-                </button>
-
-                <button
-                  (click)="openProfile()"
-                  class="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-indigo-50 hover:text-indigo-700 transition-colors duration-200">
-                  <span class="text-lg">👤</span>
-                  <div class="text-left">
-                    <p class="font-medium">Mi Perfil</p>
-                    <p class="text-xs text-gray-500">Ver y editar información</p>
-                  </div>
-                </button>
-
-                <div class="border-t border-gray-100 my-2"></div>
-
-                <button
-                  (click)="logout()"
-                  class="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 transition-colors duration-200">
-                  <span class="text-lg">🚪</span>
-                  <div class="text-left">
-                    <p class="font-medium">Cerrar Sesión</p>
-                    <p class="text-xs text-red-500">Salir del sistema</p>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </header>
-
-  <!-- Sidebar móvil (overlay) -->
-  <div class="lg:hidden" *ngIf="showSidebar">
-    <div class="fixed inset-0 z-40 flex">
-      <div class="fixed inset-0 bg-black/20 backdrop-blur-sm" (click)="toggleSidebar()"></div>
-      <div class="relative flex flex-col flex-1 w-full max-w-xs bg-white shadow-2xl">
-        <div class="absolute top-0 right-0 -mr-12 pt-2">
-          <button
-            (click)="toggleSidebar()"
-            class="ml-1 flex items-center justify-center h-10 w-10 rounded-full bg-white/10 backdrop-blur-sm text-white hover:bg-white/20 transition-colors duration-200">
-            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          <h1 class="text-xl font-semibold text-gray-900">Dashboard</h1>
+          <div class="hidden lg:block h-6 w-px bg-gray-200"></div>
+          <div class="hidden lg:flex items-center space-x-2 text-sm text-gray-500">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
             </svg>
-          </button>
+            <span>{{ getCurrentDate() }}</span>
+          </div>
         </div>
 
-        <!-- Contenido del sidebar móvil -->
-        <div class="flex flex-col h-full pt-5 pb-4 bg-gradient-to-b from-indigo-600 to-purple-700">
-          <div class="flex items-center flex-shrink-0 px-4">
-            <div class="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center mr-3">
-              <span class="text-white text-lg">🏢</span>
+        <!-- Right Section -->
+        <div class="flex items-center space-x-2 lg:space-x-4">
+
+          <!-- Búsqueda Rápida - Oculta en móviles -->
+          <div class="relative hidden md:block">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <svg class="h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+              </svg>
             </div>
-            <h1 class="text-lg font-bold text-white">Mi Conjunto</h1>
+            <input
+              type="text"
+              placeholder="Buscar..."
+              class="w-48 lg:w-64 pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-gray-50 hover:bg-white transition-colors duration-200">
           </div>
 
-          <nav class="mt-8 flex-1 px-4 space-y-2">
-            <div
-              *ngFor="let item of quickActionsMenuItems"
-              class="group px-4 py-3 text-indigo-100 hover:bg-white/10 hover:text-white rounded-xl cursor-pointer transition-all duration-300 flex items-center space-x-3"
-              (click)="onMenuItemClick(item); toggleSidebar()"
-              [class.opacity-50]="item.isDisabled">
-              <span class="text-lg">{{ item.icon || '📱' }}</span>
-              <span class="font-medium">{{ item.title }}</span>
+          <!-- Notificaciones -->
+          <div class="relative">
+            <button class="relative p-2 text-gray-500 hover:text-indigo-600 hover:bg-gray-50 rounded-lg transition-colors duration-200">
+              <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+              </svg>
+              <!-- Badge -->
+              <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center">3</div>
+            </button>
+          </div>
+
+          <!-- User Avatar -->
+          <div class="flex items-center space-x-3">
+            <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-lg flex items-center justify-center text-white font-semibold text-sm">
+              JD
             </div>
-          </nav>
+          </div>
         </div>
       </div>
     </div>
+
+    <!-- Main Content -->
+    <main class="overflow-auto">
+
+      <!-- Welcome Hero - Versión compacta -->
+      <section class="bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700 text-white py-8 lg:py-12">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6">
+          <div class="text-center space-y-4 lg:space-y-6">
+            <div class="inline-flex items-center bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-4 py-2 text-white text-sm font-medium">
+              <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z"/>
+              </svg>
+              Bienvenido de vuelta
+            </div>
+
+            <h1 class="text-3xl lg:text-5xl font-black text-white leading-tight">
+              ¡Hola Juan! 👋
+              <span class="block text-xl lg:text-3xl font-medium text-purple-100 mt-2">
+                Tu hogar te está esperando
+              </span>
+            </h1>
+
+            <!-- Stats compactas -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4 max-w-4xl mx-auto mt-6 lg:mt-8">
+              @for (stat of quickStats(); track stat.id) {
+                <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-3 lg:p-4 text-center">
+                  <div class="text-xl lg:text-2xl font-bold text-white">{{ stat.value }}</div>
+                  <div class="text-xs text-purple-100 font-medium">{{ stat.label }}</div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Dashboard Content -->
+      <section class="py-6 lg:py-8">
+        <div class="max-w-7xl mx-auto px-4 lg:px-6">
+
+          <!-- Acciones Rápidas -->
+          <div class="mb-6 lg:mb-8">
+            <h2 class="text-xl lg:text-2xl font-bold text-gray-900 mb-4 lg:mb-6">Servicios Principales</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+              @for (action of quickActions(); track action.id) {
+                <div class="group bg-white rounded-2xl shadow-sm hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden border border-gray-100 cursor-pointer"
+                     (click)="navigateToAction(action.route)">
+
+                  <div class="relative h-20 lg:h-24 bg-gradient-to-br from-indigo-50 to-purple-50 overflow-hidden">
+                    <div class="absolute inset-0 opacity-20">
+                      <div class="absolute top-2 right-2 w-10 lg:w-12 h-10 lg:h-12 bg-gradient-to-br from-indigo-400 to-purple-500 transform rotate-45 rounded-lg"></div>
+                    </div>
+
+                    @if (action.badge) {
+                      <div class="absolute top-2 lg:top-3 right-2 lg:right-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        {{action.badge}}
+                      </div>
+                    }
+
+                    <div class="relative z-10 flex items-center justify-center h-full">
+                      <div class="text-2xl lg:text-3xl group-hover:scale-110 transition-transform duration-300">
+                        {{action.icon}}
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="p-3 lg:p-4">
+                    <h3 class="text-base lg:text-lg font-semibold text-gray-900 mb-1 lg:mb-2 group-hover:text-indigo-600 transition-colors duration-300">
+                      {{action.title}}
+                    </h3>
+                    <p class="text-gray-600 text-sm mb-2 lg:mb-3">{{action.description}}</p>
+                    <div class="flex items-center text-indigo-600 font-medium group-hover:translate-x-1 transition-transform duration-300">
+                      <span class="mr-2 text-sm">Acceder</span>
+                      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Información Reciente -->
+          <div class="grid lg:grid-cols-2 gap-6 lg:gap-8">
+
+            <!-- Panel de Reservas -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div class="bg-gradient-to-r from-indigo-600 to-purple-600 p-4 lg:p-6 text-white">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 lg:w-10 h-8 lg:h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      📅
+                    </div>
+                    <div>
+                      <h3 class="text-base lg:text-lg font-semibold">Mis Reservas</h3>
+                      <p class="text-indigo-100 text-sm">Próximas actividades</p>
+                    </div>
+                  </div>
+                  <div class="w-3 h-3 bg-emerald-400 rounded-full animate-pulse"></div>
+                </div>
+              </div>
+
+              <div class="p-4 lg:p-6">
+                <div class="space-y-3 mb-4 lg:mb-6">
+                  @for (reservation of recentReservations(); track reservation.id) {
+                    <div class="flex items-center space-x-3 p-3 lg:p-4 bg-gray-50 rounded-xl">
+                      <div [class]="'w-3 h-3 rounded-full ' +
+                                   (reservation.status === 'confirmed' ? 'bg-emerald-500' :
+                                    reservation.status === 'pending' ? 'bg-amber-500' : 'bg-red-500')"></div>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-gray-900 font-medium text-sm lg:text-base truncate">{{reservation.area}}</div>
+                        <div class="text-gray-500 text-xs lg:text-sm">{{reservation.date}} • {{reservation.time}}</div>
+                      </div>
+                      <div [class]="'px-2 lg:px-3 py-1 rounded-lg text-xs font-medium ' +
+                                   (reservation.status === 'confirmed' ? 'bg-emerald-100 text-emerald-700' :
+                                    reservation.status === 'pending' ? 'bg-amber-100 text-amber-700' : 'bg-red-100 text-red-700')">
+                        {{getStatusLabel(reservation.status)}}
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <button class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-medium py-3 px-4 lg:px-6 rounded-xl transition-all duration-300 text-sm lg:text-base"
+                        (click)="navigateToAction('/dashboard/reservas')">
+                  Ver Todas las Reservas
+                </button>
+              </div>
+            </div>
+
+            <!-- Panel de Notificaciones -->
+            <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+              <div class="bg-gradient-to-r from-amber-500 to-orange-500 p-4 lg:p-6 text-white">
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-3">
+                    <div class="w-8 lg:w-10 h-8 lg:h-10 bg-white/20 backdrop-blur-sm rounded-xl flex items-center justify-center">
+                      🔔
+                    </div>
+                    <div>
+                      <h3 class="text-base lg:text-lg font-semibold">Notificaciones</h3>
+                      <p class="text-orange-100 text-sm">Mensajes importantes</p>
+                    </div>
+                  </div>
+                  <div class="bg-white text-orange-500 text-sm font-bold px-2 lg:px-3 py-1 rounded-lg">
+                    {{notifications().length}}
+                  </div>
+                </div>
+              </div>
+
+              <div class="p-4 lg:p-6">
+                <div class="space-y-3 mb-4 lg:mb-6">
+                  @for (notification of notifications().slice(0, 3); track notification.id) {
+                    <div class="flex items-start space-x-3 p-3 lg:p-4 bg-gray-50 rounded-xl">
+                      <div class="text-base lg:text-lg flex-shrink-0">{{notification.icon}}</div>
+                      <div class="flex-1 min-w-0">
+                        <div class="text-gray-900 font-medium text-sm">{{notification.title}}</div>
+                        <div class="text-gray-600 text-xs mt-1 line-clamp-2">{{notification.message}}</div>
+                        <div class="flex items-center justify-between mt-2">
+                          <span class="text-gray-400 text-xs">{{notification.time}}</span>
+                          <span [class]="'px-2 py-1 rounded-md text-xs font-medium ' +
+                                       (notification.type === 'warning' ? 'bg-amber-100 text-amber-700' :
+                                        notification.type === 'info' ? 'bg-blue-100 text-blue-700' :
+                                        notification.type === 'error' ? 'bg-red-100 text-red-700' : 'bg-emerald-100 text-emerald-700')">
+                            {{notification.type | titlecase}}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <button class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-medium py-3 px-4 lg:px-6 rounded-xl transition-all duration-300 text-sm lg:text-base"
+                        (click)="navigateToAction('/dashboard/notificaciones')">
+                  Ver Todas las Notificaciones
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   </div>
-
-  <!-- Contenido Principal -->
-  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-    <!-- Loading State -->
-    <div *ngIf="isLoading" class="flex items-center justify-center min-h-96">
-      <div class="flex flex-col items-center space-y-4">
-        <div class="custom-spinner"></div>
-        <p class="text-gray-600 font-medium">Cargando información...</p>
-      </div>
-    </div>
-
-    <!-- Error State -->
-    <div *ngIf="errorMessage && !isLoading" class="max-w-md mx-auto bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
-      <div class="text-red-500 text-6xl mb-4">⚠️</div>
-      <h3 class="text-lg font-semibold text-red-800 mb-2">Error al cargar</h3>
-      <p class="text-red-600 mb-6">{{ errorMessage }}</p>
-      <button
-        (click)="loadUserData()"
-        class="bg-red-600 hover:bg-red-700 text-white px-6 py-3 rounded-xl font-medium transition-colors duration-200">
-        Reintentar
-      </button>
-    </div>
-
-    <!-- Dashboard Content -->
-    <div *ngIf="!isLoading && !errorMessage" class="space-y-8">
-
-      <!-- Hero Section -->
-      <section class="relative overflow-hidden bg-gradient-to-br from-indigo-600 via-purple-600 to-indigo-800 rounded-3xl p-8 lg:p-12 text-white shadow-2xl">
-        <div class="absolute inset-0 bg-black/10"></div>
-        <div class="relative z-10">
-          <div class="flex flex-col lg:flex-row items-start justify-between">
-            <div class="flex-1 mb-6 lg:mb-0">
-              <div class="flex items-center space-x-2 mb-4">
-                <span class="text-4xl">👋</span>
-                <div class="h-8 w-1 bg-white/30 rounded-full"></div>
-                <span class="text-indigo-200 font-medium">Bienvenido de vuelta</span>
-              </div>
-              <h1 class="text-4xl lg:text-5xl font-bold mb-4">
-                ¡Hola, {{ getUserFirstName() }}!
-              </h1>
-              <p class="text-xl text-indigo-100 mb-6 max-w-2xl">
-                Tu hogar digital te está esperando. Gestiona todo lo que necesitas de tu conjunto residencial desde aquí.
-              </p>
-              <div class="flex items-center space-x-6 text-indigo-200">
-                <div class="flex items-center space-x-2" *ngIf="getUserApartmentNumber()">
-                  <span>🏠</span>
-                  <span class="font-medium">Apartamento {{ getUserApartmentNumber() }}</span>
-                </div>
-                <div class="flex items-center space-x-2">
-                  <span>📅</span>
-                  <span>{{ getCurrentDate() }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Estadísticas rápidas -->
-            <div class="flex space-x-4 lg:space-x-6">
-              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
-                <div class="text-2xl font-bold">{{ getTotalActionsCount() }}</div>
-                <div class="text-xs text-indigo-200 mt-1">Servicios</div>
-              </div>
-              <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-4 text-center border border-white/20">
-                <div class="text-2xl font-bold">{{ getNewNotificationsCount() }}</div>
-                <div class="text-xs text-indigo-200 mt-1">Alertas</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Elementos decorativos -->
-        <div class="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-white/5 to-transparent rounded-full -mr-48 -mt-48"></div>
-        <div class="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-purple-500/10 to-transparent rounded-full -ml-32 -mb-32"></div>
-      </section>
-
-      <!-- Acciones Rápidas -->
-      <section>
-        <div class="flex items-center justify-between mb-6">
-          <div>
-            <h2 class="text-2xl font-bold text-gray-900">Acciones Rápidas</h2>
-            <p class="text-gray-600">Gestiona los servicios más importantes de tu conjunto</p>
-          </div>
-          <div class="hidden sm:flex items-center space-x-2 text-sm text-gray-500">
-            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-            <span>{{ getTotalActionsCount() }} servicios disponibles</span>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          <div
-            *ngFor="let item of quickActionsMenuItems"
-            class="group relative bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl border border-gray-100 hover:border-indigo-200 cursor-pointer transition-all duration-300 hover:-translate-y-2"
-            (click)="onMenuItemClick(item)"
-            [class.opacity-50]="item.isDisabled"
-            [class.cursor-not-allowed]="item.isDisabled">
-
-            <!-- Badge de notificación -->
-            <div *ngIf="item.notification && item.notification > 0"
-                 class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white text-xs font-bold rounded-full flex items-center justify-center z-10">
-              {{ item.notification }}
-            </div>
-
-            <!-- Badge NEW -->
-            <div *ngIf="item.isNew"
-                 class="absolute -top-2 -right-2 bg-gradient-to-r from-green-400 to-green-500 text-white text-xs font-bold px-2 py-1 rounded-full z-10">
-              NEW
-            </div>
-
-            <div class="flex flex-col items-center text-center space-y-4">
-              <div class="w-16 h-16 bg-gradient-to-br from-indigo-500 to-purple-600 rounded-2xl flex items-center justify-center text-2xl shadow-lg group-hover:shadow-xl group-hover:scale-110 transition-all duration-300">
-                {{ item.icon || '📱' }}
-              </div>
-              <div>
-                <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200">
-                  {{ item.title }}
-                </h3>
-                <p class="text-sm text-gray-500 mt-1" *ngIf="item.description">
-                  {{ item.description }}
-                </p>
-              </div>
-            </div>
-
-            <!-- Hover effect -->
-            <div class="absolute inset-0 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          </div>
-        </div>
-      </section>
-
-      <!-- Anuncios y Eventos -->
-      <div class="grid lg:grid-cols-2 gap-8">
-
-        <!-- Anuncios Importantes -->
-        <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-indigo-500 to-purple-600 px-6 py-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <span class="text-2xl">📢</span>
-                <div>
-                  <h2 class="text-xl font-bold text-white">Anuncios</h2>
-                  <p class="text-indigo-100 text-sm">Mantente informado</p>
-                </div>
-              </div>
-              <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full font-medium">
-                {{ getTotalAnunciosCount() }} activos
-              </span>
-            </div>
-          </div>
-
-          <div class="p-6 space-y-4 max-h-96 overflow-y-auto">
-            <div *ngFor="let anuncio of anuncios"
-                 class="group p-4 rounded-xl border border-gray-200 hover:border-indigo-300 hover:shadow-md transition-all duration-300 cursor-pointer">
-              <div class="flex space-x-4">
-                <img [src]="anuncio.imagen" [alt]="anuncio.titulo"
-                     class="w-16 h-16 object-cover rounded-xl flex-shrink-0">
-                <div class="flex-1 min-w-0">
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs bg-indigo-100 text-indigo-800 px-2 py-1 rounded-full font-medium">
-                      {{ anuncio.categoria }}
-                    </span>
-                    <span class="text-xs text-gray-500">{{ anuncio.fecha }}</span>
-                  </div>
-                  <h3 class="font-semibold text-gray-900 group-hover:text-indigo-600 transition-colors duration-200 mb-1">
-                    {{ anuncio.titulo }}
-                  </h3>
-                  <p class="text-sm text-gray-600 line-clamp-2">{{ anuncio.resumen }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- Próximos Eventos -->
-        <section class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-          <div class="bg-gradient-to-r from-purple-500 to-indigo-600 px-6 py-4">
-            <div class="flex items-center justify-between">
-              <div class="flex items-center space-x-3">
-                <span class="text-2xl">📅</span>
-                <div>
-                  <h2 class="text-xl font-bold text-white">Eventos</h2>
-                  <p class="text-purple-100 text-sm">Actividades programadas</p>
-                </div>
-              </div>
-              <span class="bg-white/20 text-white text-sm px-3 py-1 rounded-full font-medium">
-                {{ getTotalEventosCount() }} próximos
-              </span>
-            </div>
-          </div>
-
-          <div class="p-6 space-y-4 max-h-96 overflow-y-auto">
-            <div *ngFor="let evento of eventos"
-                 class="group p-4 rounded-xl border border-gray-200 hover:border-purple-300 hover:shadow-md transition-all duration-300 cursor-pointer">
-              <div class="flex space-x-4">
-                <div class="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-indigo-600 rounded-xl flex items-center justify-center text-white font-bold shadow-lg">
-                  {{ getEventDay(evento.fecha) }}
-                </div>
-                <div class="flex-1 min-w-0">
-                  <h3 class="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors duration-200 mb-2">
-                    {{ evento.titulo }}
-                  </h3>
-                  <div class="flex flex-wrap gap-2 text-xs text-gray-600 mb-2">
-                    <span class="flex items-center space-x-1">
-                      <span>📅</span>
-                      <span>{{ evento.fecha }}</span>
-                    </span>
-                    <span class="flex items-center space-x-1">
-                      <span>⏰</span>
-                      <span>{{ evento.hora }}</span>
-                    </span>
-                  </div>
-                  <p class="text-sm text-gray-600 line-clamp-2">{{ evento.descripcion }}</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-      </div>
-
-    </div>
-  </main>
-</div>
-
-<!-- Overlay para cerrar menú de usuario al hacer click fuera -->
-<div *ngIf="showUserMenu"
-     class="fixed inset-0 z-40"
-     (click)="closeUserMenu()">
 </div>

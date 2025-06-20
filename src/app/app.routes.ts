@@ -8,12 +8,12 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { ContactComponent } from './components/contact/contact.component';
-import {ApartamentosComponent} from './components/apartamentos/apartamentos.component';
-import {ManualConvivenciaComponent} from './components/manual-convivencia/manual-convivencia.component';
-import {EmprendimientosComponent} from './components/emprendimientos/emprendimientos.component';
+import { ApartamentosComponent } from './components/apartamentos/apartamentos.component';
+import { ManualConvivenciaComponent } from './components/manual-convivencia/manual-convivencia.component';
+import { EmprendimientosComponent } from './components/emprendimientos/emprendimientos.component';
 
 export const routes: Routes = [
-  { path: '', component: IndexComponent, pathMatch: 'full' },
+  { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: IndexComponent },
   { path: 'apartamentos', component: ApartamentosComponent },
   { path: 'normas-propiedad', component: NormasPropiedadComponent },
@@ -22,11 +22,10 @@ export const routes: Routes = [
   { path: 'noticias', component: NoticiasComponent },
   { path: 'administracion', component: AdministracionComponent },
   { path: 'pagos', component: PagosComponent },
-  { path: 'reservas', component: ReservasComponent },
   { path: 'eventos', component: EventosComponent },
-  { path: 'welcome', component: WelcomeComponent },
   { path: 'contacto', component: ContactComponent },
-  // Redirect all other routes to the home page
-  { path: '**', redirectTo: '' }
-];
+  { path: 'welcome', component: WelcomeComponent },
+  { path: 'reservas', component: ReservasComponent },
 
+  { path: '**', redirectTo: '/home' }
+];

@@ -48,6 +48,23 @@ export class ReservasComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
+  // Getters para el template
+  get diasDisponibles(): number {
+    return this.diasMes.filter(d => !d.vacio).length;
+  }
+
+  get reservasActivas(): number {
+    return this.reservas.filter(r => r.estado !== 'cancelada').length;
+  }
+
+  get totalZonas(): number {
+    return this.zonasComunes.length;
+  }
+
+  get reservasHoy(): number {
+    return this.reservasDelDiaSeleccionado.length;
+  }
+
   private cargarDatos(): void {
     this.zonasComunes = this.reservasService.getZonasComunes();
 
@@ -179,18 +196,18 @@ export class ReservasComponent implements OnInit, OnDestroy {
   getDiaClasses(dia: DiaCalendario): string {
     if (dia.vacio) return 'invisible';
 
-    let clases = 'relative cursor-pointer transition-all duration-300 rounded-xl p-3 ';
+    let clases = 'calendar-day ';
 
     if (dia.seleccionado) {
-      clases += 'bg-gradient-to-br from-indigo-500 to-purple-600 text-white shadow-lg transform scale-105 ';
+      clases += 'selected ';
     } else if (dia.esHoy) {
-      clases += 'bg-gradient-to-br from-blue-100 to-indigo-100 text-indigo-700 border-2 border-indigo-300 ';
+      clases += 'today ';
     } else if (dia.esPasado) {
-      clases += 'bg-gray-50 text-gray-400 ';
+      clases += 'past ';
     } else if (dia.reservas.length > 0) {
-      clases += 'bg-gradient-to-br from-green-50 to-emerald-50 text-green-700 border border-green-200 hover:shadow-md ';
+      clases += 'with-reservas ';
     } else {
-      clases += 'bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:shadow-md ';
+      clases += 'available ';
     }
 
     return clases;
