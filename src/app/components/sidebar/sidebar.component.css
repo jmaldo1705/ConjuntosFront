@@ -1,0 +1,50 @@
+/* Sidebar styling */
+.sidebar-collapsed {
+  width: 6rem !important; /* w-20 */
+  overflow: visible !important;
+}
+
+/* Ensure content is centered when sidebar is collapsed */
+.sidebar-collapsed .sidebar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Improve icon visibility in collapsed state */
+.sidebar-collapsed .nav-icon {
+  margin: 0 auto;
+}
+
+/* Fix home icon alignment with shadow */
+.sidebar-collapsed button[data-title="Dashboard"] .nav-icon svg {
+  stroke-width: 2.2;
+}
+
+/* Add tooltip-like behavior for collapsed sidebar items */
+.sidebar-collapsed .nav-item {
+  position: relative;
+}
+
+/* Make notification badges smaller in collapsed state */
+.sidebar-collapsed .nav-item .absolute {
+  width: 1rem;
+  height: 1rem;
+  font-size: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  top: -2px;
+  right: -2px;
+  border: 1px solid white;
+}
+
+/* Improve logout button visibility in collapsed state */
+.sidebar-collapsed button[data-title="Cerrar Sesión"] svg {
+  color: #ef4444;
+  stroke-width: 2;
+}
+
+.elegant-pattern-bg {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3e%3cdefs%3e%3cpattern id='elegantPattern' width='60' height='60' patternUnits='userSpaceOnUse'%3e%3ccircle cx='30' cy='30' r='8' fill='none' stroke='%23e0e7ff' stroke-width='0.5' opacity='0.7'/%3e%3ccircle cx='30' cy='30' r='4' fill='%23eef2ff' opacity='0.4'/%3e%3cline x1='0' y1='30' x2='60' y2='30' stroke='%23e0e7ff' stroke-width='0.3' opacity='0.3'/%3e%3cline x1='30' y1='0' x2='30' y2='60' stroke='%23e0e7ff' stroke-width='0.3' opacity='0.3'/%3e%3cline x1='0' y1='0' x2='60' y2='60' stroke='%23c7d2fe' stroke-width='0.2' opacity='0.2'/%3e%3cline x1='60' y1='0' x2='0' y2='60' stroke='%23c7d2fe' stroke-width='0.2' opacity='0.2'/%3e%3ccircle cx='0' cy='0' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3ccircle cx='60' cy='0' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3ccircle cx='0' cy='60' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3ccircle cx='60' cy='60' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23elegantPattern)'/%3e%3c/svg%3e");
+}

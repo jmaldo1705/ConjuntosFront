@@ -5,8 +5,8 @@
   <app-sidebar></app-sidebar>
 
   <!-- Main Content Area - Responsive mejorado -->
-  <div class="transition-all duration-300 lg:ml-20"
-       [class.lg:ml-80]="sidebarExpanded()">
+  <div class="sidebar-transition"
+       [class]="sidebarExpanded() ? 'content-with-expanded-sidebar' : 'content-with-collapsed-sidebar'">
 
     <!-- Header Component con botón de menú móvil -->
     <div class="bg-white border-b border-gray-200 sticky top-0 z-20 shadow-sm">

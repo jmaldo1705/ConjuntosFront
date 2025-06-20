@@ -59,7 +59,14 @@ import {
   tablerBrandFacebook,
   tablerBrandTwitter,
   tablerBrandInstagram,
-  tablerBrandLinkedin
+  tablerBrandLinkedin,
+  tablerChevronLeft,
+  tablerChevronRight,
+  tablerPlus,
+  tablerHelpCircle,
+  tablerSettings,
+  tablerLogout
+
 } from '@ng-icons/tabler-icons';
 
 export const appConfig: ApplicationConfig = {
@@ -130,7 +137,13 @@ export const appConfig: ApplicationConfig = {
       tablerBrandFacebook,
       tablerBrandTwitter,
       tablerBrandInstagram,
-      tablerBrandLinkedin
+      tablerBrandLinkedin,
+      tablerChevronLeft,
+      tablerChevronRight,
+      tablerPlus,
+      tablerHelpCircle,
+      tablerSettings,
+      tablerLogout
     })
   ]
 };

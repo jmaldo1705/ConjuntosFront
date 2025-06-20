@@ -2,6 +2,7 @@ import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { SidebarService } from '../../services/sidebar.service';
 
 interface QuickStat {
   id: number;
@@ -50,8 +51,10 @@ interface Notification {
 })
 export class WelcomeComponent {
   private router = inject(Router);
+  private sidebarService = inject(SidebarService);
 
-  sidebarExpanded = signal(true);
+  // Use the shared service for sidebar state
+  sidebarExpanded = this.sidebarService.sidebarExpanded;
 
   quickStats = signal<QuickStat[]>([
     {
@@ -217,6 +220,6 @@ export class WelcomeComponent {
   }
 
   toggleMobileSidebar(): void {
-    this.sidebarExpanded.set(!this.sidebarExpanded());
+    this.sidebarService.toggleSidebar();
   }
 }

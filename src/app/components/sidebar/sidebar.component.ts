@@ -1,7 +1,8 @@
-
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { SidebarService } from '../../services/sidebar.service';
+import { NgIconComponent } from '@ng-icons/core';
 
 interface NavItem {
   id: string;
@@ -24,26 +25,27 @@ interface QuickAction {
 @Component({
   selector: 'app-sidebar',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, NgIconComponent],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
 export class SidebarComponent {
 
-  sidebarExpanded = signal(true);
+  // Use the shared service for sidebar state
+  sidebarExpanded;
 
   navItems = signal<NavItem[]>([
     {
       id: 'dashboard',
       label: 'Dashboard',
-      icon: 'home',
+      icon: 'tablerHome',
       route: '/dashboard/welcome',
       isActive: true
     },
     {
       id: 'reservas',
       label: 'Reservas',
-      icon: 'calendar',
+      icon: 'tablerCalendar',
       route: '/dashboard/reservas',
       isActive: false,
       badge: '3'
@@ -51,14 +53,14 @@ export class SidebarComponent {
     {
       id: 'pagos',
       label: 'Pagos',
-      icon: 'credit-card',
+      icon: 'tablerCreditCard',
       route: '/dashboard/pagos',
       isActive: false
     },
     {
       id: 'eventos',
       label: 'Eventos',
-      icon: 'star',
+      icon: 'tablerStar',
       route: '/dashboard/eventos',
       isActive: false,
       badge: '2'
@@ -66,21 +68,21 @@ export class SidebarComponent {
     {
       id: 'noticias',
       label: 'Noticias',
-      icon: 'newspaper',
+      icon: 'tablerNews',
       route: '/dashboard/noticias',
       isActive: false
     },
     {
       id: 'pqrs',
       label: 'PQRS',
-      icon: 'file-text',
+      icon: 'tablerFileText',
       route: '/dashboard/pqrs',
       isActive: false
     },
     {
       id: 'configuracion',
       label: 'Configuración',
-      icon: 'settings',
+      icon: 'tablerSettings',
       route: '/dashboard/configuracion',
       isActive: false
     }
@@ -90,36 +92,38 @@ export class SidebarComponent {
     {
       id: 'nueva-reserva',
       title: 'Nueva Reserva',
-      icon: 'plus',
+      icon: 'tablerPlus',
       color: 'blue',
       route: '/dashboard/reservas/nueva'
     },
     {
       id: 'pagar',
       title: 'Pagar Ahora',
-      icon: 'credit-card',
+      icon: 'tablerCreditCard',
       color: 'emerald',
       route: '/dashboard/pagos/nuevo'
     },
     {
       id: 'soporte',
       title: 'Soporte',
-      icon: 'help-circle',
+      icon: 'tablerHelpCircle',
       color: 'purple',
       route: '/dashboard/soporte'
     }
   ]);
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private sidebarService: SidebarService) {
+    this.sidebarExpanded = this.sidebarService.sidebarExpanded;
+  }
 
   toggleSidebar(): void {
-    this.sidebarExpanded.set(!this.sidebarExpanded());
+    this.sidebarService.toggleSidebar();
   }
 
   navigateToItem(item: NavItem): void {
     // Actualizar estado activo
-    this.navItems.update(items =>
-      items.map(navItem => ({
+    this.navItems.update((items: NavItem[]) =>
+      items.map((navItem: NavItem) => ({
         ...navItem,
         isActive: navItem.id === item.id
       }))
