@@ -1,20 +1,34 @@
 
-import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID, OnDestroy } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subscription, interval } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { User, RegisterRequest, RegisterResponse, LoginRequest, LoginResponse } from '../models/auth.model';
+import { Router } from '@angular/router';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   private apiUrl = 'http://localhost:8080/api';
+  private tokenCheckInterval: Subscription | null = null;
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private toastService: ToastService
+  ) {
+    // Iniciar verificación de token si el usuario ya está logueado
+    if (this.isLoggedIn()) {
+      this.startTokenExpirationCheck();
+    }
+  }
+
+  ngOnDestroy(): void {
+    this.stopTokenExpirationCheck();
+  }
 
   // Método para verificar si estamos en el navegador
   private isBrowser(): boolean {
@@ -111,10 +125,94 @@ export class AuthService {
     return this.http.get<User>(`${this.apiUrl}/users/me`);
   }
 
+  // Decodificar token JWT
+  private decodeToken(token: string): any {
+    try {
+      // Dividir el token en sus partes (header, payload, signature)
+      const parts = token.split('.');
+      if (parts.length !== 3) {
+        return null;
+      }
+
+      // Decodificar la parte del payload (segunda parte)
+      const payload = parts[1];
+      const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(
+        atob(base64)
+          .split('')
+          .map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+          .join('')
+      );
+
+      return JSON.parse(jsonPayload);
+    } catch (error) {
+      console.error('Error decodificando token:', error);
+      return null;
+    }
+  }
+
+  // Verificar si el token ha expirado
+  private isTokenExpired(token: string): boolean {
+    const decoded = this.decodeToken(token);
+    if (!decoded || !decoded.exp) {
+      return true; // Si no se puede decodificar o no tiene fecha de expiración, considerarlo expirado
+    }
+
+    // La fecha de expiración en el token está en segundos desde epoch
+    const expirationDate = new Date(decoded.exp * 1000);
+    const currentDate = new Date();
+
+    return expirationDate < currentDate;
+  }
+
+  // Iniciar verificación periódica de expiración del token
+  private startTokenExpirationCheck(): void {
+    // Detener cualquier verificación existente primero
+    this.stopTokenExpirationCheck();
+
+    if (this.isBrowser()) {
+      // Verificar cada minuto si el token ha expirado
+      this.tokenCheckInterval = interval(60000).subscribe(() => {
+        const token = this.getFromStorage('token');
+        if (token && this.isTokenExpired(token)) {
+          console.log('Token expirado detectado en verificación periódica');
+          this.logout();
+        }
+      });
+    }
+  }
+
+  // Detener verificación periódica de expiración del token
+  private stopTokenExpirationCheck(): void {
+    if (this.tokenCheckInterval) {
+      this.tokenCheckInterval.unsubscribe();
+      this.tokenCheckInterval = null;
+    }
+  }
+
   // Verificar si el usuario está logueado
   isLoggedIn(): boolean {
-    const token = this.getFromStorage('token');
-    return !!token;
+    try {
+      const token = this.getFromStorage('token');
+      const user = this.getFromStorage('currentUser');
+
+      // Verificar que tanto el token como el usuario existan
+      if (!token || !user) {
+        return false;
+      }
+
+      // Verificar que el token no esté expirado
+      if (this.isTokenExpired(token)) {
+        console.log('Token expirado, cerrando sesión');
+        this.logout();
+        return false;
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Error verificando estado de login:', error);
+      return false;
+    }
   }
 
   // Método de login con tipado correcto
@@ -142,12 +240,84 @@ export class AuthService {
     }
 
     this.setToStorage('currentUser', JSON.stringify(user));
+
+    // Iniciar verificación periódica de expiración del token
+    this.startTokenExpirationCheck();
   }
 
   // Método de logout
   logout(): void {
-    this.removeFromStorage('token');
-    this.removeFromStorage('currentUser');
+    try {
+      // Detener la verificación periódica de expiración del token
+      this.stopTokenExpirationCheck();
+
+      this.removeFromStorage('token');
+      this.removeFromStorage('currentUser');
+
+      // Limpiar cualquier otro dato de sesión que pueda existir
+      if (this.isBrowser()) {
+        // Limpiar localStorage
+        const keysToRemove = [];
+        for (let i = 0; i < localStorage.length; i++) {
+          const key = localStorage.key(i);
+          if (key && (
+            key.startsWith('auth_') ||
+            key.startsWith('user_') ||
+            key === 'token' ||
+            key === 'currentUser' ||
+            key.includes('token') ||
+            key.includes('user')
+          )) {
+            keysToRemove.push(key);
+          }
+        }
+        keysToRemove.forEach(key => localStorage.removeItem(key));
+
+        // Limpiar sessionStorage también
+        const sessionKeysToRemove = [];
+        for (let i = 0; i < sessionStorage.length; i++) {
+          const key = sessionStorage.key(i);
+          if (key && (
+            key.startsWith('auth_') ||
+            key.startsWith('user_') ||
+            key === 'token' ||
+            key === 'currentUser' ||
+            key.includes('token') ||
+            key.includes('user')
+          )) {
+            sessionKeysToRemove.push(key);
+          }
+        }
+        sessionKeysToRemove.forEach(key => sessionStorage.removeItem(key));
+
+        // Limpiar cookies relacionadas con la autenticación
+        document.cookie.split(';').forEach(cookie => {
+          const [name] = cookie.trim().split('=');
+          if (name && (
+            name.startsWith('auth_') ||
+            name.startsWith('user_') ||
+            name === 'token' ||
+            name === 'currentUser' ||
+            name.includes('token') ||
+            name.includes('user')
+          )) {
+            document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;`;
+          }
+        });
+      }
+
+      // Mostrar mensaje de éxito
+      this.toastService.authSuccess('Se ha cerrado sesión exitosamente');
+
+      // Redirigir al usuario a la página de inicio
+      this.router.navigate(['/']);
+    } catch (error) {
+      console.error('Error durante logout:', error);
+      // Mostrar mensaje de error
+      this.toastService.error('Hubo un problema al cerrar sesión', 'Error');
+      // Intentar redirigir incluso si hay un error
+      this.router.navigate(['/']);
+    }
   }
 
   // Obtener token

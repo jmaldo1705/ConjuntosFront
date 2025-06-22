@@ -2,6 +2,7 @@ import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
+import { AuthService } from '../../services/auth.service';
 import { NgIconComponent } from '@ng-icons/core';
 
 interface NavItem {
@@ -112,7 +113,11 @@ export class SidebarComponent {
     }
   ]);
 
-  constructor(private router: Router, private sidebarService: SidebarService) {
+  constructor(
+    private router: Router,
+    private sidebarService: SidebarService,
+    private authService: AuthService
+  ) {
     this.sidebarExpanded = this.sidebarService.sidebarExpanded;
   }
 
@@ -150,6 +155,7 @@ export class SidebarComponent {
 
   logout(): void {
     console.log('Cerrando sesión...');
-    this.router.navigate(['/login']);
+    this.authService.logout();
+    // No need to navigate as the auth service already handles navigation
   }
 }
