@@ -8,6 +8,7 @@
 /* Main content styles */
 main {
   flex: 1;
+  padding-top: 64px; /* Add padding to account for the fixed header */
 }
 
 /* Responsive design for main content */
