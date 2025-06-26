@@ -1,9 +1,11 @@
-import { Component, OnInit, OnDestroy, PLATFORM_ID, Inject } from '@angular/core';
-import { Router, NavigationEnd, RouterOutlet, RouterModule } from '@angular/router';
+import { Component } from '@angular/core';
+import { RouterOutlet, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { filter } from 'rxjs/operators';
 import { MenuGuestComponent } from './components/menu-guest/menu-guest.component';
 import { HeaderComponent } from './components/header/header.component';
+import {SidebarComponent} from './components/sidebar/sidebar.component';
+import {AuthService} from './services/auth.service';
+import {SidebarService} from './services/sidebar.service';
 
 @Component({
   selector: 'app-root',
@@ -13,32 +15,19 @@ import { HeaderComponent } from './components/header/header.component';
     RouterModule,
     CommonModule,
     MenuGuestComponent,
-    HeaderComponent
+    HeaderComponent,
+    SidebarComponent
   ],
   styleUrl: './app.css',
   standalone: true
 })
-export class App implements OnInit, OnDestroy {
-  isWelcomePage = false;
-
+export class App {
   constructor(
-    private readonly router: Router ) {}
+    public authService: AuthService,
+    private readonly sidebarService: SidebarService
+  ) {}
 
-  ngOnInit() {
-    this.checkCurrentRoute();
-
-    this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
-      .subscribe((event: any) => {
-        this.isWelcomePage = event.url === '/welcome';
-      });
-  }
-
-  ngOnDestroy(): void {
-    // Cleanup if needed
-  }
-
-  private checkCurrentRoute() {
-    this.isWelcomePage = this.router.url === '/welcome';
+  get sidebarExpanded() {
+    return this.sidebarService.sidebarExpanded;
   }
 }

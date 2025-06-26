@@ -1,20 +1,30 @@
-/* App container styles */
-.app-container {
-  display: flex;
-  flex-direction: column;
+.sidebar-transition {
+  transition: margin-left 0.3s ease-in-out;
+  padding-top: 4rem; /* Espacio para el header cuando hay sesión */
+}
+
+.content-with-expanded-sidebar {
+  margin-left: 20rem; /* 320px - ancho del sidebar expandido (80 en Tailwind) */
+}
+
+.content-with-collapsed-sidebar {
+  margin-left: 4rem; /* 64px - ancho del sidebar colapsado */
+}
+
+/* Responsive: En móviles no hay margen lateral */
+@media (max-width: 768px) {
+  .content-with-expanded-sidebar,
+  .content-with-collapsed-sidebar {
+    margin-left: 0;
+  }
+}
+
+/* Ajustes específicos para el layout sin sesión */
+.app-container main {
   min-height: 100vh;
 }
 
-/* Main content styles */
-main {
-  flex: 1;
-  padding-top: 64px; /* Add padding to account for the fixed header */
-}
-
-/* Responsive design for main content */
-@media (max-width: 768px) {
-  main {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
+/* Cuando no hay sesión, el main no necesita padding-top */
+.app-container > main {
+  padding-top: 0;
 }

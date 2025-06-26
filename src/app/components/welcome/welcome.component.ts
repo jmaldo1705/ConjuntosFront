@@ -1,7 +1,6 @@
 import { Component, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { SidebarComponent } from '../sidebar/sidebar.component';
 import { SidebarService } from '../../services/sidebar.service';
 
 interface QuickStat {
@@ -45,13 +44,13 @@ interface Notification {
 @Component({
   selector: 'app-welcome',
   standalone: true,
-  imports: [CommonModule, SidebarComponent],
+  imports: [CommonModule],
   templateUrl: './welcome.component.html',
   styleUrl: './welcome.component.css'
 })
 export class WelcomeComponent {
-  private router = inject(Router);
-  private sidebarService = inject(SidebarService);
+  private readonly router = inject(Router);
+  private readonly sidebarService = inject(SidebarService);
 
   // Use the shared service for sidebar state
   sidebarExpanded = this.sidebarService.sidebarExpanded;

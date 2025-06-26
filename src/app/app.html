@@ -1,14 +1,32 @@
 <div class="app-container">
-  <!-- Header - Always visible at the top -->
-  <app-header></app-header>
+  <!-- Si hay sesión iniciada, mostrar el layout con sidebar y header -->
+  @if (authService.isLoggedIn()) {
+    <!-- Layout con Sidebar y Header -->
+    <div class="min-h-screen bg-gray-50">
+      <!-- Header Component - Solo cuando hay sesión -->
+      <app-header></app-header>
 
-  <!-- Navigation Menu - Only show when NOT on welcome page -->
-  @if (!isWelcomePage) {
+      <!-- Sidebar Component -->
+      <app-sidebar></app-sidebar>
+
+      <!-- Main Content Area -->
+      <div class="sidebar-transition"
+           [class]="sidebarExpanded() ? 'content-with-expanded-sidebar' : 'content-with-collapsed-sidebar'">
+
+        <!-- Main Content -->
+        <main class="overflow-auto">
+          <router-outlet></router-outlet>
+        </main>
+      </div>
+    </div>
+  } @else {
+    <!-- Si no hay sesión, mostrar solo el menú para invitados -->
+      <!-- Navigation Menu - Solo cuando no hay sesión -->
     <app-menu-guest></app-menu-guest>
-  }
 
-  <!-- Main Content -->
-  <main>
-    <router-outlet></router-outlet>
-  </main>
+    <!-- Main Content -->
+    <main>
+      <router-outlet></router-outlet>
+    </main>
+  }
 </div>
