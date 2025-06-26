@@ -1,4 +1,7 @@
 <div class="app-container">
+  <!-- Header - Always visible at the top -->
+  <app-header></app-header>
+
   <!-- Navigation Menu - Only show when NOT on welcome page -->
   @if (!isWelcomePage) {
     <app-menu-guest></app-menu-guest>

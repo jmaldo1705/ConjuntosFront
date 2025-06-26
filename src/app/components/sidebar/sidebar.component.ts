@@ -40,14 +40,14 @@ export class SidebarComponent {
       id: 'dashboard',
       label: 'Dashboard',
       icon: 'tablerHome',
-      route: '/dashboard/welcome',
+      route: '/welcome',
       isActive: true
     },
     {
       id: 'reservas',
       label: 'Reservas',
       icon: 'tablerCalendar',
-      route: '/dashboard/reservas',
+      route: '/reservas',
       isActive: false,
       badge: '3'
     },
@@ -55,14 +55,14 @@ export class SidebarComponent {
       id: 'pagos',
       label: 'Pagos',
       icon: 'tablerCreditCard',
-      route: '/dashboard/pagos',
+      route: '/pagos',
       isActive: false
     },
     {
       id: 'eventos',
       label: 'Eventos',
       icon: 'tablerStar',
-      route: '/dashboard/eventos',
+      route: '/eventos',
       isActive: false,
       badge: '2'
     },
@@ -70,21 +70,21 @@ export class SidebarComponent {
       id: 'noticias',
       label: 'Noticias',
       icon: 'tablerNews',
-      route: '/dashboard/noticias',
+      route: '/noticias',
       isActive: false
     },
     {
       id: 'pqrs',
       label: 'PQRS',
       icon: 'tablerFileText',
-      route: '/dashboard/pqrs',
+      route: '/pqrs',
       isActive: false
     },
     {
       id: 'configuracion',
       label: 'Configuración',
       icon: 'tablerSettings',
-      route: '/dashboard/configuracion',
+      route: '/configuracion',
       isActive: false
     }
   ]);

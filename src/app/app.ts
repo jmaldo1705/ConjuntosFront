@@ -3,6 +3,7 @@ import { Router, NavigationEnd, RouterOutlet, RouterModule } from '@angular/rout
 import { CommonModule } from '@angular/common';
 import { filter } from 'rxjs/operators';
 import { MenuGuestComponent } from './components/menu-guest/menu-guest.component';
+import { HeaderComponent } from './components/header/header.component';
 
 @Component({
   selector: 'app-root',
@@ -11,7 +12,8 @@ import { MenuGuestComponent } from './components/menu-guest/menu-guest.component
     RouterOutlet,
     RouterModule,
     CommonModule,
-    MenuGuestComponent
+    MenuGuestComponent,
+    HeaderComponent
   ],
   styleUrl: './app.css',
   standalone: true
