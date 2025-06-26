@@ -1,307 +1,569 @@
-  <div class="reservas-container geometric-pattern">
-    <!-- Loading State -->
-    @if (cargando) {
-      <div class="flex flex-col items-center justify-center py-20 space-y-4">
-        <div class="custom-spinner"></div>
-        <p class="text-gray-600 font-medium">Cargando información de reservas...</p>
-      </div>
-    }
 
-    <!-- Main Content -->
-    @if (!cargando) {
-      <!-- Stats Cards -->
-      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex items-center space-x-4">
-          <div class="text-3xl">📅</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold text-gray-900">{{ diasDisponibles }}</div>
-            <div class="text-sm text-gray-600 font-medium">Días Disponibles</div>
-          </div>
+<div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
+  <!-- Header -->
+  <div class="bg-white shadow-lg border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900 mb-2">📅 Gestión de Reservas</h1>
+          <p class="text-gray-600">Administra las reservas de zonas comunes del conjunto</p>
         </div>
 
-        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex items-center space-x-4">
-          <div class="text-3xl">🎯</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold text-gray-900">{{ reservasActivas }}</div>
-            <div class="text-sm text-gray-600 font-medium">Reservas Activas</div>
-          </div>
-        </div>
-
-        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex items-center space-x-4">
-          <div class="text-3xl">🏢</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold text-gray-900">{{ totalZonas }}</div>
-            <div class="text-sm text-gray-600 font-medium">Zonas Disponibles</div>
-          </div>
-        </div>
-
-        <div class="stat-card bg-white rounded-2xl p-6 shadow-lg border border-gray-100 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex items-center space-x-4">
-          <div class="text-3xl">⭐</div>
-          <div class="flex-1">
-            <div class="text-2xl font-bold text-gray-900">{{ reservasHoy }}</div>
-            <div class="text-sm text-gray-600 font-medium">Reservas Hoy</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Grid -->
-      <div class="grid grid-cols-1 xl:grid-cols-3 gap-8">
-
-        <!-- Calendar Section -->
-        <div class="xl:col-span-2">
-          <div class="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100">
-
-            <!-- Calendar Header -->
-            <div class="calendar-header flex items-center justify-between p-8">
-              <div>
-                <h2 class="text-2xl font-bold mb-1">📅 {{ mesActualNombre }}</h2>
-                <p class="text-indigo-100 text-sm">Selecciona un día para ver las reservas</p>
-              </div>
-              <div class="flex space-x-2">
-                <button
-                  class="p-3 rounded-xl bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300 hover:scale-110"
-                  (click)="cambiarMes(-1)"
-                  aria-label="Mes anterior"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                  </svg>
-                </button>
-                <button
-                  class="p-3 rounded-xl bg-white bg-opacity-20 hover:bg-opacity-30 transition-all duration-300 hover:scale-110"
-                  (click)="cambiarMes(1)"
-                  aria-label="Mes siguiente"
-                >
-                  <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                  </svg>
-                </button>
-              </div>
-            </div>
-
-            <!-- Days Header -->
-            <div class="grid grid-cols-7 bg-gray-50 border-b border-gray-200">
-              @for (dia of diasSemana; track dia) {
-                <div class="p-4 text-center font-semibold text-gray-600 text-sm uppercase tracking-wider">{{ dia }}</div>
-              }
-            </div>
-
-            <!-- Calendar Grid -->
-            <div class="grid grid-cols-7 gap-1 p-6 bg-gray-50">
-              @for (dia of diasMes; track trackByDia($index, dia)) {
-                <div
-                  [class]="getDiaClasses(dia)"
-                  class="relative transition-all duration-300 cursor-pointer rounded-2xl p-4 min-h-20"
-                  (click)="seleccionarDia(dia)"
-                  [attr.aria-label]="dia.vacio ? '' : 'Día ' + dia.numero"
-                >
-                  <div class="flex flex-col items-center space-y-2">
-                    <span class="font-bold text-lg">{{ dia.numero }}</span>
-
-                    @if (dia.reservas.length > 0) {
-                      <div class="flex flex-wrap gap-1 max-w-full">
-                        @for (reserva of dia.reservas.slice(0, 2); track reserva.zona) {
-                          <div
-                            class="w-2 h-2 rounded-full"
-                            [style.background]="'linear-gradient(135deg, ' + reserva.color.replace('from-', '#').replace('to-', '#') + ')'"
-                            [title]="reserva.zona + ' - ' + reserva.horario"
-                          ></div>
-                        }
-                        @if (dia.reservas.length > 2) {
-                          <div class="text-xs bg-gray-600 text-white rounded-full px-1 min-w-4 h-4 flex items-center justify-center">+{{ dia.reservas.length - 2 }}</div>
-                        }
-                      </div>
-                    }
-
-                    @if (dia.esHoy && !dia.seleccionado) {
-                      <div class="w-1 h-1 bg-blue-500 rounded-full"></div>
-                    }
-                  </div>
-                </div>
-              }
-            </div>
-
-            <!-- Calendar Legend -->
-            <div class="flex flex-wrap items-center justify-center gap-6 p-6 bg-gray-50 border-t border-gray-200 text-sm">
-              <div class="flex items-center space-x-2">
-                <div class="legend-color w-4 h-4 rounded bg-gradient-to-r from-indigo-500 to-purple-600"></div>
-                <span>Seleccionado</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="legend-color w-4 h-4 rounded bg-gradient-to-r from-blue-100 to-indigo-100 ring-2 ring-indigo-300"></div>
-                <span>Hoy</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="legend-color w-4 h-4 rounded bg-gradient-to-r from-green-50 to-emerald-50 ring-1 ring-green-200"></div>
-                <span>Con reservas</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <div class="legend-color w-4 h-4 rounded bg-gray-50"></div>
-                <span>Pasado</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Sidebar Section -->
-        <div class="xl:col-span-1 space-y-6">
-
-          <!-- Day Info Card -->
-          <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            <div class="day-info-header p-6">
-              <h3 class="text-xl font-bold">{{ diaSeleccionado ? '📍 ' + fechaSeleccionadaFormateada : '📅 Selecciona un Día' }}</h3>
-            </div>
-
-            <div class="p-6">
-              @if (!diaSeleccionado) {
-                <div class="text-center py-8">
-                  <div class="text-6xl mb-4">📅</div>
-                  <p class="text-gray-700 font-semibold mb-2">Selecciona un día</p>
-                  <p class="text-sm text-gray-500">Haz clic en cualquier día del calendario</p>
-                </div>
-              } @else if (reservasDelDiaSeleccionado.length === 0) {
-                <div class="text-center py-8">
-                  <div class="text-6xl mb-4">🌟</div>
-                  <p class="text-gray-700 font-semibold mb-2">Sin reservas</p>
-                  <p class="text-sm text-gray-500">¡Perfecto para hacer una nueva reserva!</p>
-                </div>
-              } @else {
-                <div class="space-y-4">
-                  <div class="flex items-center justify-between mb-4">
-                    <span class="font-semibold text-gray-800">{{ reservasDelDiaSeleccionado.length }} reserva(s)</span>
-                  </div>
-
-                  @for (reserva of reservasDelDiaSeleccionado; track trackByReserva($index, reserva)) {
-                    <div
-                      class="flex items-start space-x-4 p-4 border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-300 cursor-pointer hover:border-indigo-300"
-                      (click)="verDetalleReserva(reserva)"
-                    >
-                      <div class="w-12 h-12 rounded-xl flex items-center justify-center text-white text-xl font-bold shadow-lg" [style.background]="'linear-gradient(135deg, ' + getZonaColor(reserva.zonaId) + ')'">
-                        {{ getZonaIcon(reserva.zonaId) }}
-                      </div>
-
-                      <div class="flex-1 min-w-0">
-                        <div class="flex items-center justify-between mb-2">
-                          <h4 class="font-semibold text-gray-800 truncate">{{ reserva.zona }}</h4>
-                          <span class="px-2 py-1 text-xs font-medium rounded-full" [class]="'status-' + reserva.estado">
-                            {{ reserva.estado | titlecase }}
-                          </span>
-                        </div>
-
-                        <p class="text-sm text-gray-600 mb-1">{{ reserva.horario }}</p>
-                        <p class="text-sm text-gray-500 mb-3">👤 {{ reserva.usuario }}</p>
-
-                        <div class="flex items-center justify-between">
-                          <span class="text-lg font-bold text-indigo-600">${{ reserva.costoTotal | number:'1.0-0' }}</span>
-                          <span class="text-xs text-gray-400 transition-colors">→</span>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
-              }
-            </div>
-          </div>
-
-          <!-- Zones Summary -->
-          <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
-            <div class="zones-header flex items-center justify-between p-6">
-              <h3 class="text-xl font-bold">🏢 Zonas Comunes</h3>
-              <span class="text-emerald-100 text-sm">{{ zonasComunes.length }} disponibles</span>
-            </div>
-
-            <div class="p-6 space-y-3">
-              @for (zona of zonasComunes.slice(0, 6); track zona.id) {
-                <div class="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors">
-                  <div class="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm" [style.background]="'linear-gradient(135deg, ' + zona.color + ')'">
-                    {{ zona.icono }}
-                  </div>
-                  <div class="flex-1 min-w-0">
-                    <span class="block font-medium text-gray-800 truncate">{{ zona.nombre }}</span>
-                    <span class="block text-xs text-gray-500">{{ zona.capacidad }} personas</span>
-                  </div>
-                  <div class="w-2 h-2 rounded-full" [class]="zona.disponible ? 'bg-green-400' : 'bg-red-400'"></div>
-                </div>
-              }
-            </div>
-          </div>
-        </div>
-      </div>
-    }
-
-    <!-- Modal de detalle -->
-    @if (mostrarDetalleReserva && reservaSeleccionada) {
-      <div class="modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" (click)="cerrarDetalleReserva()">
-        <div class="modal-container bg-white rounded-2xl shadow-2xl max-w-lg w-full max-h-[90vh] overflow-hidden" (click)="$event.stopPropagation()">
-
-          <!-- Modal Header -->
-          <div class="p-6 text-white relative" [style.background]="'linear-gradient(135deg, ' + getZonaColor(reservaSeleccionadaSegura.zonaId) + ')'">
-            <div class="flex items-center space-x-4">
-              <div class="w-12 h-12 bg-white bg-opacity-20 rounded-xl flex items-center justify-center text-2xl">{{ getZonaIcon(reservaSeleccionadaSegura.zonaId) }}</div>
-              <div>
-                <h3 class="text-xl font-bold">{{ reservaSeleccionadaSegura.zona }}</h3>
-                <p class="opacity-90">Detalle de Reserva</p>
-              </div>
-            </div>
-            <button class="absolute top-6 right-6 text-white bg-white bg-opacity-20 rounded-xl p-2 hover:bg-opacity-30 transition-all" (click)="cerrarDetalleReserva()">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-              </svg>
+        <!-- Selector de Vista -->
+        <div class="flex items-center gap-4">
+          <div class="bg-gray-100 rounded-2xl p-1 flex space-x-1">
+            <button
+              class="px-4 py-2 rounded-xl font-medium transition-all duration-200"
+              [ngClass]="{
+                'bg-white shadow-md text-purple-600': modoVista === 'month',
+                'text-gray-600 hover:text-purple-600': modoVista !== 'month'
+              }"
+              (click)="cambiarVista('month')"
+            >
+              📅 Mes
+            </button>
+            <button
+              class="px-4 py-2 rounded-xl font-medium transition-all duration-200"
+              [ngClass]="{
+                'bg-white shadow-md text-purple-600': modoVista === 'list',
+                'text-gray-600 hover:text-purple-600': modoVista !== 'list'
+              }"
+              (click)="cambiarVista('list')"
+            >
+              📋 Lista
             </button>
           </div>
 
-          <!-- Modal Content -->
-          <div class="p-6">
-            <div class="grid grid-cols-2 gap-6">
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-500">Fecha</label>
-                <span class="block text-lg font-semibold text-gray-800">{{ reservaSeleccionadaSegura.fecha | date:'dd/MM/yyyy' }}</span>
-              </div>
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-500">Estado</label>
-                <span class="block text-lg font-semibold text-gray-800">
-                  <span class="inline-block px-3 py-1 text-sm font-medium rounded-full" [class]="'status-' + reservaSeleccionadaSegura.estado">
-                    {{ reservaSeleccionadaSegura.estado | titlecase }}
-                  </span>
+          <button
+            class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+            (click)="abrirModalNuevaReserva()"
+          >
+            ✨ Nueva Reserva
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Reservas -->
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Total Reservas</p>
+            <p class="text-3xl font-bold text-gray-900">{{ totalReservas }}</p>
+          </div>
+          <div class="bg-blue-100 p-3 rounded-xl">
+            <span class="text-2xl">📊</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reservas Activas -->
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Confirmadas</p>
+            <p class="text-3xl font-bold text-green-600">{{ reservasActivas }}</p>
+          </div>
+          <div class="bg-green-100 p-3 rounded-xl">
+            <span class="text-2xl">✅</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Reservas Pendientes -->
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Pendientes</p>
+            <p class="text-3xl font-bold text-yellow-600">{{ reservasPendientes }}</p>
+          </div>
+          <div class="bg-yellow-100 p-3 rounded-xl">
+            <span class="text-2xl">⏳</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ingresos del Mes -->
+      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-600">Ingresos Mes</p>
+            <p class="text-2xl font-bold text-purple-600">{{ formatearPrecio(ingresosMes) }}</p>
+          </div>
+          <div class="bg-purple-100 p-3 rounded-xl">
+            <span class="text-2xl">💰</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spinner de carga -->
+    @if (cargando) {
+      <div class="flex justify-center items-center py-20">
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600"></div>
+      </div>
+    }
+
+    <!-- Vista Calendario -->
+    @if (!cargando && modoVista === 'month') {
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+        <!-- Header del Calendario -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6">
+          <div class="flex items-center justify-between">
+            <button
+              (click)="mesAnterior()"
+              class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+            >
+              <span class="text-xl">←</span>
+            </button>
+
+            <div class="text-center">
+              <h2 class="text-2xl font-bold">{{ mesAnio }}</h2>
+            </div>
+
+            <div class="flex gap-2">
+              <button
+                (click)="irAHoy()"
+                class="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200 text-sm font-medium"
+              >
+                Hoy
+              </button>
+              <button
+                (click)="mesSiguiente()"
+                class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+              >
+                <span class="text-xl">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Días de la semana -->
+        <div class="grid grid-cols-7 bg-gray-50 border-b">
+          @for (dia of diasSemana; track dia) {
+            <div class="p-4 text-center font-medium text-gray-700 border-r border-gray-200 last:border-r-0">
+              {{ dia }}
+            </div>
+          }
+        </div>
+
+        <!-- Días del calendario -->
+        <div class="grid grid-cols-7">
+          @for (dia of diasCalendario; track trackByDia($index, dia)) {
+            <div
+              class="min-h-[120px] border-r border-b border-gray-200 last:border-r-0 p-2 cursor-pointer transition-colors duration-200"
+              [ngClass]="{
+                'bg-gray-50': dia.esOtroMes,
+                'bg-blue-50 border-blue-200': dia.esHoy && !dia.esOtroMes,
+                'bg-gray-100': dia.esPasado && !dia.esHoy && !dia.esOtroMes,
+                'hover:bg-purple-50': !dia.esPasado || dia.esHoy,
+                'bg-red-50': dia.esFestivo && !dia.esOtroMes
+              }"
+              (click)="seleccionarFecha(dia)"
+            >
+              <!-- Número del día -->
+              <div class="flex justify-between items-start mb-2">
+                <span
+                  class="text-sm font-medium"
+                  [ngClass]="{
+                    'text-gray-400': dia.esOtroMes,
+                    'text-white bg-blue-500 rounded-full w-6 h-6 flex items-center justify-center': dia.esHoy && !dia.esOtroMes,
+                    'text-gray-500': dia.esPasado && !dia.esHoy && !dia.esOtroMes,
+                    'text-gray-900': !dia.esPasado && !dia.esHoy && !dia.esOtroMes,
+                    'text-red-600 font-bold': dia.esFestivo && !dia.esOtroMes && !dia.esHoy
+                  }"
+                >
+                  {{ dia.numero }}
                 </span>
               </div>
-              <div class="space-y-1 col-span-2">
-                <label class="text-sm font-medium text-gray-500">Horario</label>
-                <span class="block text-lg font-semibold text-gray-800">{{ reservaSeleccionadaSegura.horario }}</span>
-              </div>
-              <div class="space-y-1 col-span-2">
-                <label class="text-sm font-medium text-gray-500">Solicitante</label>
-                <span class="block text-lg font-semibold text-gray-800">{{ reservaSeleccionadaSegura.usuario }}</span>
-              </div>
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-500">Costo Total</label>
-                <span class="block text-2xl font-bold text-indigo-600">${{ reservaSeleccionadaSegura.costoTotal | number:'1.0-0' }}</span>
-              </div>
-              <div class="space-y-1">
-                <label class="text-sm font-medium text-gray-500">Fecha de Reserva</label>
-                <span class="block text-lg font-semibold text-gray-800">{{ reservaSeleccionadaSegura.fechaCreacion | date:'dd/MM/yyyy' }}</span>
-              </div>
-              @if (reservaSeleccionadaSegura.observaciones) {
-                <div class="space-y-1 col-span-2">
-                  <label class="text-sm font-medium text-gray-500">Observaciones</label>
-                  <span class="block text-gray-700 bg-gray-50 rounded-lg p-3 text-base font-normal">{{ reservaSeleccionadaSegura.observaciones }}</span>
-                </div>
-              }
-            </div>
-          </div>
 
-          <!-- Modal Actions -->
-          <div class="bg-gray-50 px-6 py-4 flex space-x-3">
-            @if (reservaSeleccionadaSegura.estado !== 'cancelada') {
-              <button class="flex-1 py-3 px-4 rounded-xl font-medium transition-colors bg-red-500 text-white hover:bg-red-600" (click)="cancelarReserva(reservaSeleccionadaSegura)">
-                Cancelar Reserva
-              </button>
-            }
-            <button class="flex-1 py-3 px-4 rounded-xl font-medium transition-colors bg-gray-200 text-gray-800 hover:bg-gray-300" (click)="cerrarDetalleReserva()">
-              Cerrar
+              <!-- Reservas del día -->
+              <div class="space-y-1">
+                @for (reservaDelDia of getReservasDelDia(dia); track reservaDelDia.reserva.id; let i = $index) {
+                  @if (i < 3) {
+                    <div
+                      class="text-xs px-2 py-1 rounded-md text-white font-medium truncate cursor-pointer hover:shadow-md transition-shadow duration-200"
+                      [style.background-color]="reservaDelDia.color"
+                      (click)="verDetalleReserva(reservaDelDia.reserva, $event)"
+                      [title]="reservaDelDia.reserva.zona + ' - ' + reservaDelDia.reserva.usuario"
+                    >
+                      {{ reservaDelDia.icono }} {{ reservaDelDia.reserva.zona }}
+                    </div>
+                  }
+                }
+                @if (dia.reservas.length > 3) {
+                  <div class="text-xs text-gray-500 font-medium">
+                    +{{ dia.reservas.length - 3 }} más
+                  </div>
+                }
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Vista Lista -->
+    @if (!cargando && modoVista === 'list') {
+      <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
+        <!-- Header de Lista -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6">
+          <div class="flex items-center justify-between">
+            <button
+              (click)="mesAnterior()"
+              class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+            >
+              <span class="text-xl">←</span>
+            </button>
+
+            <div class="text-center">
+              <h2 class="text-2xl font-bold">Reservas de {{ mesAnio }}</h2>
+              <p class="text-white/80">{{ reservasDelMes.length }} reservas este mes</p>
+            </div>
+
+            <button
+              (click)="mesSiguiente()"
+              class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+            >
+              <span class="text-xl">→</span>
             </button>
           </div>
+        </div>
+
+        <!-- Lista de Reservas -->
+        <div class="divide-y divide-gray-200">
+          @if (reservasDelMes.length === 0) {
+            <div class="p-12 text-center">
+              <span class="text-6xl mb-4 block">📅</span>
+              <h3 class="text-xl font-semibold text-gray-700 mb-2">No hay reservas este mes</h3>
+              <p class="text-gray-500">¡Comienza creando una nueva reserva!</p>
+            </div>
+          } @else {
+            @for (reserva of reservasDelMes; track trackByReserva($index, reserva)) {
+              <div
+                class="p-6 hover:bg-gray-50 transition-colors duration-200 cursor-pointer"
+                (click)="verDetalleReserva(reserva)"
+              >
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-4">
+                    <!-- Fecha -->
+                    <div class="text-center">
+                      <div class="text-sm font-medium text-gray-500">{{ formatearFechaLista(reserva.fecha) }}</div>
+                      <div class="text-2xl font-bold text-gray-900">{{ obtenerDiaDelMes(reserva.fecha) }}</div>
+                    </div>
+
+                    <!-- Información de la reserva -->
+                    <div>
+                      <div class="flex items-center space-x-2 mb-1">
+                        <span class="text-lg">{{ getZonaIcon(reserva.zonaId) }}</span>
+                        <h3 class="text-lg font-semibold text-gray-900">{{ reserva.zona }}</h3>
+                        <span
+                          class="px-2 py-1 rounded-full text-xs font-medium"
+                          [ngClass]="{
+                            'bg-green-100 text-green-800': reserva.estado === 'confirmada',
+                            'bg-yellow-100 text-yellow-800': reserva.estado === 'pendiente',
+                            'bg-red-100 text-red-800': reserva.estado === 'cancelada'
+                          }"
+                        >
+                          @switch (reserva.estado) {
+                            @case ('confirmada') {
+                              Confirmada
+                            }
+                            @case ('pendiente') {
+                              Pendiente
+                            }
+                            @case ('cancelada') {
+                              Cancelada
+                            }
+                          }
+                        </span>
+                      </div>
+                      <p class="text-gray-600">{{ reserva.usuario }}</p>
+                      <p class="text-sm text-gray-500">{{ reserva.horario }}</p>
+                    </div>
+                  </div>
+
+                  <!-- Precio -->
+                  <div class="text-right">
+                    <div class="text-lg font-bold text-purple-600">{{ formatearPrecio(reserva.costoTotal) }}</div>
+                    <div class="text-sm text-gray-500">Total</div>
+                  </div>
+                </div>
+              </div>
+            }
+          }
         </div>
       </div>
     }
   </div>
+
+  <!-- Modal Nueva Reserva -->
+  @if (mostrarModalReserva) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      (click)="cerrarModalReserva()"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Header del Modal -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold">✨ Nueva Reserva</h2>
+              @if (fechaSeleccionada) {
+                <p class="text-white/80">{{ fechaSeleccionadaFormateada }}</p>
+              }
+            </div>
+            <button
+              (click)="cerrarModalReserva()"
+              class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+            >
+              <span class="text-xl">✕</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- Paso 1: Seleccionar Zona -->
+          <div class="mb-8">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">1. Selecciona la zona común</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              @for (zona of zonasComunes; track zona.id) {
+                <div
+                  class="border rounded-xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg"
+                  [ngClass]="{
+                    'border-purple-500 bg-purple-50': zonaSeleccionada?.id === zona.id,
+                    'border-gray-200 hover:border-purple-300': zonaSeleccionada?.id !== zona.id
+                  }"
+                  (click)="seleccionarZona(zona)"
+                >
+                  <div class="text-center">
+                    <span class="text-3xl mb-2 block">{{ zona.icono }}</span>
+                    <h4 class="font-semibold text-gray-900">{{ zona.nombre }}</h4>
+                    <p class="text-sm text-gray-600 mt-1">{{ zona.descripcion }}</p>
+                    <p class="text-sm font-medium text-purple-600 mt-2">{{ formatearPrecio(zona.tarifa) }}</p>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Paso 2: Seleccionar Horario -->
+          @if (zonaSeleccionada) {
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">2. Selecciona el horario</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                @for (horario of zonaSeleccionada.horarios; track horario.id) {
+                  <div
+                    class="border rounded-xl p-4 cursor-pointer transition-all duration-200"
+                    [ngClass]="{
+                      'border-purple-500 bg-purple-50': horarioSeleccionado?.id === horario.id,
+                      'border-gray-200 hover:border-purple-300': horarioSeleccionado?.id !== horario.id && esHorarioDisponible(horario.id),
+                      'border-red-200 bg-red-50 cursor-not-allowed': !esHorarioDisponible(horario.id)
+                    }"
+                    (click)="seleccionarHorario(horario)"
+                  >
+                    <div class="flex justify-between items-center">
+                      <div>
+                        <h4 class="font-semibold" [ngClass]="!esHorarioDisponible(horario.id) ? 'text-red-600' : 'text-gray-900'">
+                          {{ horario.nombre }}
+                        </h4>
+                        <p class="text-sm text-gray-600">{{ horario.horaInicio }} - {{ horario.horaFin }}</p>
+                        <p class="text-sm font-medium text-purple-600">{{ formatearPrecio(horario.precio) }}</p>
+                      </div>
+                      @if (!esHorarioDisponible(horario.id)) {
+                        <span class="text-red-500 text-xs font-medium">No disponible</span>
+                      }
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Paso 3: Información del Usuario -->
+          @if (horarioSeleccionado) {
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">3. Información del reservante</h3>
+              <div class="space-y-4">
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Nombre completo *</label>
+                  <input
+                    type="text"
+                    [(ngModel)]="formularioReserva.usuario"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Ingresa el nombre completo"
+                  >
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Observaciones</label>
+                  <textarea
+                    [(ngModel)]="formularioReserva.observaciones"
+                    rows="3"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="Información adicional sobre la reserva"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
+          }
+
+          <!-- Resumen y Acciones -->
+          @if (horarioSeleccionado) {
+            <div class="bg-gray-50 rounded-xl p-6">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">📋 Resumen de la reserva</h3>
+              <div class="space-y-2 mb-6">
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Zona:</span>
+                  <span class="font-medium">{{ zonaSeleccionada?.nombre }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Fecha:</span>
+                  <span class="font-medium">{{ fechaSeleccionadaFormateada }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Horario:</span>
+                  <span class="font-medium">{{ horarioSeleccionado.nombre }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Usuario:</span>
+                  <span class="font-medium">{{ formularioReserva.usuario || 'Por definir' }}</span>
+                </div>
+                <div class="border-t pt-2 mt-4 flex justify-between">
+                  <span class="text-lg font-semibold">Total:</span>
+                  <span class="text-lg font-bold text-purple-600">{{ formatearPrecio(horarioSeleccionado.precio) }}</span>
+                </div>
+              </div>
+
+              <div class="flex gap-4">
+                <button
+                  (click)="cerrarModalReserva()"
+                  class="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Cancelar
+                </button>
+                <button
+                  (click)="crearReserva()"
+                  [disabled]="!formularioReserva.usuario.trim()"
+                  class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                >
+                  ✨ Crear Reserva
+                </button>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Modal Detalle Reserva -->
+  @if (mostrarDetalleReserva && reservaSeleccionada) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      (click)="cerrarDetalleReserva()"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl max-w-2xl w-full"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Header del Modal -->
+        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold">📋 Detalle de Reserva</h2>
+              <p class="text-white/80">#{{ reservaSeleccionada.id }}</p>
+            </div>
+            <button
+              (click)="cerrarDetalleReserva()"
+              class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+            >
+              <span class="text-xl">✕</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- Información de la reserva -->
+          <div class="space-y-4 mb-6">
+            <div class="flex items-center space-x-3">
+              <span class="text-2xl">{{ getZonaIcon(reservaSeleccionada.zonaId) }}</span>
+              <div>
+                <h3 class="text-xl font-semibold text-gray-900">{{ reservaSeleccionada.zona }}</h3>
+                <p class="text-gray-600">{{ reservaSeleccionada.horario }}</p>
+              </div>
+            </div>
+
+            <div class="bg-gray-50 rounded-xl p-4 space-y-3">
+              <div class="flex justify-between">
+                <span class="text-gray-600">Fecha:</span>
+                <span class="font-medium">{{ formatearFechaCompleta(reservaSeleccionada.fecha) }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Usuario:</span>
+                <span class="font-medium">{{ reservaSeleccionada.usuario }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Estado:</span>
+                <span
+                  class="px-2 py-1 rounded-full text-xs font-medium"
+                  [ngClass]="{
+                    'bg-green-100 text-green-800': reservaSeleccionada.estado === 'confirmada',
+                    'bg-yellow-100 text-yellow-800': reservaSeleccionada.estado === 'pendiente',
+                    'bg-red-100 text-red-800': reservaSeleccionada.estado === 'cancelada'
+                  }"
+                >
+                  @switch (reservaSeleccionada.estado) {
+                    @case ('confirmada') {
+                      Confirmada
+                    }
+                    @case ('pendiente') {
+                      Pendiente
+                    }
+                    @case ('cancelada') {
+                      Cancelada
+                    }
+                  }
+                </span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-600">Costo Total:</span>
+                <span class="font-bold text-purple-600">{{ formatearPrecio(reservaSeleccionada.costoTotal) }}</span>
+              </div>
+              @if (reservaSeleccionada.observaciones) {
+                <div class="border-t pt-3">
+                  <span class="text-gray-600 block mb-1">Observaciones:</span>
+                  <p class="text-gray-900">{{ reservaSeleccionada.observaciones }}</p>
+                </div>
+              }
+            </div>
+          </div>
+
+          <!-- Acciones -->
+          <div class="flex gap-4">
+            <button
+              (click)="cerrarDetalleReserva()"
+              class="flex-1 px-6 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors duration-200"
+            >
+              Cerrar
+            </button>
+            @if (reservaSeleccionada.estado !== 'cancelada') {
+              <button
+                (click)="cancelarReserva()"
+                class="flex-1 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors duration-200"
+              >
+                🗑️ Cancelar Reserva
+              </button>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</div>
