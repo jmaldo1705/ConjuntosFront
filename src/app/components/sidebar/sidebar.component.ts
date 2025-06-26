@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, OnInit, HostListener } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { SidebarService } from '../../services/sidebar.service';
@@ -30,7 +30,7 @@ interface QuickAction {
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.css'
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
 
   // Use the shared service for sidebar state
   sidebarExpanded;
@@ -121,6 +121,26 @@ export class SidebarComponent {
     this.sidebarExpanded = this.sidebarService.sidebarExpanded;
   }
 
+  ngOnInit(): void {
+    // Asegurar estado inicial correcto basado en tamaño de pantalla
+    this.checkScreenSize();
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onResize(event: any): void {
+    this.checkScreenSize();
+  }
+
+  private checkScreenSize(): void {
+    if (typeof window !== 'undefined') {
+      const isDesktop = window.innerWidth >= 1024;
+      if (!isDesktop && this.sidebarExpanded()) {
+        // En móviles, cerrar sidebar automáticamente si está abierto
+        this.sidebarService.closeSidebarOnMobile();
+      }
+    }
+  }
+
   toggleSidebar(): void {
     this.sidebarService.toggleSidebar();
   }
@@ -134,10 +154,15 @@ export class SidebarComponent {
       }))
     );
 
+    // Cerrar sidebar en móviles después de navegar
+    this.sidebarService.closeSidebarOnMobile();
+
     this.router.navigate([item.route]);
   }
 
   navigateToAction(route: string): void {
+    // Cerrar sidebar en móviles después de navegar
+    this.sidebarService.closeSidebarOnMobile();
     this.router.navigate([route]);
   }
 

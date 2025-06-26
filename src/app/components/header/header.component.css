@@ -1,22 +1,43 @@
-/* Estilo principal para el header premium */
-.grand-header {
-  background-color: rgba(67, 56, 202, 0.85); /* Indigo-700 con transparencia */
-  backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+
+/* CSS simplificado para el header */
+.user-menu-container {
+  position: relative;
 }
 
-/* Estilo base para los botones de acción (Notificaciones, Tema) */
-.action-button {
-  @apply relative flex h-10 w-10 items-center justify-center rounded-full text-white/80 transition hover:bg-white/10 hover:text-white;
-  transform-origin: center;
-}
-.action-button:hover {
-  transform: scale(1.1);
+/* Animaciones suaves */
+.transition-transform {
+  transition: transform 0.2s ease;
 }
 
-/* Animación de entrada para el menú de usuario */
-@keyframes fadeIn {
+.rotate-180 {
+  transform: rotate(180deg);
+}
+
+/* Estados hover mejorados */
+button:hover {
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+/* Responsivo */
+@media (max-width: 767px) {
+  .user-menu-container .absolute {
+    width: 18rem;
+    right: -1rem;
+  }
+}
+
+/* Efectos de foco para accesibilidad */
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+}
+
+/* Animación de entrada del dropdown */
+@keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-10px) scale(0.95);
@@ -27,6 +48,6 @@
   }
 }
 
-.user-menu-dropdown {
-  animation: fadeIn 0.15s ease-out;
+.user-menu-container .absolute.visible {
+  animation: slideDown 0.2s ease-out;
 }

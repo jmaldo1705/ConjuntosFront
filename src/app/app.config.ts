@@ -65,7 +65,8 @@ import {
   tablerPlus,
   tablerHelpCircle,
   tablerSettings,
-  tablerLogout
+  tablerLogout,
+  tablerMenu2
 
 } from '@ng-icons/tabler-icons';
 
@@ -143,7 +144,8 @@ export const appConfig: ApplicationConfig = {
       tablerPlus,
       tablerHelpCircle,
       tablerSettings,
-      tablerLogout
+      tablerLogout,
+      tablerMenu2
     })
   ]
 };

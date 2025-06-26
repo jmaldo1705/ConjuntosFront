@@ -48,3 +48,54 @@
 .elegant-pattern-bg {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3e%3cdefs%3e%3cpattern id='elegantPattern' width='60' height='60' patternUnits='userSpaceOnUse'%3e%3ccircle cx='30' cy='30' r='8' fill='none' stroke='%23e0e7ff' stroke-width='0.5' opacity='0.7'/%3e%3ccircle cx='30' cy='30' r='4' fill='%23eef2ff' opacity='0.4'/%3e%3cline x1='0' y1='30' x2='60' y2='30' stroke='%23e0e7ff' stroke-width='0.3' opacity='0.3'/%3e%3cline x1='30' y1='0' x2='30' y2='60' stroke='%23e0e7ff' stroke-width='0.3' opacity='0.3'/%3e%3cline x1='0' y1='0' x2='60' y2='60' stroke='%23c7d2fe' stroke-width='0.2' opacity='0.2'/%3e%3cline x1='60' y1='0' x2='0' y2='60' stroke='%23c7d2fe' stroke-width='0.2' opacity='0.2'/%3e%3ccircle cx='0' cy='0' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3ccircle cx='60' cy='0' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3ccircle cx='0' cy='60' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3ccircle cx='60' cy='60' r='3' fill='%23a5b4fc' opacity='0.15'/%3e%3c/pattern%3e%3c/defs%3e%3crect width='100%25' height='100%25' fill='url(%23elegantPattern)'/%3e%3c/svg%3e");
 }
+
+/* Estilos específicos para móviles */
+@media (max-width: 1023px) {
+  /* En móviles, el sidebar siempre debe ser full width cuando está abierto */
+  .sidebar-collapsed {
+    width: 16rem !important; /* w-64 en móviles cuando está "expandido" */
+  }
+
+  /* Mejorar la visibilidad del overlay en móviles */
+  .fixed.inset-0.bg-black.bg-opacity-50 {
+    backdrop-filter: blur(2px);
+  }
+}
+
+/* Animaciones mejoradas */
+.sidebar-transition {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover effects para desktop */
+@media (min-width: 1024px) {
+  .sidebar-collapsed .nav-item:hover::after {
+    content: attr(title);
+    position: absolute;
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgb(55, 65, 81);
+    color: white;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    margin-left: 0.5rem;
+    z-index: 50;
+    pointer-events: none;
+    opacity: 0;
+    animation: tooltipFadeIn 0.2s ease-in-out forwards;
+  }
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
