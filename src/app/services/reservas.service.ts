@@ -1,7 +1,7 @@
 
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { ZonaComun, Reserva, HorarioZona } from '../models/reserva.model';
+import { Observable, BehaviorSubject } from 'rxjs';
+import { Reserva, ZonaComun } from '../models/reserva.model';
 
 @Injectable({
   providedIn: 'root'
@@ -199,17 +199,63 @@ export class ReservasService {
   cancelarReserva(id: number): Observable<boolean> {
     return new Observable(observer => {
       const reservas = this.reservasSubject.value;
-      const reserva = reservas.find(r => r.id === id);
+      const reservaIndex = reservas.findIndex((r: Reserva) => r.id === id);
 
-      if (reserva) {
-        reserva.estado = 'cancelada';
-        this.reservasSubject.next(reservas);
+      if (reservaIndex !== -1) {
+        reservas[reservaIndex].estado = 'cancelada';
+        this.reservasSubject.next([...reservas]);
         observer.next(true);
       } else {
         observer.next(false);
       }
-
       observer.complete();
+    });
+  }
+
+  /**
+   * Confirma una reserva pendiente
+   */
+  confirmarReserva(reservaId: number): Observable<boolean> {
+    return new Observable(observer => {
+      setTimeout(() => {
+        const reservasActuales = this.reservasSubject.value;
+        const reservaIndex = reservasActuales.findIndex((r: Reserva) => r.id === reservaId);
+
+        if (reservaIndex !== -1 && reservasActuales[reservaIndex].estado === 'pendiente') {
+          const reservasActualizadas = [...reservasActuales];
+          reservasActualizadas[reservaIndex].estado = 'confirmada';
+          this.reservasSubject.next(reservasActualizadas);
+          observer.next(true);
+        } else {
+          observer.next(false);
+        }
+        observer.complete();
+      }, 1000);
+    });
+  }
+
+  /**
+   * Rechaza una reserva pendiente
+   */
+  rechazarReserva(reservaId: number, motivo: string): Observable<boolean> {
+    return new Observable(observer => {
+      setTimeout(() => {
+        const reservasActuales = this.reservasSubject.value;
+        const reservaIndex = reservasActuales.findIndex((r: Reserva) => r.id === reservaId);
+
+        if (reservaIndex !== -1 && reservasActuales[reservaIndex].estado === 'pendiente') {
+          const reservasActualizadas = [...reservasActuales];
+          reservasActualizadas[reservaIndex].estado = 'cancelada';
+          reservasActualizadas[reservaIndex].observaciones =
+            (reservasActualizadas[reservaIndex].observaciones || '') +
+            `\n[RECHAZADA] Motivo: ${motivo}`;
+          this.reservasSubject.next(reservasActualizadas);
+          observer.next(true);
+        } else {
+          observer.next(false);
+        }
+        observer.complete();
+      }, 1000);
     });
   }
 

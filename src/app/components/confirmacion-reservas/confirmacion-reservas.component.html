@@ -1,0 +1,422 @@
+<div class="min-h-screen bg-gray-50 p-6">
+  <!-- Header -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900 mb-2">
+          📋 Gestión de Reservas
+        </h1>
+        <p class="text-gray-600">
+          Administra y gestiona las reservas de zonas comunes
+        </p>
+      </div>
+
+      <div class="flex gap-3 mt-4 lg:mt-0">
+        <button
+          (click)="cargarDatos()"
+          class="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+          [disabled]="cargando">
+          <span>🔄</span>
+          <span>{{ cargando ? 'Cargando...' : 'Actualizar' }}</span>
+        </button>
+
+        <button
+          (click)="exportarReservas()"
+          class="flex items-center gap-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+          <span>📊</span>
+          <span>Exportar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Pendientes</p>
+          <p class="text-2xl font-bold text-yellow-600">{{ estadisticas.totalPendientes }}</p>
+        </div>
+        <div class="p-3 bg-yellow-100 rounded-full">
+          <span class="text-2xl">⏳</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Confirmadas</p>
+          <p class="text-2xl font-bold text-green-600">{{ estadisticas.totalConfirmadas }}</p>
+        </div>
+        <div class="p-3 bg-green-100 rounded-full">
+          <span class="text-2xl">✅</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Canceladas</p>
+          <p class="text-2xl font-bold text-red-600">{{ estadisticas.totalCanceladas }}</p>
+        </div>
+        <div class="p-3 bg-red-100 rounded-full">
+          <span class="text-2xl">❌</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm font-medium text-gray-600">Ingresos del Mes</p>
+          <p class="text-2xl font-bold text-blue-600">{{ formatearPrecio(estadisticas.ingresosMes) }}</p>
+        </div>
+        <div class="p-3 bg-blue-100 rounded-full">
+          <span class="text-2xl">💰</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filtros -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- Filtro por estado -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Estado</label>
+        <select
+          [(ngModel)]="filtroEstado"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+          <option value="pendientes">Pendientes</option>
+          <option value="confirmadas">Confirmadas</option>
+          <option value="canceladas">Canceladas</option>
+          <option value="todas">Todas</option>
+        </select>
+      </div>
+
+      <!-- Filtro por zona -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Zona</label>
+        <select
+          [(ngModel)]="filtroZona"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+          <option value="">Todas las zonas</option>
+          <option *ngFor="let zona of zonasComunes" [value]="zona.id">
+            {{ zona.nombre }}
+          </option>
+        </select>
+      </div>
+
+      <!-- Filtro por fecha -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Fecha</label>
+        <input
+          type="date"
+          [(ngModel)]="filtroFecha"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+      </div>
+
+      <!-- Búsqueda -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-2">Buscar</label>
+        <input
+          type="text"
+          [(ngModel)]="terminoBusqueda"
+          placeholder="Usuario, zona, observaciones..."
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+      </div>
+    </div>
+
+    <div class="flex justify-end mt-4">
+      <button
+        (click)="limpiarFiltros()"
+        class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors">
+        Limpiar filtros
+      </button>
+    </div>
+  </div>
+
+  <!-- Lista de reservas -->
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200">
+    <div class="p-6 border-b border-gray-200">
+      <h2 class="text-lg font-semibold text-gray-900">
+        Reservas - {{ filtroEstado.charAt(0).toUpperCase() + filtroEstado.slice(1) }}
+        <span class="text-sm text-gray-500 ml-2">({{ reservasFiltradas.length }})</span>
+      </h2>
+    </div>
+
+    <div class="divide-y divide-gray-200" *ngIf="!cargando; else loadingTemplate">
+      <div *ngIf="reservasFiltradas.length === 0" class="p-8 text-center text-gray-500">
+        <div class="text-6xl mb-4">📭</div>
+        <p class="text-lg font-medium">No hay reservas</p>
+        <p class="text-sm">No se encontraron reservas con los filtros aplicados</p>
+      </div>
+
+      <div
+        *ngFor="let reserva of reservasFiltradas; trackBy: trackByReserva"
+        class="p-6 hover:bg-gray-50 transition-colors">
+
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+          <!-- Información principal -->
+          <div class="flex-1">
+            <div class="flex items-center gap-3 mb-2">
+              <span class="text-2xl">{{ reserva.zonaInfo?.icono || '📍' }}</span>
+              <div>
+                <h3 class="font-semibold text-gray-900">{{ reserva.zona }}</h3>
+                <p class="text-sm text-gray-600">{{ reserva.usuario }}</p>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+              <div>
+                <span class="text-gray-500">Fecha:</span>
+                <p class="font-medium">{{ reserva.fechaFormateada }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500">Horario:</span>
+                <p class="font-medium">{{ reserva.horaFormateada }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500">Costo:</span>
+                <p class="font-medium">{{ formatearPrecio(reserva.costoTotal) }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500">Creada:</span>
+                <p class="font-medium">{{ reserva.fechaCreacion | date:'short' }}</p>
+              </div>
+            </div>
+
+            <div *ngIf="reserva.observaciones" class="mt-2">
+              <span class="text-gray-500 text-sm">Observaciones:</span>
+              <p class="text-sm text-gray-700">{{ reserva.observaciones }}</p>
+            </div>
+          </div>
+
+          <!-- Estado y acciones -->
+          <div class="flex items-center gap-3">
+            <span [class]="'px-3 py-1 rounded-full text-xs font-medium ' + obtenerColorEstado(reserva.estado)">
+              {{ obtenerIconoEstado(reserva.estado) }} {{ reserva.estado | titlecase }}
+            </span>
+
+            <div class="flex gap-2">
+              <button
+                (click)="verDetalle(reserva)"
+                class="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Ver detalle">
+                👁️
+              </button>
+
+              <button
+                *ngIf="reserva.estado === 'pendiente'"
+                (click)="abrirModalConfirmacion(reserva)"
+                class="p-2 text-green-600 hover:bg-green-100 rounded-lg transition-colors"
+                title="Confirmar reserva">
+                ✅
+              </button>
+
+              <button
+                *ngIf="reserva.estado === 'pendiente'"
+                (click)="abrirModalRechazo(reserva)"
+                class="p-2 text-red-600 hover:bg-red-100 rounded-lg transition-colors"
+                title="Rechazar reserva">
+                ❌
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading template -->
+  <ng-template #loadingTemplate>
+    <div class="p-8 text-center">
+      <div class="animate-spin text-4xl mb-4">⏳</div>
+      <p class="text-gray-600">Cargando reservas...</p>
+    </div>
+  </ng-template>
+</div>
+
+<!-- Modal de detalle -->
+<div *ngIf="mostrarModalDetalle" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg max-w-2xl w-full max-h-screen overflow-y-auto">
+    <div class="p-6 border-b border-gray-200">
+      <div class="flex justify-between items-center">
+        <h2 class="text-xl font-semibold text-gray-900">Detalle de Reserva</h2>
+        <button
+          (click)="cerrarModales()"
+          class="text-gray-400 hover:text-gray-600 text-2xl">
+          ×
+        </button>
+      </div>
+    </div>
+
+    <div class="p-6" *ngIf="reservaSeleccionada">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3">Información de la Reserva</h3>
+          <div class="space-y-3">
+            <div>
+              <span class="text-gray-500">ID:</span>
+              <p class="font-medium">#{{ reservaSeleccionada.id }}</p>
+            </div>
+            <div>
+              <span class="text-gray-500">Usuario:</span>
+              <p class="font-medium">{{ reservaSeleccionada.usuario }}</p>
+            </div>
+            <div>
+              <span class="text-gray-500">Estado:</span>
+              <span [class]="'px-2 py-1 rounded-full text-xs font-medium ' + obtenerColorEstado(reservaSeleccionada.estado)">
+                {{ obtenerIconoEstado(reservaSeleccionada.estado) }} {{ reservaSeleccionada.estado | titlecase }}
+              </span>
+            </div>
+            <div>
+              <span class="text-gray-500">Fecha de creación:</span>
+              <p class="font-medium">{{ reservaSeleccionada.fechaCreacion | date:'full' }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h3 class="font-semibold text-gray-900 mb-3">Detalles de la Zona</h3>
+          <div class="space-y-3">
+            <div>
+              <span class="text-gray-500">Zona:</span>
+              <p class="font-medium">
+                {{ reservaSeleccionada.zonaInfo?.icono }} {{ reservaSeleccionada.zona }}
+              </p>
+            </div>
+            <div>
+              <span class="text-gray-500">Fecha:</span>
+              <p class="font-medium">{{ reservaSeleccionada.fechaFormateada }}</p>
+            </div>
+            <div>
+              <span class="text-gray-500">Horario:</span>
+              <p class="font-medium">{{ reservaSeleccionada.horaFormateada }}</p>
+            </div>
+            <div>
+              <span class="text-gray-500">Costo:</span>
+              <p class="font-medium text-lg">{{ formatearPrecio(reservaSeleccionada.costoTotal) }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="reservaSeleccionada.observaciones" class="mt-6">
+        <h3 class="font-semibold text-gray-900 mb-2">Observaciones</h3>
+        <p class="text-gray-700 bg-gray-50 p-3 rounded-lg">{{ reservaSeleccionada.observaciones }}</p>
+      </div>
+
+      <div class="flex justify-end gap-3 mt-6" *ngIf="reservaSeleccionada.estado === 'pendiente'">
+        <button
+          (click)="abrirModalRechazo(reservaSeleccionada)"
+          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+          ❌ Rechazar
+        </button>
+        <button
+          (click)="abrirModalConfirmacion(reservaSeleccionada)"
+          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+          ✅ Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div *ngIf="mostrarModalConfirmacion" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg max-w-md w-full">
+    <div class="p-6">
+      <div class="text-center">
+        <div class="text-6xl mb-4">✅</div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Confirmar Reserva</h2>
+        <p class="text-gray-600 mb-6">
+          ¿Estás seguro de que deseas confirmar esta reserva?
+        </p>
+
+        <div class="bg-gray-50 p-4 rounded-lg mb-6 text-left" *ngIf="reservaSeleccionada">
+          <p><strong>Usuario:</strong> {{ reservaSeleccionada.usuario }}</p>
+          <p><strong>Zona:</strong> {{ reservaSeleccionada.zona }}</p>
+          <p><strong>Fecha:</strong> {{ reservaSeleccionada.fechaFormateada }}</p>
+          <p><strong>Horario:</strong> {{ reservaSeleccionada.horaFormateada }}</p>
+        </div>
+
+        <div class="flex gap-3">
+          <button
+            (click)="cerrarModales()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+            Cancelar
+          </button>
+          <button
+            (click)="confirmarReserva()"
+            [disabled]="procesandoReserva"
+            class="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50">
+            {{ procesandoReserva ? 'Confirmando...' : 'Confirmar' }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal de rechazo -->
+<div *ngIf="mostrarModalRechazo" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+  <div class="bg-white rounded-lg max-w-md w-full">
+    <div class="p-6">
+      <div class="text-center mb-6">
+        <div class="text-6xl mb-4">❌</div>
+        <h2 class="text-xl font-semibold text-gray-900 mb-2">Rechazar Reserva</h2>
+        <p class="text-gray-600">
+          Selecciona el motivo del rechazo
+        </p>
+      </div>
+
+      <form (ngSubmit)="rechazarReserva()" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700 mb-2">Motivo</label>
+          <select
+            [(ngModel)]="formularioRechazo.motivo"
+            name="motivo"
+            required
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500">
+            <option value="">Selecciona un motivo</option>
+            <option *ngFor="let motivo of motivosRechazo" [value]="motivo">
+              {{ motivo }}
+            </option>
+          </select>
+        </div>
+
+        <div *ngIf="formularioRechazo.motivo === 'Otro' || formularioRechazo.motivo">
+          <label class="block text-sm font-medium text-gray-700 mb-2">
+            {{ formularioRechazo.motivo === 'Otro' ? 'Especifica el motivo' : 'Observaciones adicionales (opcional)' }}
+          </label>
+          <textarea
+            [(ngModel)]="formularioRechazo.observaciones"
+            name="observaciones"
+            [required]="formularioRechazo.motivo === 'Otro'"
+            rows="3"
+            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-red-500 focus:border-red-500"
+            placeholder="Describe el motivo del rechazo..."></textarea>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button
+            type="button"
+            (click)="cerrarModales()"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors">
+            Cancelar
+          </button>
+          <button
+            type="submit"
+            [disabled]="procesandoReserva || !formularioRechazo.motivo"
+            class="flex-1 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors disabled:opacity-50">
+            {{ procesandoReserva ? 'Rechazando...' : 'Rechazar' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

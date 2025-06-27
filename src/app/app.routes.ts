@@ -34,5 +34,10 @@ export const routes: Routes = [
     loadComponent: () => import('./components/welcome/welcome.component').then(m => m.WelcomeComponent),
     canActivate: [AuthGuard]
   },
+  {
+    path: 'admin/reservas',
+    loadComponent: () => import('./components/confirmacion-reservas/confirmacion-reservas.component').then(c => c.ConfirmacionReservasComponent),
+    canActivate: [AuthGuard]
+  },
   { path: '**', redirectTo: '/home' }
 ];

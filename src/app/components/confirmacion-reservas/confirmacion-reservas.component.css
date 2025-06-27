@@ -1,0 +1,88 @@
+
+/* Animaciones personalizadas */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-enter {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Estilos para los estados de reserva */
+.estado-pendiente {
+  @apply bg-yellow-100 text-yellow-800 border border-yellow-200;
+}
+
+.estado-confirmada {
+  @apply bg-green-100 text-green-800 border border-green-200;
+}
+
+.estado-cancelada {
+  @apply bg-red-100 text-red-800 border border-red-200;
+}
+
+/* Hover effects mejorados */
+.reserva-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
+}
+
+/* Botones de acción */
+.btn-action {
+  @apply p-2 rounded-lg transition-all duration-200 ease-in-out;
+}
+
+.btn-action:hover {
+  transform: scale(1.1);
+}
+
+.btn-confirmar {
+  @apply text-green-600 hover:bg-green-100;
+}
+
+.btn-rechazar {
+  @apply text-red-600 hover:bg-red-100;
+}
+
+.btn-ver {
+  @apply text-blue-600 hover:bg-blue-100;
+}
+
+/* Responsive mejoras */
+@media (max-width: 768px) {
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+/* Loading states */
+.loading-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Filtros sticky en móvil */
+@media (max-width: 1024px) {
+  .filtros-container {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+}
