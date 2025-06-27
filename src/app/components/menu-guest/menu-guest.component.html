@@ -122,10 +122,10 @@
     </div>
   </div>
 
-  <!-- Mobile Navigation Menu - Enhanced -->
+  <!-- Mobile Navigation Menu - Fixed positioning issues -->
   @if (showMobileMenu) {
-    <div class="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md fixed top-16 left-0 right-0 z-40 shadow-lg">
-      <div class="px-4 py-3 space-y-1 max-h-screen overflow-y-auto">
+    <div class="lg:hidden border-t border-gray-100 bg-white/95 backdrop-blur-md absolute top-16 left-0 right-0 z-10 shadow-lg">
+      <div class="px-4 py-3 space-y-1 max-h-[calc(100vh-4rem)] overflow-y-auto">
         <a routerLink="/home"
            (click)="toggleMobileMenu()"
            routerLinkActive="bg-gradient-to-r from-indigo-50 to-purple-50 text-indigo-700 border-indigo-200"

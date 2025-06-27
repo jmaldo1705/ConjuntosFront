@@ -1,3 +1,4 @@
+
 <div class="app-container">
   <!-- Si hay sesión iniciada, mostrar el layout con sidebar y header -->
   @if (authService.isLoggedIn()) {
@@ -21,12 +22,14 @@
     </div>
   } @else {
     <!-- Si no hay sesión, mostrar solo el menú para invitados -->
+    <div class="min-h-screen bg-gray-50">
       <!-- Navigation Menu - Solo cuando no hay sesión -->
-    <app-menu-guest></app-menu-guest>
+      <app-menu-guest></app-menu-guest>
 
-    <!-- Main Content -->
-    <main>
-      <router-outlet></router-outlet>
-    </main>
+      <!-- Main Content con padding para compensar el header fijo -->
+      <main class="pt-16 min-h-screen">
+        <router-outlet></router-outlet>
+      </main>
+    </div>
   }
 </div>
