@@ -1,4 +1,3 @@
-
 <div class="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50">
   <!-- Header -->
   <div class="bg-white shadow-lg border-b border-gray-200">
@@ -9,14 +8,15 @@
           <p class="text-gray-600">Administra las reservas de zonas comunes del conjunto</p>
         </div>
 
-        <!-- Selector de Vista -->
-        <div class="flex items-center gap-4">
+        <!-- Controles superiores -->
+        <div class="flex flex-col sm:flex-row items-center gap-4">
+          <!-- Selector de Vista -->
           <div class="bg-gray-100 rounded-2xl p-1 flex space-x-1">
             <button
               class="px-4 py-2 rounded-xl font-medium transition-all duration-200"
               [ngClass]="{
-                'bg-white shadow-md text-purple-600': modoVista === 'month',
-                'text-gray-600 hover:text-purple-600': modoVista !== 'month'
+                'bg-white shadow-md text-indigo-600': modoVista === 'month',
+                'text-gray-600 hover:text-indigo-600': modoVista !== 'month'
               }"
               (click)="cambiarVista('month')"
             >
@@ -25,8 +25,8 @@
             <button
               class="px-4 py-2 rounded-xl font-medium transition-all duration-200"
               [ngClass]="{
-                'bg-white shadow-md text-purple-600': modoVista === 'list',
-                'text-gray-600 hover:text-purple-600': modoVista !== 'list'
+                'bg-white shadow-md text-indigo-600': modoVista === 'list',
+                'text-gray-600 hover:text-indigo-600': modoVista !== 'list'
               }"
               (click)="cambiarVista('list')"
             >
@@ -34,20 +34,29 @@
             </button>
           </div>
 
-          <button
-            class="bg-gradient-to-r from-purple-600 to-pink-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
-            (click)="abrirModalNuevaReserva()"
-          >
-            ✨ Nueva Reserva
-          </button>
+          <!-- Botones de acción -->
+          <div class="flex gap-3">
+            <button
+              class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              (click)="abrirModalZonas()"
+            >
+              🏢 Ver Zonas
+            </button>
+            <button
+              class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200"
+              (click)="abrirModalNuevaReserva()"
+            >
+              ✨ Nueva Reserva
+            </button>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Estadísticas -->
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <!-- Estadísticas -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <!-- Total Reservas -->
       <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
         <div class="flex items-center justify-between">
@@ -86,25 +95,12 @@
           </div>
         </div>
       </div>
-
-      <!-- Ingresos del Mes -->
-      <div class="bg-white rounded-2xl p-6 shadow-lg border border-gray-100">
-        <div class="flex items-center justify-between">
-          <div>
-            <p class="text-sm font-medium text-gray-600">Ingresos Mes</p>
-            <p class="text-2xl font-bold text-purple-600">{{ formatearPrecio(ingresosMes) }}</p>
-          </div>
-          <div class="bg-purple-100 p-3 rounded-xl">
-            <span class="text-2xl">💰</span>
-          </div>
-        </div>
-      </div>
     </div>
 
     <!-- Spinner de carga -->
     @if (cargando) {
       <div class="flex justify-center items-center py-20">
-        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-purple-600"></div>
+        <div class="animate-spin rounded-full h-16 w-16 border-b-2 border-indigo-600"></div>
       </div>
     }
 
@@ -112,7 +108,7 @@
     @if (!cargando && modoVista === 'month') {
       <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         <!-- Header del Calendario -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
           <div class="flex items-center justify-between">
             <button
               (click)="mesAnterior()"
@@ -160,7 +156,7 @@
                 'bg-gray-50': dia.esOtroMes,
                 'bg-blue-50 border-blue-200': dia.esHoy && !dia.esOtroMes,
                 'bg-gray-100': dia.esPasado && !dia.esHoy && !dia.esOtroMes,
-                'hover:bg-purple-50': !dia.esPasado || dia.esHoy,
+                'hover:bg-indigo-50': !dia.esPasado || dia.esHoy,
                 'bg-red-50': dia.esFestivo && !dia.esOtroMes
               }"
               (click)="seleccionarFecha(dia)"
@@ -211,7 +207,7 @@
     @if (!cargando && modoVista === 'list') {
       <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
         <!-- Header de Lista -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6">
           <div class="flex items-center justify-between">
             <button
               (click)="mesAnterior()"
@@ -266,7 +262,8 @@
                           [ngClass]="{
                             'bg-green-100 text-green-800': reserva.estado === 'confirmada',
                             'bg-yellow-100 text-yellow-800': reserva.estado === 'pendiente',
-                            'bg-red-100 text-red-800': reserva.estado === 'cancelada'
+                            'bg-red-100 text-red-800': reserva.estado === 'cancelada',
+                            'bg-orange-100 text-orange-800': reserva.estado === 'solicitud_cancelacion'
                           }"
                         >
                           @switch (reserva.estado) {
@@ -279,6 +276,9 @@
                             @case ('cancelada') {
                               Cancelada
                             }
+                            @case ('solicitud_cancelacion') {
+                              Cancelación Solicitada
+                            }
                           }
                         </span>
                       </div>
@@ -289,7 +289,7 @@
 
                   <!-- Precio -->
                   <div class="text-right">
-                    <div class="text-lg font-bold text-purple-600">{{ formatearPrecio(reserva.costoTotal) }}</div>
+                    <div class="text-lg font-bold text-indigo-600">{{ formatearPrecio(reserva.costoTotal) }}</div>
                     <div class="text-sm text-gray-500">Total</div>
                   </div>
                 </div>
@@ -300,6 +300,133 @@
       </div>
     }
   </div>
+
+  <!-- Modal Zonas Sociales Disponibles -->
+  @if (mostrarModalZonas) {
+    <div
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
+      (click)="cerrarModalZonas()"
+    >
+      <div
+        class="bg-white rounded-2xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto"
+        (click)="$event.stopPropagation()"
+      >
+        <!-- Header del Modal -->
+        <div class="bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-6 rounded-t-2xl">
+          <div class="flex items-center justify-between">
+            <div>
+              <h2 class="text-2xl font-bold">🏢 Zonas Sociales Disponibles</h2>
+              <p class="text-white/80">Información completa de las zonas comunes</p>
+            </div>
+            <button
+              (click)="cerrarModalZonas()"
+              class="p-2 rounded-xl bg-white/20 hover:bg-white/30 transition-colors duration-200"
+            >
+              <span class="text-xl">✕</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="p-6">
+          <!-- Grid de Zonas Sociales -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (zona of zonasComunes; track zona.id) {
+              <div class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-indigo-300">
+                <!-- Icono y nombre -->
+                <div class="text-center mb-4">
+                  <span class="text-4xl mb-3 block">{{ zona.icono }}</span>
+                  <h3 class="font-bold text-xl text-gray-900 mb-2">{{ zona.nombre }}</h3>
+                  <p class="text-gray-600 text-sm leading-relaxed">{{ zona.descripcion }}</p>
+                </div>
+
+                <!-- Información básica -->
+                <div class="space-y-3 mb-4">
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 text-sm">Reserva:</span>
+                    <span
+                      class="font-medium text-sm px-2 py-1 rounded-full"
+                      [ngClass]="zona.requiereReserva ? 'bg-orange-100 text-orange-700' : 'bg-green-100 text-green-700'"
+                    >
+                      {{ zona.requiereReserva ? 'Requerida' : 'No requerida' }}
+                    </span>
+                  </div>
+                  <div class="flex items-center justify-between">
+                    <span class="text-gray-500 text-sm">Costo base:</span>
+                    <span class="font-bold text-indigo-600">
+                      {{ zona.tarifa > 0 ? formatearPrecio(zona.tarifa) : 'Gratuito' }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Horarios disponibles -->
+                <div class="border-t pt-4">
+                  <h4 class="font-semibold text-gray-900 mb-3 text-sm">Horarios disponibles:</h4>
+                  <div class="space-y-2">
+                    @for (horario of zona.horarios; track horario.id) {
+                      <div class="bg-gray-50 rounded-lg p-3">
+                        <div class="flex justify-between items-center">
+                          <div>
+                            <span class="font-medium text-sm text-gray-900">{{ horario.nombre }}</span>
+                            <p class="text-xs text-gray-600">{{ horario.horaInicio }} - {{ horario.horaFin }}</p>
+                          </div>
+                          <span class="text-sm font-semibold text-indigo-600">
+                            {{ formatearPrecio(horario.precio) }}
+                          </span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+
+                <!-- Botón de acción -->
+                <div class="mt-4 pt-4 border-t">
+                  <button
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                    (click)="cerrarModalZonas(); abrirModalNuevaReserva()"
+                  >
+                    ✨ Reservar {{ zona.nombre }}
+                  </button>
+                </div>
+              </div>
+            }
+          </div>
+
+          <!-- Información adicional -->
+          <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">📋 Información importante</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+              <div>
+                <h4 class="font-medium text-gray-900 mb-2">Políticas de reserva:</h4>
+                <ul class="space-y-1 text-gray-600">
+                  <li>• Las reservas deben realizarse con mínimo 24 horas de anticipación</li>
+                  <li>• Cancelaciones sin costo hasta 12 horas antes</li>
+                  <li>• Depósito requerido para zonas pagadas</li>
+                </ul>
+              </div>
+              <div>
+                <h4 class="font-medium text-gray-900 mb-2">Contacto y soporte:</h4>
+                <ul class="space-y-1 text-gray-600">
+                  <li>• Administración: 316 666 3666</li>
+                  <li>• Horario de atención: 8:00 AM - 6:00 PM</li>
+                  <li>• Email: reservas&#64;conjunto.com</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón de cerrar -->
+          <div class="mt-6 text-center">
+            <button
+              (click)="cerrarModalZonas()"
+              class="px-8 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors duration-200"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
 
   <!-- Modal Nueva Reserva -->
   @if (mostrarModalReserva) {
@@ -312,7 +439,7 @@
         (click)="$event.stopPropagation()"
       >
         <!-- Header del Modal -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl">
           <div class="flex items-center justify-between">
             <div>
               <h2 class="text-2xl font-bold">✨ Nueva Reserva</h2>
@@ -330,41 +457,63 @@
         </div>
 
         <div class="p-6">
-          <!-- Paso 1: Seleccionar Zona -->
+          <!-- Paso 1: Seleccionar Fecha -->
           <div class="mb-8">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">1. Selecciona la zona común</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              @for (zona of zonasComunes; track zona.id) {
-                <div
-                  class="border rounded-xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg"
-                  [ngClass]="{
-                    'border-purple-500 bg-purple-50': zonaSeleccionada?.id === zona.id,
-                    'border-gray-200 hover:border-purple-300': zonaSeleccionada?.id !== zona.id
-                  }"
-                  (click)="seleccionarZona(zona)"
-                >
-                  <div class="text-center">
-                    <span class="text-3xl mb-2 block">{{ zona.icono }}</span>
-                    <h4 class="font-semibold text-gray-900">{{ zona.nombre }}</h4>
-                    <p class="text-sm text-gray-600 mt-1">{{ zona.descripcion }}</p>
-                    <p class="text-sm font-medium text-purple-600 mt-2">{{ formatearPrecio(zona.tarifa) }}</p>
-                  </div>
-                </div>
-              }
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">1. Selecciona la fecha</h3>
+            <div class="max-w-md">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Fecha de la reserva *</label>
+              <input
+                type="date"
+                [(ngModel)]="fechaSeleccionada"
+                [min]="fechaMinima"
+                class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                required
+              >
             </div>
           </div>
 
-          <!-- Paso 2: Seleccionar Horario -->
+          <!-- Paso 2: Seleccionar Zona -->
+          @if (fechaSeleccionada) {
+            <div class="mb-8">
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">2. Selecciona la zona común</h3>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                @for (zona of zonasComunes; track zona.id) {
+                  <div
+                    class="border rounded-xl p-4 cursor-pointer transition-all duration-200 hover:shadow-lg"
+                    [ngClass]="{
+                      'border-indigo-500 bg-indigo-50': zonaSeleccionada?.id === zona.id,
+                      'border-gray-200 hover:border-indigo-300': zonaSeleccionada?.id !== zona.id
+                    }"
+                    (click)="seleccionarZona(zona)"
+                  >
+                    <div class="text-center">
+                      <span class="text-3xl mb-2 block">{{ zona.icono }}</span>
+                      <h4 class="font-semibold text-gray-900">{{ zona.nombre }}</h4>
+                      <p class="text-sm text-gray-600 mt-1">{{ zona.descripcion }}</p>
+                      <p class="text-sm font-medium text-indigo-600 mt-2">
+                        {{ zona.tarifa > 0 ? formatearPrecio(zona.tarifa) : 'Gratuito' }}
+                      </p>
+                      <div class="text-xs text-gray-500 mt-1">
+                        {{ zona.requiereReserva ? 'Requiere reserva' : 'Libre acceso' }}
+                      </div>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+          }
+
+          <!-- Paso 3: Seleccionar Horario -->
           @if (zonaSeleccionada) {
             <div class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">2. Selecciona el horario</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">3. Selecciona el horario</h3>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 @for (horario of zonaSeleccionada.horarios; track horario.id) {
                   <div
                     class="border rounded-xl p-4 cursor-pointer transition-all duration-200"
                     [ngClass]="{
-                      'border-purple-500 bg-purple-50': horarioSeleccionado?.id === horario.id,
-                      'border-gray-200 hover:border-purple-300': horarioSeleccionado?.id !== horario.id && esHorarioDisponible(horario.id),
+                      'border-indigo-500 bg-indigo-50': horarioSeleccionado?.id === horario.id,
+                      'border-gray-200 hover:border-indigo-300': horarioSeleccionado?.id !== horario.id && esHorarioDisponible(horario.id),
                       'border-red-200 bg-red-50 cursor-not-allowed': !esHorarioDisponible(horario.id)
                     }"
                     (click)="seleccionarHorario(horario)"
@@ -375,7 +524,7 @@
                           {{ horario.nombre }}
                         </h4>
                         <p class="text-sm text-gray-600">{{ horario.horaInicio }} - {{ horario.horaFin }}</p>
-                        <p class="text-sm font-medium text-purple-600">{{ formatearPrecio(horario.precio) }}</p>
+                        <p class="text-sm font-medium text-indigo-600">{{ formatearPrecio(horario.precio) }}</p>
                       </div>
                       @if (!esHorarioDisponible(horario.id)) {
                         <span class="text-red-500 text-xs font-medium">No disponible</span>
@@ -387,18 +536,18 @@
             </div>
           }
 
-          <!-- Paso 3: Información del Usuario -->
+          <!-- Paso 4: Información de la Reserva -->
           @if (horarioSeleccionado) {
             <div class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">3. Información del reservante</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">4. Información de la reserva</h3>
               <div class="space-y-4">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Nombre completo *</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Nombre del evento o reserva *</label>
                   <input
                     type="text"
-                    [(ngModel)]="formularioReserva.usuario"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                    placeholder="Ingresa el nombre completo"
+                    [(ngModel)]="formularioReserva.nombreEvento"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                    placeholder="Ej: Cumpleaños de María, Reunión familiar, etc."
                   >
                 </div>
                 <div>
@@ -406,7 +555,7 @@
                   <textarea
                     [(ngModel)]="formularioReserva.observaciones"
                     rows="3"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
                     placeholder="Información adicional sobre la reserva"
                   ></textarea>
                 </div>
@@ -416,7 +565,7 @@
 
           <!-- Resumen y Acciones -->
           @if (horarioSeleccionado) {
-            <div class="bg-gray-50 rounded-xl p-6">
+            <div class="bg-gradient-to-r from-rose-50 to-pink-50 rounded-xl p-6">
               <h3 class="text-lg font-semibold text-gray-900 mb-4">📋 Resumen de la reserva</h3>
               <div class="space-y-2 mb-6">
                 <div class="flex justify-between">
@@ -432,12 +581,16 @@
                   <span class="font-medium">{{ horarioSeleccionado.nombre }}</span>
                 </div>
                 <div class="flex justify-between">
-                  <span class="text-gray-600">Usuario:</span>
-                  <span class="font-medium">{{ formularioReserva.usuario || 'Por definir' }}</span>
+                  <span class="text-gray-600">Reservante:</span>
+                  <span class="font-medium">{{ usuarioLogueado || 'Usuario actual' }}</span>
+                </div>
+                <div class="flex justify-between">
+                  <span class="text-gray-600">Evento:</span>
+                  <span class="font-medium">{{ formularioReserva.nombreEvento || 'Por definir' }}</span>
                 </div>
                 <div class="border-t pt-2 mt-4 flex justify-between">
                   <span class="text-lg font-semibold">Total:</span>
-                  <span class="text-lg font-bold text-purple-600">{{ formatearPrecio(horarioSeleccionado.precio) }}</span>
+                  <span class="text-lg font-bold text-indigo-600">{{ formatearPrecio(horarioSeleccionado.precio) }}</span>
                 </div>
               </div>
 
@@ -450,8 +603,8 @@
                 </button>
                 <button
                   (click)="crearReserva()"
-                  [disabled]="!formularioReserva.usuario.trim()"
-                  class="flex-1 px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                  [disabled]="!formularioReserva.nombreEvento.trim()"
+                  class="flex-1 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                 >
                   ✨ Crear Reserva
                 </button>
@@ -474,7 +627,7 @@
         (click)="$event.stopPropagation()"
       >
         <!-- Header del Modal -->
-        <div class="bg-gradient-to-r from-purple-600 to-pink-600 text-white p-6 rounded-t-2xl">
+        <div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white p-6 rounded-t-2xl">
           <div class="flex items-center justify-between">
             <div>
               <h2 class="text-2xl font-bold">📋 Detalle de Reserva</h2>
@@ -516,7 +669,8 @@
                   [ngClass]="{
                     'bg-green-100 text-green-800': reservaSeleccionada.estado === 'confirmada',
                     'bg-yellow-100 text-yellow-800': reservaSeleccionada.estado === 'pendiente',
-                    'bg-red-100 text-red-800': reservaSeleccionada.estado === 'cancelada'
+                    'bg-red-100 text-red-800': reservaSeleccionada.estado === 'cancelada',
+                    'bg-orange-100 text-orange-800': reservaSeleccionada.estado === 'solicitud_cancelacion'
                   }"
                 >
                   @switch (reservaSeleccionada.estado) {
@@ -529,12 +683,15 @@
                     @case ('cancelada') {
                       Cancelada
                     }
+                    @case ('solicitud_cancelacion') {
+                      Cancelación Solicitada
+                    }
                   }
                 </span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-600">Costo Total:</span>
-                <span class="font-bold text-purple-600">{{ formatearPrecio(reservaSeleccionada.costoTotal) }}</span>
+                <span class="font-bold text-indigo-600">{{ formatearPrecio(reservaSeleccionada.costoTotal) }}</span>
               </div>
               @if (reservaSeleccionada.observaciones) {
                 <div class="border-t pt-3">
@@ -553,12 +710,13 @@
             >
               Cerrar
             </button>
-            @if (reservaSeleccionada.estado !== 'cancelada') {
+            @if (puedesCancelarReserva(reservaSeleccionada)) {
               <button
                 (click)="cancelarReserva()"
-                class="flex-1 px-6 py-3 bg-red-600 text-white rounded-xl font-semibold hover:bg-red-700 transition-colors duration-200"
+                class="flex-1 px-6 py-3 text-white rounded-xl font-semibold transition-colors duration-200"
+                [ngClass]="getColorCancelacion(reservaSeleccionada)"
               >
-                🗑️ Cancelar Reserva
+                {{ getTextoCancelacion(reservaSeleccionada) }}
               </button>
             }
           </div>
