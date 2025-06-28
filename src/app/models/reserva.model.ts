@@ -1,4 +1,3 @@
-
 export interface ZonaComun {
   id: number;
   nombre: string;
@@ -28,7 +27,7 @@ export interface Reserva {
   horarioId: string;
   horario: string;
   usuario: string;
-  estado: 'pendiente' | 'confirmada' | 'cancelada';
+  estado: 'pendiente' | 'confirmada' | 'cancelada' | 'solicitud_cancelacion';
   observaciones?: string;
   costoTotal: number;
   fechaCreacion: string;

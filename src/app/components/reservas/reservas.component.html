@@ -301,7 +301,7 @@
     }
   </div>
 
-  <!-- Modal Zonas Sociales Disponibles -->
+  <!-- Modal Zonas Sociales Disponibles - MEJORADO -->
   @if (mostrarModalZonas) {
     <div
       class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4"
@@ -328,19 +328,21 @@
         </div>
 
         <div class="p-6">
-          <!-- Grid de Zonas Sociales -->
+          <!-- Grid de Zonas Sociales - CON ALTURA UNIFORME -->
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             @for (zona of zonasComunes; track zona.id) {
-              <div class="border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-all duration-200 hover:border-indigo-300">
-                <!-- Icono y nombre -->
-                <div class="text-center mb-4">
+              <!-- CARD CON FLEXBOX PARA ALTURA CONSISTENTE -->
+              <div class="border border-gray-200 rounded-xl hover:shadow-lg transition-all duration-200 hover:border-indigo-300 flex flex-col h-full">
+
+                <!-- HEADER FIJO DE LA CARD -->
+                <div class="p-6 text-center flex-shrink-0">
                   <span class="text-4xl mb-3 block">{{ zona.icono }}</span>
                   <h3 class="font-bold text-xl text-gray-900 mb-2">{{ zona.nombre }}</h3>
-                  <p class="text-gray-600 text-sm leading-relaxed">{{ zona.descripcion }}</p>
+                  <p class="text-gray-600 text-sm leading-relaxed h-12 flex items-center justify-center">{{ zona.descripcion }}</p>
                 </div>
 
-                <!-- Información básica -->
-                <div class="space-y-3 mb-4">
+                <!-- INFORMACIÓN BÁSICA FIJA -->
+                <div class="px-6 space-y-3 flex-shrink-0">
                   <div class="flex items-center justify-between">
                     <span class="text-gray-500 text-sm">Reserva:</span>
                     <span
@@ -358,12 +360,13 @@
                   </div>
                 </div>
 
-                <!-- Horarios disponibles -->
-                <div class="border-t pt-4">
-                  <h4 class="font-semibold text-gray-900 mb-3 text-sm">Horarios disponibles:</h4>
-                  <div class="space-y-2">
+                <!-- HORARIOS CON ALTURA EXPANDIBLE -->
+                <div class="px-6 border-t mt-4 pt-4 flex-1 flex flex-col">
+                  <h4 class="font-semibold text-gray-900 mb-3 text-sm flex-shrink-0">Horarios disponibles:</h4>
+                  <!-- CONTENEDOR CON ALTURA FIJA PARA HORARIOS -->
+                  <div class="flex-1 min-h-[140px] max-h-[140px] overflow-y-auto space-y-2 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
                     @for (horario of zona.horarios; track horario.id) {
-                      <div class="bg-gray-50 rounded-lg p-3">
+                      <div class="bg-gray-50 rounded-lg p-3 flex-shrink-0">
                         <div class="flex justify-between items-center">
                           <div>
                             <span class="font-medium text-sm text-gray-900">{{ horario.nombre }}</span>
@@ -378,10 +381,10 @@
                   </div>
                 </div>
 
-                <!-- Botón de acción -->
-                <div class="mt-4 pt-4 border-t">
+                <!-- BOTÓN FIJO AL FINAL -->
+                <div class="p-6 pt-4 border-t flex-shrink-0">
                   <button
-                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-2 px-4 rounded-lg font-medium text-sm hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+                    class="w-full bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-3 px-4 rounded-lg font-medium text-sm hover:shadow-lg transform hover:scale-105 transition-all duration-200"
                     (click)="cerrarModalZonas(); abrirModalNuevaReserva()"
                   >
                     ✨ Reservar {{ zona.nombre }}
@@ -391,34 +394,128 @@
             }
           </div>
 
-          <!-- Información adicional -->
-          <div class="mt-8 bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">📋 Información importante</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div>
-                <h4 class="font-medium text-gray-900 mb-2">Políticas de reserva:</h4>
-                <ul class="space-y-1 text-gray-600">
-                  <li>• Las reservas deben realizarse con mínimo 24 horas de anticipación</li>
-                  <li>• Cancelaciones sin costo hasta 12 horas antes</li>
-                  <li>• Depósito requerido para zonas pagadas</li>
+          <!-- Información adicional MEJORADA -->
+          <div class="mt-8 bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50 rounded-2xl p-8 border border-indigo-100">
+            <div class="text-center mb-6">
+              <h3 class="text-2xl font-bold text-gray-900 mb-2">📋 Información Importante</h3>
+              <p class="text-gray-600">Todo lo que necesitas saber sobre las reservas</p>
+            </div>
+
+            <!-- Grid de información -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+              <!-- Políticas de Reserva -->
+              <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                  <div class="bg-blue-100 p-2 rounded-lg mr-3">
+                    <span class="text-xl">📝</span>
+                  </div>
+                  <h4 class="text-lg font-semibold text-gray-900">Políticas de Reserva</h4>
+                </div>
+                <ul class="space-y-3 text-sm text-gray-600">
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <span>Reservas con mínimo <strong>24 horas</strong> de anticipación</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <span>Cancelaciones sin costo hasta <strong>12 horas</strong> antes</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <span>Depósito requerido para zonas de pago</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <span>Máximo <strong>2 reservas</strong> activas por propietario</span>
+                  </li>
                 </ul>
               </div>
-              <div>
-                <h4 class="font-medium text-gray-900 mb-2">Contacto y soporte:</h4>
-                <ul class="space-y-1 text-gray-600">
-                  <li>• Administración: 316 666 3666</li>
-                  <li>• Horario de atención: 8:00 AM - 6:00 PM</li>
-                  <li>• Email: reservas&#64;conjunto.com</li>
+
+              <!-- Horarios y Tarifas -->
+              <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                  <div class="bg-purple-100 p-2 rounded-lg mr-3">
+                    <span class="text-xl">⏰</span>
+                  </div>
+                  <h4 class="text-lg font-semibold text-gray-900">Horarios y Tarifas</h4>
+                </div>
+                <ul class="space-y-3 text-sm text-gray-600">
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Horarios disponibles de <strong>6:00 AM a 11:00 PM</strong></span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Tarifas especiales en <strong>horarios nocturnos</strong></span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Descuentos del <strong>10%</strong> para reservas de día completo</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-purple-500 mr-2">•</span>
+                    <span>Pago en línea o en administración</span>
+                  </li>
                 </ul>
+              </div>
+
+              <!-- Contacto y Soporte -->
+              <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+                <div class="flex items-center mb-4">
+                  <div class="bg-green-100 p-2 rounded-lg mr-3">
+                    <span class="text-xl">📞</span>
+                  </div>
+                  <h4 class="text-lg font-semibold text-gray-900">Contacto y Soporte</h4>
+                </div>
+                <ul class="space-y-3 text-sm text-gray-600">
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <div>
+                      <strong>Administración:</strong><br>
+                      <span>📱 316 666 3666</span>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <div>
+                      <strong>Horario de atención:</strong><br>
+                      <span>🕐 Lunes a Viernes: 8:00 AM - 6:00 PM</span><br>
+                      <span>🕐 Sábados: 9:00 AM - 2:00 PM</span>
+                    </div>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-green-500 mr-2">•</span>
+                    <div>
+                      <strong>Correo electrónico:</strong><br>
+                      <span>✉️ reservas&#64;conjunto.com</span>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Nota importante -->
+            <div class="mt-6 bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 rounded-lg p-4">
+              <div class="flex items-start">
+                <span class="text-amber-500 text-lg mr-3">⚠️</span>
+                <div>
+                  <h5 class="font-semibold text-amber-800 mb-1">Importante</h5>
+                  <p class="text-sm text-amber-700">
+                    El no cumplimiento de las normas de uso puede resultar en la suspensión temporal
+                    del derecho a reservar. Mantengamos nuestras zonas comunes en perfecto estado para
+                    el disfrute de todos.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
 
           <!-- Botón de cerrar -->
-          <div class="mt-6 text-center">
+          <div class="mt-8 text-center">
             <button
               (click)="cerrarModalZonas()"
-              class="px-8 py-3 border border-gray-300 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-colors duration-200"
+              class="px-8 py-3 bg-gradient-to-r from-gray-600 to-gray-700 text-white rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200"
             >
               Cerrar
             </button>

@@ -362,6 +362,20 @@ export class ReservasComponent implements OnInit, OnDestroy {
         estado: 'solicitud_cancelacion',
         costoTotal: 150000,
         fechaCreacion: new Date().toISOString()
+      },
+      {
+        id: '6',
+        fecha: new Date(año, mes - 1, 20).toISOString().split('T')[0],
+        zonaId: '1',
+        zona: 'Salón Social',
+        horarioId: '1-3',
+        horario: '19:00 - 23:00',
+        usuario: 'Roberto González',
+        nombreEvento: 'Evento corporativo',
+        observaciones: 'Evento cancelado por el cliente - Solicitud aprobada',
+        estado: 'cancelada',
+        costoTotal: 200000,
+        fechaCreacion: new Date(año, mes - 1, 15).toISOString()
       }
     ];
   }
@@ -383,6 +397,7 @@ export class ReservasComponent implements OnInit, OnDestroy {
   }
 
   actualizarEstadisticas(): void {
+    // Solo contar reservas que no han sido eliminadas (las pendientes canceladas se eliminan)
     this.totalReservas = this.reservas.length;
     this.reservasActivas = this.reservas.filter(r => r.estado === 'confirmada').length;
     this.reservasPendientes = this.reservas.filter(r => r.estado === 'pendiente').length;
@@ -471,42 +486,48 @@ export class ReservasComponent implements OnInit, OnDestroy {
   }
 
   esHorarioDisponible(horarioId: string): boolean {
-    if (!this.fechaSeleccionada) return false;
+    if (!this.fechaSeleccionada || !this.zonaSeleccionada) return false;
 
-    return !this.reservas.some(reserva =>
-      reserva.fecha === this.fechaSeleccionada &&
+    const reservasDelDia = this.reservas.filter(r => r.fecha === this.fechaSeleccionada);
+    return !reservasDelDia.some(reserva =>
+      reserva.zonaId === this.zonaSeleccionada!.id &&
       reserva.horarioId === horarioId &&
       reserva.estado !== 'cancelada'
     );
   }
 
   crearReserva(): void {
-    if (!this.formularioReserva.nombreEvento.trim()) {
-      this.toastService.error('Por favor ingresa el nombre del evento o reserva');
+    if (!this.zonaSeleccionada || !this.horarioSeleccionado || !this.formularioReserva.nombreEvento.trim()) {
+      this.toastService.error('Por favor completa todos los campos requeridos');
       return;
     }
 
-    const nuevaReserva: Reserva = {
-      id: Date.now().toString(),
+    const nuevaReserva: Omit<Reserva, 'id' | 'fechaCreacion'> = {
       fecha: this.fechaSeleccionada,
-      zonaId: this.zonaSeleccionada!.id,
-      zona: this.zonaSeleccionada!.nombre,
-      horarioId: this.horarioSeleccionado!.id,
-      horario: `${this.horarioSeleccionado!.horaInicio} - ${this.horarioSeleccionado!.horaFin}`,
+      zonaId: this.zonaSeleccionada.id,
+      zona: this.zonaSeleccionada.nombre,
+      horarioId: this.horarioSeleccionado.id,
+      horario: `${this.horarioSeleccionado.horaInicio} - ${this.horarioSeleccionado.horaFin}`,
       usuario: this.usuarioLogueado,
-      nombreEvento: this.formularioReserva.nombreEvento,
-      observaciones: this.formularioReserva.observaciones,
+      nombreEvento: this.formularioReserva.nombreEvento.trim(),
+      observaciones: this.formularioReserva.observaciones.trim(),
       estado: 'pendiente',
-      costoTotal: this.horarioSeleccionado!.precio,
-      fechaCreacion: new Date().toISOString()
+      costoTotal: this.horarioSeleccionado.precio
     };
 
-    this.reservas.push(nuevaReserva);
-    this.actualizarEstadisticas();
+    // Simulación de creación
+    const reservaConId: Reserva = {
+      ...nuevaReserva,
+      id: (this.reservas.length + 1).toString(),
+      fechaCreacion: new Date().toISOString().split('T')[0]
+    };
+
+    this.reservas.push(reservaConId);
     this.actualizarReservasDelMes();
+    this.actualizarEstadisticas();
     this.actualizarReservasEnCalendario();
 
-    this.toastService.success('¡Reserva creada exitosamente!');
+    this.toastService.success('Reserva creada exitosamente. Estado: Pendiente de aprobación');
     this.cerrarModalReserva();
   }
 
@@ -524,116 +545,116 @@ export class ReservasComponent implements OnInit, OnDestroy {
     this.reservaSeleccionada = null;
   }
 
-  // MÉTODO ACTUALIZADO - Lógica de cancelación mejorada
-  cancelarReserva(): void {
-    if (!this.reservaSeleccionada) return;
-
-    const fechaReserva = new Date(this.reservaSeleccionada.fecha);
-    const fechaActual = new Date();
-
-    // Normalizar fechas para comparar solo día/mes/año
-    fechaReserva.setHours(0, 0, 0, 0);
-    fechaActual.setHours(0, 0, 0, 0);
-
-    // Verificar si es una fecha pasada
-    if (fechaReserva <= fechaActual) {
-      this.toastService.error('No se pueden cancelar reservas de fechas pasadas');
-      return;
-    }
-
-    // Lógica según el estado de la reserva
-    switch (this.reservaSeleccionada.estado) {
-      case 'pendiente':
-        // Cancelación directa para reservas pendientes
-        this.reservaSeleccionada.estado = 'cancelada';
-        this.actualizarEstadisticas();
-        this.toastService.success('Reserva cancelada exitosamente');
-        this.cerrarDetalleReserva();
-        break;
-
-      case 'confirmada':
-        // Solicitud de cancelación para reservas confirmadas
-        this.reservaSeleccionada.estado = 'solicitud_cancelacion';
-        this.actualizarEstadisticas();
-        this.toastService.info('Solicitud de cancelación enviada. La administración revisará tu petición.');
-        this.cerrarDetalleReserva();
-        break;
-
-      case 'cancelada':
-        this.toastService.warning('Esta reserva ya está cancelada');
-        break;
-
-      case 'solicitud_cancelacion':
-        this.toastService.info('Ya existe una solicitud de cancelación pendiente para esta reserva');
-        break;
-
-      default:
-        this.toastService.error('Estado de reserva no válido');
-    }
-  }
-
-  // NUEVO MÉTODO - Verificar si se puede cancelar una reserva
+  // Métodos de cancelación con nueva lógica
   puedesCancelarReserva(reserva: Reserva): boolean {
-    const fechaReserva = new Date(reserva.fecha);
-    const fechaActual = new Date();
+    // Solo se pueden cancelar reservas pendientes o confirmadas
+    const puedeSegunEstado = reserva.estado === 'pendiente' || reserva.estado === 'confirmada';
 
-    // Normalizar fechas
-    fechaReserva.setHours(0, 0, 0, 0);
-    fechaActual.setHours(0, 0, 0, 0);
+    // Verificar que la fecha no sea anterior a hoy
+    const fechaReserva = new Date(reserva.fecha + 'T00:00:00');
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0); // Resetear hora para comparar solo fechas
 
-    // Solo se puede cancelar si:
-    // 1. La fecha es posterior a hoy
-    // 2. El estado es 'pendiente' o 'confirmada'
-    return fechaReserva > fechaActual &&
-      (reserva.estado === 'pendiente' || reserva.estado === 'confirmada');
+    const fechaNoEsPasada = fechaReserva >= hoy;
+
+    return puedeSegunEstado && fechaNoEsPasada;
   }
 
-  // NUEVO MÉTODO - Obtener texto del botón de cancelación
   getTextoCancelacion(reserva: Reserva): string {
+    // Si la fecha ya pasó, no mostrar opciones de cancelación
+    const fechaReserva = new Date(reserva.fecha + 'T00:00:00');
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (fechaReserva < hoy) {
+      return 'Fecha expirada';
+    }
+
     if (reserva.estado === 'pendiente') {
-      return '🗑️ Cancelar Reserva';
+      return '🗑️ Eliminar Reserva';
     } else if (reserva.estado === 'confirmada') {
       return '📋 Solicitar Cancelación';
     }
-    return 'No disponible';
+    return '';
   }
 
-  // NUEVO MÉTODO - Obtener color del botón de cancelación
   getColorCancelacion(reserva: Reserva): string {
+    // Si la fecha ya pasó, usar color gris
+    const fechaReserva = new Date(reserva.fecha + 'T00:00:00');
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (fechaReserva < hoy) {
+      return 'bg-gray-400 cursor-not-allowed';
+    }
+
     if (reserva.estado === 'pendiente') {
       return 'bg-red-600 hover:bg-red-700';
     } else if (reserva.estado === 'confirmada') {
       return 'bg-orange-600 hover:bg-orange-700';
     }
-    return 'bg-gray-400 cursor-not-allowed';
+    return 'bg-gray-600 hover:bg-gray-700';
   }
 
-  // Métodos de utilidad
-  getReservasDelDia(dia: DiaCalendario): ReservaDelDia[] {
-    return dia.reservas.map(reserva => ({
-      reserva,
-      color: this.getColorReserva(reserva.estado),
-      icono: this.getZonaIcon(reserva.zonaId)
-    }));
-  }
+  cancelarReserva(): void {
+    if (!this.reservaSeleccionada) return;
 
-  // MÉTODO ACTUALIZADO - Incluir nuevo estado
-  getColorReserva(estado: string): string {
-    switch (estado) {
-      case 'confirmada': return '#10b981';
-      case 'pendiente': return '#f59e0b';
-      case 'cancelada': return '#ef4444';
-      case 'solicitud_cancelacion': return '#f97316'; // Naranja para solicitudes
-      default: return '#6b7280';
+    // Verificar que la fecha no sea anterior a hoy
+    const fechaReserva = new Date(this.reservaSeleccionada.fecha + 'T00:00:00');
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    if (fechaReserva < hoy) {
+      this.toastService.error('No se pueden cancelar reservas de fechas anteriores a hoy');
+      return;
+    }
+
+    const textoConfirmacion = this.reservaSeleccionada.estado === 'pendiente'
+      ? '¿Estás seguro de que deseas eliminar esta reserva? Esta acción no se puede deshacer.'
+      : '¿Estás seguro de que deseas solicitar la cancelación de esta reserva? La administración revisará tu solicitud.';
+
+    if (confirm(textoConfirmacion)) {
+      if (this.reservaSeleccionada.estado === 'pendiente') {
+        // Eliminar reserva pendiente
+        this.reservas = this.reservas.filter(r => r.id !== this.reservaSeleccionada!.id);
+        this.toastService.success('Reserva eliminada correctamente');
+      } else if (this.reservaSeleccionada.estado === 'confirmada') {
+        // Solicitar cancelación
+        const reserva = this.reservas.find(r => r.id === this.reservaSeleccionada!.id);
+        if (reserva) {
+          reserva.estado = 'solicitud_cancelacion';
+        }
+        this.toastService.success('Solicitud de cancelación enviada. La administración revisará tu solicitud.');
+      }
+
+      this.actualizarReservasDelMes();
+      this.actualizarEstadisticas();
+      this.actualizarReservasEnCalendario();
+      this.cerrarDetalleReserva();
     }
   }
 
-  getZonaIcon(zonaId: string): string {
-    const zona = this.zonasComunes.find(z => z.id === zonaId);
-    return zona?.icono || '📅';
+  esFechaPasada(fecha: string): boolean {
+    const fechaReserva = new Date(fecha + 'T00:00:00');
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+    return fechaReserva < hoy;
+  }
+
+  // Métodos de utilidad
+  esMismaFecha(fecha1: Date, fecha2: Date): boolean {
+    return fecha1.getDate() === fecha2.getDate() &&
+      fecha1.getMonth() === fecha2.getMonth() &&
+      fecha1.getFullYear() === fecha2.getFullYear();
+  }
+
+  esFestivo(fecha: Date): boolean {
+    // Lógica simple para festivos (ejemplo: domingos)
+    return fecha.getDay() === 0;
   }
 
   formatearPrecio(precio: number): string {
+    if (precio === 0) return 'Gratuito';
     return new Intl.NumberFormat('es-CO', {
       style: 'currency',
       currency: 'COP',
@@ -641,16 +662,8 @@ export class ReservasComponent implements OnInit, OnDestroy {
     }).format(precio);
   }
 
-  formatearFechaLista(fecha: string): string {
-    const fechaObj = new Date(fecha);
-    return fechaObj.toLocaleDateString('es-ES', {
-      weekday: 'short',
-      month: 'short'
-    });
-  }
-
   formatearFechaCompleta(fecha: string): string {
-    const fechaObj = new Date(fecha);
+    const fechaObj = new Date(fecha + 'T00:00:00');
     return fechaObj.toLocaleDateString('es-ES', {
       weekday: 'long',
       year: 'numeric',
@@ -659,8 +672,47 @@ export class ReservasComponent implements OnInit, OnDestroy {
     });
   }
 
-  obtenerDiaDelMes(fecha: string): number {
-    return new Date(fecha).getDate();
+  formatearFechaLista(fecha: string): string {
+    const fechaObj = new Date(fecha + 'T00:00:00');
+    return fechaObj.toLocaleDateString('es-ES', {
+      month: 'short'
+    });
+  }
+
+  obtenerDiaDelMes(fecha: string): string {
+    const fechaObj = new Date(fecha + 'T00:00:00');
+    return fechaObj.getDate().toString();
+  }
+
+  getZonaIcon(zonaId: string): string {
+    const zona = this.zonasComunes.find(z => z.id === zonaId);
+    return zona?.icono || '📍';
+  }
+
+  getReservasDelDia(dia: DiaCalendario): ReservaDelDia[] {
+    return dia.reservas.map(reserva => ({
+      reserva,
+      color: this.getColorReserva(reserva.estado),
+      icono: this.getZonaIcon(reserva.zonaId)
+    }));
+  }
+
+  getColorReserva(estado: string): string {
+    const colores = {
+      'pendiente': '#f59e0b', // amber-500
+      'confirmada': '#10b981', // emerald-500
+      'cancelada': '#ef4444', // red-500
+      'solicitud_cancelacion': '#f97316' // orange-500
+    };
+    return colores[estado as keyof typeof colores] || '#6b7280';
+  }
+
+  trackByDia(index: number, dia: DiaCalendario): string {
+    return dia.fecha;
+  }
+
+  trackByReserva(index: number, reserva: Reserva): string {
+    return reserva.id;
   }
 
   get fechaSeleccionadaFormateada(): string {
@@ -668,28 +720,22 @@ export class ReservasComponent implements OnInit, OnDestroy {
     return this.formatearFechaCompleta(this.fechaSeleccionada);
   }
 
-  esMismaFecha(fecha1: Date, fecha2: Date): boolean {
-    return fecha1.getFullYear() === fecha2.getFullYear() &&
-      fecha1.getMonth() === fecha2.getMonth() &&
-      fecha1.getDate() === fecha2.getDate();
-  }
+  getTextoEstadoCompleto(reserva: Reserva): string {
+    if (this.esFechaPasada(reserva.fecha)) {
+      if (reserva.estado === 'confirmada') {
+        return 'Completada';
+      } else if (reserva.estado === 'pendiente') {
+        return 'Expirada';
+      }
+    }
 
-  esFestivo(fecha: Date): boolean {
-    const dia = fecha.getDate();
-    const mes = fecha.getMonth() + 1;
+    const estados = {
+      'pendiente': 'Pendiente',
+      'confirmada': 'Confirmada',
+      'cancelada': 'Cancelada',
+      'solicitud_cancelacion': 'Solicitud de Cancelación'
+    };
 
-    return (dia === 25 && mes === 12) ||
-      (dia === 1 && mes === 1) ||
-      (dia === 20 && mes === 7) ||
-      (dia === 7 && mes === 8);
-  }
-
-  // Métodos de tracking para *ngFor
-  trackByDia(index: number, dia: DiaCalendario): string {
-    return dia.fecha;
-  }
-
-  trackByReserva(index: number, reserva: Reserva): string {
-    return reserva.id;
+    return estados[reserva.estado] || reserva.estado;
   }
 }

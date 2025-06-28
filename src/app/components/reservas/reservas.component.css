@@ -1,58 +1,165 @@
 
-/* Animaciones personalizadas */
-.calendario-dia {
-  transition: all 0.2s ease-in-out;
+/* Scrollbar personalizada para contenedor de horarios */
+.scrollbar-thin {
+  scrollbar-width: thin;
 }
 
-.calendario-dia:hover {
-  transform: translateY(-2px);
+.scrollbar-thumb-gray-300 {
+  scrollbar-color: #d1d5db #f3f4f6;
 }
 
-.reserva-pill {
-  transition: all 0.2s ease-in-out;
+.scrollbar-track-gray-100 {
+  scrollbar-color: #d1d5db #f3f4f6;
 }
 
-.reserva-pill:hover {
-  transform: scale(1.05);
+/* Webkit scrollbar para mejor compatibilidad */
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
 }
 
-/* Estilos para scroll suave */
-.modal-content {
-  scroll-behavior: smooth;
+.scrollbar-thin::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
 }
 
-/* Animación de entrada para modales */
-.modal-backdrop {
-  animation: fadeIn 0.3s ease-out;
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
 }
 
-@keyframes fadeIn {
+.scrollbar-thin::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+/* Animaciones de entrada para las cards */
+@keyframes fadeInUp {
   from {
     opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-.modal-content {
-  animation: slideInUp 0.3s ease-out;
-}
-
-@keyframes slideInUp {
-  from {
     transform: translateY(30px);
-    opacity: 0;
   }
   to {
-    transform: translateY(0);
     opacity: 1;
+    transform: translateY(0);
   }
 }
 
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .calendario-dia {
-    min-height: 80px;
+.zone-card {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.zone-card:nth-child(1) { animation-delay: 0.1s; }
+.zone-card:nth-child(2) { animation-delay: 0.2s; }
+.zone-card:nth-child(3) { animation-delay: 0.3s; }
+.zone-card:nth-child(4) { animation-delay: 0.4s; }
+.zone-card:nth-child(5) { animation-delay: 0.5s; }
+.zone-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Hover effects mejorados */
+.zone-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.zone-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+/* Efectos de glassmorphism para el modal */
+.modal-backdrop {
+  backdrop-filter: blur(8px);
+}
+
+/* Animación del modal */
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(20px);
   }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.modal-content {
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Estilo para botones con efectos */
+.btn-gradient {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-gradient::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-gradient:hover::before {
+  left: 100%;
+}
+
+.btn-gradient:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+}
+
+/* Efectos de carga mejorados */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Responsive mejoras */
+@media (max-width: 768px) {
+  .zone-card {
+    margin-bottom: 1rem;
+  }
+
+  .modal-content {
+    margin: 1rem;
+    max-height: calc(100vh - 2rem);
+  }
+}
+
+/* Efectos de estado activo */
+.zone-card.active {
+  border-color: #667eea;
+  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+  .zone-card,
+  .modal-content,
+  .btn-gradient {
+    animation: none;
+    transition: none;
+  }
+}
+
+/* Focus states mejorados */
+.zone-card:focus,
+.btn-gradient:focus {
+  outline: 2px solid #667eea;
+  outline-offset: 2px;
 }

@@ -1,4 +1,3 @@
-
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { Reserva, ZonaComun } from '../models/reserva.model';
@@ -153,9 +152,22 @@ export class ReservasService {
       horarioId: 'bbq-noche',
       horario: 'Noche (19:00 - 23:00)',
       usuario: 'Luis Fernando Torres',
-      estado: 'confirmada',
+      estado: 'solicitud_cancelacion',
       costoTotal: 100000,
       fechaCreacion: '2025-01-16'
+    },
+    {
+      id: 5,
+      zonaId: 1,
+      zona: 'Salón Social',
+      fecha: '2024-12-15',
+      horarioId: 'salon-noche',
+      horario: 'Noche (19:00 - 23:00)',
+      usuario: 'Pedro Ramírez',
+      estado: 'cancelada',
+      observaciones: 'Evento corporativo - Cancelado por el cliente',
+      costoTotal: 150000,
+      fechaCreacion: '2024-12-10'
     }
   ];
 
@@ -183,7 +195,7 @@ export class ReservasService {
     return new Observable(observer => {
       const nuevaReserva: Reserva = {
         ...reserva,
-        id: this.reservasSubject.value.length + 1,
+        id: Math.max(...this.reservasSubject.value.map(r => r.id)) + 1,
         fechaCreacion: new Date().toISOString().split('T')[0]
       };
 
@@ -196,13 +208,39 @@ export class ReservasService {
     });
   }
 
+  /**
+   * Cancela una reserva con lógica específica según el estado:
+   * - Si está pendiente: se elimina del calendario
+   * - Si está confirmada: se solicita cancelación (requiere aprobación)
+   * - No permite cancelación de fechas pasadas
+   */
   cancelarReserva(id: number): Observable<boolean> {
     return new Observable(observer => {
       const reservas = this.reservasSubject.value;
       const reservaIndex = reservas.findIndex((r: Reserva) => r.id === id);
 
       if (reservaIndex !== -1) {
-        reservas[reservaIndex].estado = 'cancelada';
+        const reserva = reservas[reservaIndex];
+
+        // Verificar que la fecha no sea anterior a hoy
+        const fechaReserva = new Date(reserva.fecha + 'T00:00:00');
+        const hoy = new Date();
+        hoy.setHours(0, 0, 0, 0);
+
+        if (fechaReserva < hoy) {
+          observer.next(false);
+          observer.complete();
+          return;
+        }
+
+        if (reserva.estado === 'pendiente') {
+          // Si está pendiente, la eliminamos del calendario
+          reservas.splice(reservaIndex, 1);
+        } else if (reserva.estado === 'confirmada') {
+          // Si está confirmada, cambiamos a solicitud de cancelación
+          reservas[reservaIndex].estado = 'solicitud_cancelacion';
+        }
+
         this.reservasSubject.next([...reservas]);
         observer.next(true);
       } else {
@@ -211,6 +249,7 @@ export class ReservasService {
       observer.complete();
     });
   }
+
 
   /**
    * Confirma una reserva pendiente
@@ -235,7 +274,23 @@ export class ReservasService {
   }
 
   /**
-   * Rechaza una reserva pendiente
+   * Verifica si una reserva puede ser cancelada
+   */
+  puedeCancelarReserva(reserva: Reserva): boolean {
+    // Verificar que el estado permita cancelación
+    const estadoPermitido = reserva.estado === 'pendiente' || reserva.estado === 'confirmada';
+
+    // Verificar que la fecha no sea anterior a hoy
+    const fechaReserva = new Date(reserva.fecha + 'T00:00:00');
+    const hoy = new Date();
+    hoy.setHours(0, 0, 0, 0);
+
+    return estadoPermitido && fechaReserva >= hoy;
+  }
+
+
+  /**
+   * Rechaza una reserva pendiente (la elimina del calendario)
    */
   rechazarReserva(reservaId: number, motivo: string): Observable<boolean> {
     return new Observable(observer => {
@@ -244,11 +299,52 @@ export class ReservasService {
         const reservaIndex = reservasActuales.findIndex((r: Reserva) => r.id === reservaId);
 
         if (reservaIndex !== -1 && reservasActuales[reservaIndex].estado === 'pendiente') {
+          // Si es pendiente, la eliminamos completamente
           const reservasActualizadas = [...reservasActuales];
-          reservasActualizadas[reservaIndex].estado = 'cancelada';
-          reservasActualizadas[reservaIndex].observaciones =
-            (reservasActualizadas[reservaIndex].observaciones || '') +
-            `\n[RECHAZADA] Motivo: ${motivo}`;
+          reservasActualizadas.splice(reservaIndex, 1);
+          this.reservasSubject.next(reservasActualizadas);
+          observer.next(true);
+        } else {
+          observer.next(false);
+        }
+        observer.complete();
+      }, 1000);
+    });
+  }
+
+  /**
+   * Procesa la solicitud de cancelación de una reserva confirmada
+   * @param reservaId ID de la reserva
+   * @param aprobada true para aprobar cancelación, false para rechazar
+   * @param motivo motivo de la decisión
+   */
+  procesarSolicitudCancelacion(reservaId: number, aprobada: boolean, motivo?: string): Observable<boolean> {
+    return new Observable(observer => {
+      setTimeout(() => {
+        const reservasActuales = this.reservasSubject.value;
+        const reservaIndex = reservasActuales.findIndex((r: Reserva) => r.id === reservaId);
+
+        if (reservaIndex !== -1 && reservasActuales[reservaIndex].estado === 'solicitud_cancelacion') {
+          const reservasActualizadas = [...reservasActuales];
+
+          if (aprobada) {
+            // Si se aprueba, cambia a cancelada
+            reservasActualizadas[reservaIndex].estado = 'cancelada';
+            if (motivo) {
+              reservasActualizadas[reservaIndex].observaciones =
+                (reservasActualizadas[reservaIndex].observaciones || '') +
+                `\n[CANCELADA] ${motivo}`;
+            }
+          } else {
+            // Si se rechaza, vuelve a confirmada
+            reservasActualizadas[reservaIndex].estado = 'confirmada';
+            if (motivo) {
+              reservasActualizadas[reservaIndex].observaciones =
+                (reservasActualizadas[reservaIndex].observaciones || '') +
+                `\n[SOLICITUD RECHAZADA] ${motivo}`;
+            }
+          }
+
           this.reservasSubject.next(reservasActualizadas);
           observer.next(true);
         } else {
