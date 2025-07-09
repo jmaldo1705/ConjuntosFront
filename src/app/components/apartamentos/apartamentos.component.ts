@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
-import { ApartamentosService, Apartamento, FiltrosApartamentos } from '../../services/apartamentos.service';
+import { ApartamentosService, Apartamento, FiltrosApartamentos, ConjuntoInfo } from '../../services/apartamentos.service';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -31,8 +31,9 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
   imagenActual = 0;
 
   // Datos del servicio
-  apartamentos: Apartamento[] = [];
+  apartamentos: Apartamento[] = []; // Datos completos originales
   conjuntos: string[] = [];
+  conjuntosInfo: ConjuntoInfo[] = [];
 
   // Estadísticas
   totalApartamentos = 0;
@@ -47,6 +48,7 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.inicializarBusqueda();
     this.cargarDatos();
+    this.cargarConjuntos();
     this.suscribirACambios();
   }
 
@@ -77,7 +79,7 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(apartamentos => {
         this.apartamentos = apartamentos;
-        this.apartamentosFiltrados = apartamentos;
+        this.aplicarFiltrosLocales();
         this.actualizarEstadisticas();
       });
 
@@ -85,6 +87,12 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroy$))
       .subscribe(conjuntos => {
         this.conjuntos = conjuntos;
+      });
+
+    this.apartamentosService.conjuntosInfo$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(conjuntosInfo => {
+        this.conjuntosInfo = conjuntosInfo;
       });
 
     this.apartamentosService.cargando$
@@ -115,7 +123,24 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Actualizar estadísticas
+   * Cargar conjuntos completos
+   */
+  private cargarConjuntos(): void {
+    this.apartamentosService.obtenerConjuntosCompletos()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe({
+        next: (conjuntos) => {
+          // Los conjuntos se actualizan automáticamente a través del observable
+        },
+        error: (error) => {
+          this.toastService.error('Error al cargar los conjuntos', 'Error');
+          console.error('Error:', error);
+        }
+      });
+  }
+
+  /**
+   * Actualizar estadísticas basadas en TODOS los apartamentos
    */
   private actualizarEstadisticas(): void {
     this.apartamentosVenta = this.apartamentos.filter(a => a.tipo === 'venta').length;
@@ -123,9 +148,71 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Aplicar filtros
+   * Aplicar filtros locales (para tipo todos/venta/arriendo)
+   */
+  private aplicarFiltrosLocales(): void {
+    let apartamentosFiltrados = [...this.apartamentos];
+
+    // Filtrar por tipo si no es "todos"
+    if (this.filtroActivo !== 'todos') {
+      apartamentosFiltrados = apartamentosFiltrados.filter(a => a.tipo === this.filtroActivo);
+    }
+
+    // Filtrar por conjunto si está seleccionado
+    if (this.filtroConjunto) {
+      apartamentosFiltrados = apartamentosFiltrados.filter(a => a.conjunto === this.filtroConjunto);
+    }
+
+    // Filtrar por búsqueda de texto
+    if (this.busquedaTexto) {
+      const termino = this.busquedaTexto.toLowerCase();
+      apartamentosFiltrados = apartamentosFiltrados.filter(a =>
+        a.titulo.toLowerCase().includes(termino) ||
+        a.descripcion.toLowerCase().includes(termino) ||
+        a.conjunto.toLowerCase().includes(termino) ||
+        a.torre.toLowerCase().includes(termino) ||
+        a.apartamento.toLowerCase().includes(termino)
+      );
+    }
+
+    this.apartamentosFiltrados = apartamentosFiltrados;
+  }
+
+  /**
+   * Aplicar filtros (decidir si usar filtros locales o ir al backend)
    */
   aplicarFiltros(): void {
+    // Para filtros básicos (tipo, conjunto, búsqueda), usar filtros locales
+    if (this.debeUsarFiltrosLocales()) {
+      this.aplicarFiltrosLocales();
+    } else {
+      // Para filtros más complejos, ir al backend
+      this.aplicarFiltrosBackend();
+    }
+  }
+
+  /**
+   * Determinar si se pueden usar filtros locales
+   */
+  private debeUsarFiltrosLocales(): boolean {
+    // Usar filtros locales si solo se está filtrando por tipo, conjunto o búsqueda básica
+    return this.apartamentos.length > 0 &&
+      !this.tieneOtrosFiltros();
+  }
+
+  /**
+   * Verificar si hay otros filtros que requieren backend
+   */
+  private tieneOtrosFiltros(): boolean {
+    // Aquí podrías agregar lógica para detectar filtros más complejos
+    // que requieran consulta al backend
+    return false;
+  }
+
+  /**
+   * Aplicar filtros usando el backend
+   */
+  private aplicarFiltrosBackend(): void {
     const filtros: FiltrosApartamentos = {
       tipo: this.filtroActivo !== 'todos' ? this.filtroActivo as 'venta' | 'arriendo' : undefined,
       conjunto: this.filtroConjunto || undefined,
@@ -174,7 +261,7 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
     this.filtroActivo = 'todos';
     this.filtroConjunto = '';
     this.busquedaTexto = '';
-    this.cargarDatos();
+    this.aplicarFiltrosLocales();
   }
 
   /**
@@ -182,6 +269,7 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
    */
   recargarDatos(): void {
     this.cargarDatos();
+    this.cargarConjuntos();
   }
 
   // Computed properties para evitar cálculos en el template

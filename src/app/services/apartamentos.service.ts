@@ -1,3 +1,4 @@
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -44,6 +45,17 @@ export interface RespuestaApartamentos {
   conjuntos: string[];
 }
 
+export interface ConjuntoInfo {
+  id: number;
+  nombre: string;
+  direccion: string;
+  telefono: string;
+  email: string;
+  sitioWeb: string;
+  activo: boolean;
+  fechaCreacion: Date;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -51,11 +63,13 @@ export class ApartamentosService {
   private readonly API_URL = 'http://localhost:8080/api';
   private apartamentosSubject = new BehaviorSubject<Apartamento[]>([]);
   private conjuntosSubject = new BehaviorSubject<string[]>([]);
+  private conjuntosInfoSubject = new BehaviorSubject<ConjuntoInfo[]>([]);
   private cargandoSubject = new BehaviorSubject<boolean>(false);
 
   // Observables públicos
   public apartamentos$ = this.apartamentosSubject.asObservable();
   public conjuntos$ = this.conjuntosSubject.asObservable();
+  public conjuntosInfo$ = this.conjuntosInfoSubject.asObservable();
   public cargando$ = this.cargandoSubject.asObservable();
 
   constructor(private http: HttpClient) {}
@@ -141,7 +155,7 @@ export class ApartamentosService {
   }
 
   /**
-   * Obtener conjuntos disponibles
+   * Obtener conjuntos disponibles (solo nombres)
    */
   obtenerConjuntos(): Observable<string[]> {
     return this.http.get<string[]>(`${this.API_URL}/apartamentos/conjuntos`)
@@ -152,6 +166,26 @@ export class ApartamentosService {
         }),
         catchError(error => {
           console.error('Error al obtener conjuntos:', error);
+          return throwError(() => error);
+        })
+      );
+  }
+
+  /**
+   * Obtener información completa de todos los conjuntos
+   */
+  obtenerConjuntosCompletos(): Observable<ConjuntoInfo[]> {
+    return this.http.get<ConjuntoInfo[]>(`${this.API_URL}/conjuntos`)
+      .pipe(
+        map(conjuntos => {
+          this.conjuntosInfoSubject.next(conjuntos);
+          // También actualizar la lista de nombres para el filtro
+          const nombres = conjuntos.map(c => c.nombre);
+          this.conjuntosSubject.next(nombres);
+          return conjuntos;
+        }),
+        catchError(error => {
+          console.error('Error al obtener conjuntos completos:', error);
           return throwError(() => error);
         })
       );
@@ -236,6 +270,7 @@ export class ApartamentosService {
   limpiarDatos(): void {
     this.apartamentosSubject.next([]);
     this.conjuntosSubject.next([]);
+    this.conjuntosInfoSubject.next([]);
     this.cargandoSubject.next(false);
   }
 }
