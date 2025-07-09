@@ -6,7 +6,7 @@ import {
   provideZonelessChangeDetection
 } from '@angular/core';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient, withFetch } from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptorsFromDi} from '@angular/common/http';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { ReactiveFormsModule } from '@angular/forms';
 import { provideToastr } from 'ngx-toastr';
@@ -75,7 +75,7 @@ export const appConfig: ApplicationConfig = {
     provideBrowserGlobalErrorListeners(),
     provideZonelessChangeDetection(),
     provideRouter(routes),
-    provideHttpClient(withFetch()),
+    provideHttpClient(withFetch(), withInterceptorsFromDi()),
     provideClientHydration(withEventReplay()),
     provideAnimations(),
     provideToastr({
