@@ -1,9 +1,12 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil, debounceTime, distinctUntilChanged } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { ApartamentosService, Apartamento, FiltrosApartamentos, ConjuntoInfo } from '../../services/apartamentos.service';
 import { ToastService } from '../../services/toast.service';
+import { DatosApartamentos } from '../../resolvers/apartamentos.resolver';
 
 @Component({
   selector: 'app-apartamentos',
@@ -13,7 +16,8 @@ import { ToastService } from '../../services/toast.service';
   styleUrl: './apartamentos.component.css'
 })
 export class ApartamentosComponent implements OnInit, OnDestroy {
-  private destroy$ = new Subject<void>();
+  private destroyRef = inject(DestroyRef);
+  private route = inject(ActivatedRoute);
   private busquedaSubject = new Subject<string>();
 
   // Filtros
@@ -25,13 +29,14 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
   // Estado de carga
   cargando = false;
   error: string | null = null;
+  datosInicializados = false;
 
   // Apartamento seleccionado para vista detallada
   apartamentoSeleccionado: Apartamento | null = null;
   imagenActual = 0;
 
   // Datos del servicio
-  apartamentos: Apartamento[] = []; // Datos completos originales
+  apartamentos: Apartamento[] = [];
   conjuntos: string[] = [];
   conjuntosInfo: ConjuntoInfo[] = [];
 
@@ -47,14 +52,82 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.inicializarBusqueda();
-    this.cargarDatos();
-    this.cargarConjuntos();
-    this.suscribirACambios();
+    this.cargarDatosDesdeResolver();
+    this.suscribirACambiosDelServicio();
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.busquedaSubject.complete();
+  }
+
+  /**
+   * Cargar datos que fueron pre-cargados por el resolver
+   */
+  private cargarDatosDesdeResolver(): void {
+    const datos = this.route.snapshot.data['datos'] as DatosApartamentos;
+
+    if (datos) {
+      if (datos.error) {
+        this.error = datos.error;
+        this.toastService.error(datos.error, 'Error de Carga');
+      } else {
+        // Datos de apartamentos
+        this.apartamentos = datos.apartamentos.apartamentos;
+        this.totalApartamentos = datos.apartamentos.total;
+
+        // Datos de conjuntos
+        this.conjuntosInfo = datos.conjuntos;
+        this.conjuntos = datos.conjuntos.map(c => c.nombre);
+
+        // Aplicar filtros iniciales y actualizar estadísticas
+        this.aplicarFiltrosLocales();
+        this.actualizarEstadisticas();
+        this.datosInicializados = true;
+
+        // Actualizar los BehaviorSubjects del servicio también
+        this.apartamentosService['apartamentosSubject'].next(this.apartamentos);
+        this.apartamentosService['conjuntosSubject'].next(this.conjuntos);
+        this.apartamentosService['conjuntosInfoSubject'].next(this.conjuntosInfo);
+      }
+    }
+  }
+
+  /**
+   * Suscribirse a cambios del servicio para actualizaciones futuras
+   */
+  private suscribirACambiosDelServicio(): void {
+    this.apartamentosService.apartamentos$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(apartamentos => {
+      // Solo actualizar si hay cambios y ya se inicializaron los datos
+      if (this.datosInicializados && apartamentos.length > 0) {
+        this.apartamentos = apartamentos;
+        this.aplicarFiltrosLocales();
+        this.actualizarEstadisticas();
+      }
+    });
+
+    this.apartamentosService.conjuntos$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(conjuntos => {
+      if (this.datosInicializados && conjuntos.length > 0) {
+        this.conjuntos = conjuntos;
+      }
+    });
+
+    this.apartamentosService.conjuntosInfo$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(conjuntosInfo => {
+      if (this.datosInicializados && conjuntosInfo.length > 0) {
+        this.conjuntosInfo = conjuntosInfo;
+      }
+    });
+
+    this.apartamentosService.cargando$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(cargando => {
+      this.cargando = cargando;
+    });
   }
 
   /**
@@ -64,78 +137,11 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
     this.busquedaSubject.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      takeUntil(this.destroy$)
+      takeUntilDestroyed(this.destroyRef)
     ).subscribe(termino => {
       this.busquedaTexto = termino;
       this.aplicarFiltros();
     });
-  }
-
-  /**
-   * Suscribirse a cambios del servicio
-   */
-  private suscribirACambios(): void {
-    this.apartamentosService.apartamentos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(apartamentos => {
-        this.apartamentos = apartamentos;
-        this.aplicarFiltrosLocales();
-        this.actualizarEstadisticas();
-      });
-
-    this.apartamentosService.conjuntos$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(conjuntos => {
-        this.conjuntos = conjuntos;
-      });
-
-    this.apartamentosService.conjuntosInfo$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(conjuntosInfo => {
-        this.conjuntosInfo = conjuntosInfo;
-      });
-
-    this.apartamentosService.cargando$
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(cargando => {
-        this.cargando = cargando;
-      });
-  }
-
-  /**
-   * Cargar datos iniciales
-   */
-  private cargarDatos(): void {
-    this.error = null;
-    this.apartamentosService.obtenerApartamentos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.totalApartamentos = response.total;
-        },
-        error: (error) => {
-          this.error = 'Error al cargar los apartamentos. Por favor, intenta nuevamente.';
-          this.toastService.error('Error al cargar los apartamentos', 'Error');
-          console.error('Error:', error);
-        }
-      });
-  }
-
-  /**
-   * Cargar conjuntos completos
-   */
-  private cargarConjuntos(): void {
-    this.apartamentosService.obtenerConjuntosCompletos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (conjuntos) => {
-          // Los conjuntos se actualizan automáticamente a través del observable
-        },
-        error: (error) => {
-          this.toastService.error('Error al cargar los conjuntos', 'Error');
-          console.error('Error:', error);
-        }
-      });
   }
 
   /**
@@ -194,18 +200,7 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
    * Determinar si se pueden usar filtros locales
    */
   private debeUsarFiltrosLocales(): boolean {
-    // Usar filtros locales si solo se está filtrando por tipo, conjunto o búsqueda básica
-    return this.apartamentos.length > 0 &&
-      !this.tieneOtrosFiltros();
-  }
-
-  /**
-   * Verificar si hay otros filtros que requieren backend
-   */
-  private tieneOtrosFiltros(): boolean {
-    // Aquí podrías agregar lógica para detectar filtros más complejos
-    // que requieran consulta al backend
-    return false;
+    return this.apartamentos.length > 0;
   }
 
   /**
@@ -218,17 +213,21 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
       busqueda: this.busquedaTexto || undefined
     };
 
-    this.apartamentosService.obtenerApartamentos(filtros)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.apartamentosFiltrados = response.apartamentos;
-        },
-        error: (error) => {
-          this.toastService.error('Error al aplicar filtros', 'Error');
-          console.error('Error:', error);
-        }
-      });
+    this.cargando = true;
+    this.apartamentosService.obtenerApartamentos(filtros).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (response) => {
+        this.apartamentosFiltrados = response.apartamentos;
+        this.cargando = false;
+      },
+      error: (error) => {
+        this.error = 'Error al aplicar filtros. Por favor, intenta nuevamente.';
+        this.cargando = false;
+        console.error('Error:', error);
+        this.toastService.error('Error al aplicar filtros', 'Error');
+      }
+    });
   }
 
   /**
@@ -264,11 +263,30 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Recargar datos
+   * Recargar datos manualmente
    */
   recargarDatos(): void {
-    this.cargarDatos();
-    this.cargarConjuntos();
+    this.cargando = true;
+    this.error = null;
+
+    this.apartamentosService.obtenerApartamentos().pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (response) => {
+        this.apartamentos = response.apartamentos;
+        this.totalApartamentos = response.total;
+        this.aplicarFiltrosLocales();
+        this.actualizarEstadisticas();
+        this.cargando = false;
+        this.toastService.success('Datos actualizados correctamente', 'Éxito');
+      },
+      error: (error) => {
+        this.error = 'Error al recargar datos. Por favor, intenta nuevamente.';
+        this.cargando = false;
+        console.error('Error:', error);
+        this.toastService.error('Error al recargar datos', 'Error');
+      }
+    });
   }
 
   // Computed properties para evitar cálculos en el template

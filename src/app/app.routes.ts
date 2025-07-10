@@ -6,15 +6,21 @@ import { PagosComponent } from './components/pagos/pagos.component';
 import { ReservasComponent } from './components/reservas/reservas.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { ContactComponent } from './components/contact/contact.component';
-import { ApartamentosComponent } from './components/apartamentos/apartamentos.component';
 import { ManualConvivenciaComponent } from './components/manual-convivencia/manual-convivencia.component';
 import { EmprendimientosComponent } from './components/emprendimientos/emprendimientos.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guestGuard';
+import { ApartamentosResolver } from './resolvers/apartamentos.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
-  { path: 'apartamentos', component: ApartamentosComponent },
+  {
+    path: 'apartamentos',
+    loadComponent: () => import('./components/apartamentos/apartamentos.component').then(m => m.ApartamentosComponent),
+    resolve: {
+      datos: ApartamentosResolver
+    }
+  },
   { path: 'normas-propiedad', component: NormasPropiedadComponent },
   { path: 'manual-convivencia', component: ManualConvivenciaComponent },
   { path: 'emprendimientos', component: EmprendimientosComponent },

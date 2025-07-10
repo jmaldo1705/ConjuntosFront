@@ -1,12 +1,39 @@
-import { Injectable } from '@angular/core';
+
+import { Injectable, inject, DestroyRef } from '@angular/core';
 import { ToastrService, IndividualConfig } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ToastService {
+  private toastr = inject(ToastrService);
 
-  constructor(private toastr: ToastrService) {}
+  constructor() {}
+
+  /**
+   * Método seguro para mostrar toasts que maneja errores de injector destruido
+   */
+  private safeToast(type: 'success' | 'error' | 'warning' | 'info', message: string, title?: string, config?: Partial<IndividualConfig>): void {
+    try {
+      switch (type) {
+        case 'success':
+          this.toastr.success(message, title, config);
+          break;
+        case 'error':
+          this.toastr.error(message, title, config);
+          break;
+        case 'warning':
+          this.toastr.warning(message, title, config);
+          break;
+        case 'info':
+          this.toastr.info(message, title, config);
+          break;
+      }
+    } catch (error) {
+      // Si el injector está destruido, usar console como fallback
+      console.warn(`Toast ${type}: ${title ? title + ' - ' : ''}${message}`);
+    }
+  }
 
   /**
    * Muestra un toast de éxito
@@ -19,7 +46,7 @@ export class ToastService {
       ...options
     };
 
-    this.toastr.success(message, title, config);
+    this.safeToast('success', message, title, config);
   }
 
   /**
@@ -33,7 +60,7 @@ export class ToastService {
       ...options
     };
 
-    this.toastr.error(message, title, config);
+    this.safeToast('error', message, title, config);
   }
 
   /**
@@ -47,7 +74,7 @@ export class ToastService {
       ...options
     };
 
-    this.toastr.warning(message, title, config);
+    this.safeToast('warning', message, title, config);
   }
 
   /**
@@ -88,14 +115,18 @@ export class ToastService {
       ...options
     };
 
-    this.toastr.info(message, title, config);
+    this.safeToast('info', message, title, config);
   }
 
   /**
    * Limpia todos los toasts
    */
   clear(): void {
-    this.toastr.clear();
+    try {
+      this.toastr.clear();
+    } catch (error) {
+      console.warn('No se pudo limpiar los toasts, injector posiblemente destruido');
+    }
   }
 
   /**
@@ -128,18 +159,6 @@ export class ToastService {
       tapToDismiss: false
     };
 
-    switch (type) {
-      case 'success':
-        this.toastr.success(message, title, config);
-        break;
-      case 'error':
-        this.toastr.error(message, title, config);
-        break;
-      case 'warning':
-        this.toastr.warning(message, title, config);
-        break;
-      default:
-        this.toastr.info(message, title, config);
-    }
+    this.safeToast(type, message, title, config);
   }
 }
