@@ -112,7 +112,6 @@ export class ApartamentosComponent implements OnInit, OnDestroy {
       .subscribe({
         next: (response) => {
           this.totalApartamentos = response.total;
-          this.toastService.success('Apartamentos cargados correctamente', 'Éxito');
         },
         error: (error) => {
           this.error = 'Error al cargar los apartamentos. Por favor, intenta nuevamente.';
