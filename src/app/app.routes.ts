@@ -7,10 +7,10 @@ import { ReservasComponent } from './components/reservas/reservas.component';
 import { EventosComponent } from './components/eventos/eventos.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { ManualConvivenciaComponent } from './components/manual-convivencia/manual-convivencia.component';
-import { EmprendimientosComponent } from './components/emprendimientos/emprendimientos.component';
 import { AuthGuard } from './guards/auth.guard';
 import { GuestGuard } from './guards/guestGuard';
 import { ApartamentosResolver } from './resolvers/apartamentos.resolver';
+import {EmprendimientosResolver} from './resolvers/emprendimientos.resolver';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -23,7 +23,13 @@ export const routes: Routes = [
   },
   { path: 'normas-propiedad', component: NormasPropiedadComponent },
   { path: 'manual-convivencia', component: ManualConvivenciaComponent },
-  { path: 'emprendimientos', component: EmprendimientosComponent },
+  {
+    path: 'emprendimientos',
+    loadComponent: () => import('./components/emprendimientos/emprendimientos.component').then(c => c.EmprendimientosComponent),
+    resolve: {
+      datos: EmprendimientosResolver
+    }
+  },
   { path: 'noticias', component: NoticiasComponent },
   { path: 'administracion', component: AdministracionComponent },
   { path: 'pagos', component: PagosComponent },

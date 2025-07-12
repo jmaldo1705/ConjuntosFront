@@ -1,89 +1,140 @@
+
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, BehaviorSubject } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 import { Emprendimiento, FiltrosEmprendimiento } from '../models/emprendimiento.model';
+
+export interface RespuestaEmprendimientos {
+  emprendimientos: Emprendimiento[];
+  total: number;
+  pagina: number;
+  totalPaginas: number;
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class EmprendimientosService {
-  private emprendimientosSubject = new BehaviorSubject<Emprendimiento[]>(this.getDatosIniciales());
+  private baseUrl = 'http://localhost:8080/api';
+  private usarDatosMock = true; // Para desarrollo
+
+  // BehaviorSubjects para mantener estado
+  private emprendimientosSubject = new BehaviorSubject<Emprendimiento[]>([]);
+  private categoriasSubject = new BehaviorSubject<string[]>([]);
+  private cargandoSubject = new BehaviorSubject<boolean>(false);
+
+  // Observables públicos
   public emprendimientos$ = this.emprendimientosSubject.asObservable();
+  public categorias$ = this.categoriasSubject.asObservable();
+  public cargando$ = this.cargandoSubject.asObservable();
 
-  constructor() {}
+  constructor(private http: HttpClient) {}
 
-  obtenerEmprendimientos(): Observable<Emprendimiento[]> {
-    return this.emprendimientos$;
+  /**
+   * Obtener todos los emprendimientos
+   */
+  obtenerEmprendimientos(filtros?: FiltrosEmprendimiento): Observable<RespuestaEmprendimientos> {
+    console.log('Obteniendo emprendimientos con filtros:', filtros);
+
+    if (this.usarDatosMock) {
+      const mockResponse = this.getMockResponse();
+      console.log('Retornando datos mock:', mockResponse);
+
+      // Actualizar subjects para mantener consistencia
+      this.emprendimientosSubject.next(mockResponse.emprendimientos);
+
+      return of(mockResponse);
+    }
+
+    // Lógica del backend (cuando esté disponible)
+    return this.http.get<RespuestaEmprendimientos>(`${this.baseUrl}/emprendimientos`)
+      .pipe(
+        map(response => {
+          this.emprendimientosSubject.next(response.emprendimientos);
+          return response;
+        }),
+        catchError(error => {
+          console.error('Error al obtener emprendimientos:', error);
+          const mockResponse = this.getMockResponse();
+          this.emprendimientosSubject.next(mockResponse.emprendimientos);
+          return of(mockResponse);
+        })
+      );
   }
 
+  /**
+   * Obtener categorías disponibles
+   */
+  obtenerCategorias(): Observable<string[]> {
+    console.log('Obteniendo categorías');
+
+    if (this.usarDatosMock) {
+      const categorias = this.getCategoriasMock();
+      console.log('Retornando categorías mock:', categorias);
+
+      // Actualizar subject
+      this.categoriasSubject.next(categorias);
+
+      return of(categorias);
+    }
+
+    return this.http.get<string[]>(`${this.baseUrl}/emprendimientos/categorias`)
+      .pipe(
+        map(categorias => {
+          this.categoriasSubject.next(categorias);
+          return categorias;
+        }),
+        catchError(error => {
+          console.error('Error al obtener categorías:', error);
+          const mockCategorias = this.getCategoriasMock();
+          this.categoriasSubject.next(mockCategorias);
+          return of(mockCategorias);
+        })
+      );
+  }
+
+  /**
+   * Obtener emprendimientos filtrados (simplificado)
+   */
   obtenerEmprendimientosFiltrados(filtros: FiltrosEmprendimiento): Observable<Emprendimiento[]> {
-    return this.emprendimientos$.pipe(
-      map(emprendimientos => {
-        let resultado = emprendimientos;
-
-        if (filtros.soloActivos) {
-          resultado = resultado.filter(emp => emp.activo);
-        }
-
-        if (filtros.soloDestacados) {
-          resultado = resultado.filter(emp => emp.destacado);
-        }
-
-        if (filtros.categoria && filtros.categoria !== 'todas') {
-          resultado = resultado.filter(emp =>
-            emp.categoria.toLowerCase() === filtros.categoria!.toLowerCase()
-          );
-        }
-
-        if (filtros.busqueda) {
-          const busqueda = filtros.busqueda.toLowerCase();
-          resultado = resultado.filter(emp =>
-            emp.nombre.toLowerCase().includes(busqueda) ||
-            emp.descripcion.toLowerCase().includes(busqueda) ||
-            emp.servicios.some(servicio => servicio.toLowerCase().includes(busqueda)) ||
-            emp.categoria.toLowerCase().includes(busqueda)
-          );
-        }
-
-        if (filtros.ordenarPor) {
-          resultado.sort((a, b) => {
-            switch (filtros.ordenarPor) {
-              case 'nombre':
-                return a.nombre.localeCompare(b.nombre);
-              case 'fecha':
-                return new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime();
-              case 'rating':
-                return (b.rating || 0) - (a.rating || 0);
-              default:
-                return 0;
-            }
-          });
-        }
-
-        return resultado;
-      })
+    return this.obtenerEmprendimientos(filtros).pipe(
+      map(response => response.emprendimientos)
     );
   }
 
-  obtenerCategorias(): string[] {
-    const emprendimientos = this.emprendimientosSubject.value;
+  /**
+   * Obtener categorías mock
+   */
+  private getCategoriasMock(): string[] {
+    const emprendimientos = this.getDatosIniciales();
     const categorias = [...new Set(emprendimientos.map(emp => emp.categoria))];
     return categorias.sort();
   }
 
-  obtenerEmprendimientoPorId(id: string): Observable<Emprendimiento | undefined> {
-    return this.emprendimientos$.pipe(
-      map(emprendimientos => emprendimientos.find(emp => emp.id === id))
-    );
+  /**
+   * Respuesta mock para desarrollo
+   */
+  private getMockResponse(): RespuestaEmprendimientos {
+    const emprendimientos = this.getDatosIniciales();
+    return {
+      emprendimientos,
+      total: emprendimientos.length,
+      pagina: 1,
+      totalPaginas: 1
+    };
   }
 
+  /**
+   * Datos iniciales simplificados
+   */
   private getDatosIniciales(): Emprendimiento[] {
     return [
       {
         id: '1',
         nombre: 'Panadería Artesanal San José',
-        descripcion: 'Panadería artesanal con productos frescos y tradicionales. Especializados en pan de campo y postres caseros.',
-        descripcionCompleta: 'Somos una panadería familiar con más de 15 años de experiencia en la elaboración de productos artesanales. Utilizamos ingredientes naturales y recetas tradicionales para ofrecer el mejor sabor y calidad. Nuestros productos estrella incluyen pan de campo, croissants, tortas personalizadas y una amplia variedad de postres caseros.',
+        descripcion: 'Panadería artesanal con productos frescos y tradicionales recién horneados.',
+        descripcionCompleta: 'Somos una panadería familiar con más de 15 años de experiencia en la elaboración de pan artesanal, postres caseros y tortas personalizadas. Usamos ingredientes frescos y naturales para brindar la mejor calidad a nuestros clientes.',
         categoria: 'Alimentación',
         propietario: 'María González',
         contacto: {
@@ -94,9 +145,9 @@ export class EmprendimientosService {
         ubicacion: 'Torre A - Apartamento 301',
         horarios: 'Lunes a Domingo: 6:00 AM - 8:00 PM',
         imagenes: [
-          '/assets/images/panaderia1.jpg',
-          '/assets/images/panaderia2.jpg',
-          '/assets/images/panaderia3.jpg'
+          'https://images.unsplash.com/photo-1549931319-a545dcf3bc73?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1517433456452-f9633a875fbc?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop'
         ],
         fechaCreacion: new Date('2024-01-15'),
         activo: true,
@@ -106,20 +157,20 @@ export class EmprendimientosService {
           max: 50000,
           moneda: 'COP'
         },
-        servicios: ['Pan fresco', 'Postres caseros', 'Tortas por encargo', 'Desayunos', 'Catering'],
+        servicios: ['Pan fresco', 'Postres caseros', 'Tortas por encargo', 'Desayunos'],
         destacado: true,
         redSocial: {
           facebook: 'https://facebook.com/panaderia.sanjose',
           instagram: '@panaderia_sanjose'
         },
         experiencia: '15 años',
-        productos: ['Pan de campo', 'Croissants', 'Tortas', 'Galletas', 'Empanadas']
+        productos: ['Pan de campo', 'Croissants', 'Tortas', 'Pastelitos', 'Empanadas']
       },
       {
         id: '2',
         nombre: 'Taller de Costura Elena',
-        descripcion: 'Servicios de costura, arreglos y confección de ropa personalizada.',
-        descripcionCompleta: 'Taller especializado en costura y confección con más de 20 años de experiencia. Ofrecemos servicios de arreglos, confección de ropa personalizada, uniformes escolares y empresariales. Trabajamos con los mejores materiales y técnicas tradicionales para garantizar la calidad y durabilidad de nuestros productos.',
+        descripcion: 'Servicios de costura profesional, arreglos y confección personalizada.',
+        descripcionCompleta: 'Taller especializado en costura con 20 años de experiencia. Ofrecemos servicios de arreglos, confección de uniformes escolares, ropa formal y bordados personalizados. Trabajamos con los mejores materiales y técnicas profesionales.',
         categoria: 'Servicios',
         propietario: 'Elena Ramírez',
         contacto: {
@@ -129,8 +180,9 @@ export class EmprendimientosService {
         ubicacion: 'Torre B - Apartamento 507',
         horarios: 'Lunes a Viernes: 8:00 AM - 6:00 PM, Sábados: 8:00 AM - 2:00 PM',
         imagenes: [
-          '/assets/images/costura1.jpg',
-          '/assets/images/costura2.jpg'
+          'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1504384764586-bb4cdc1707b0?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1445205342-1b46dce7d665?w=400&h=300&fit=crop'
         ],
         fechaCreacion: new Date('2024-02-01'),
         activo: true,
@@ -140,16 +192,16 @@ export class EmprendimientosService {
           max: 200000,
           moneda: 'COP'
         },
-        servicios: ['Arreglos de ropa', 'Confección personalizada', 'Bordados', 'Uniformes', 'Reparaciones'],
+        servicios: ['Arreglos de ropa', 'Confección personalizada', 'Bordados', 'Uniformes'],
         destacado: false,
         experiencia: '20 años',
-        productos: ['Uniformes escolares', 'Ropa formal', 'Vestidos de fiesta', 'Cortinas', 'Cojines']
+        productos: ['Uniformes escolares', 'Ropa formal', 'Vestidos', 'Camisas', 'Pantalones']
       },
       {
         id: '3',
         nombre: 'FitLife Personal Training',
-        descripcion: 'Entrenamiento personalizado y asesoría nutricional a domicilio.',
-        descripcionCompleta: 'Servicio integral de entrenamiento personal y asesoría nutricional. Contamos con entrenadores certificados y nutricionistas profesionales. Ofrecemos planes personalizados adaptados a las necesidades y objetivos de cada cliente, con seguimiento constante y resultados garantizados.',
+        descripcion: 'Entrenamiento personalizado a domicilio con equipos profesionales.',
+        descripcionCompleta: 'Servicio integral de entrenamiento personal con instructores certificados. Ofrecemos rutinas personalizadas, asesoría nutricional y seguimiento completo para alcanzar tus objetivos de fitness y salud.',
         categoria: 'Salud y Bienestar',
         propietario: 'Carlos Mendoza',
         contacto: {
@@ -160,9 +212,9 @@ export class EmprendimientosService {
         ubicacion: 'Torre C - Apartamento 805',
         horarios: 'Lunes a Sábado: 6:00 AM - 8:00 PM',
         imagenes: [
-          '/assets/images/fitness1.jpg',
-          '/assets/images/fitness2.jpg',
-          '/assets/images/fitness3.jpg'
+          'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400&h=300&fit=crop'
         ],
         fechaCreacion: new Date('2024-03-10'),
         activo: true,
@@ -172,34 +224,34 @@ export class EmprendimientosService {
           max: 300000,
           moneda: 'COP'
         },
-        servicios: ['Entrenamiento personal', 'Asesoría nutricional', 'Rutinas online', 'Clases grupales', 'Evaluaciones físicas'],
+        servicios: ['Entrenamiento personal', 'Asesoría nutricional', 'Rutinas online', 'Yoga'],
         destacado: true,
         redSocial: {
-          instagram: '@fitlife_training',
-          website: 'https://fitlife-training.com'
+          instagram: '@fitlife_training'
         },
         experiencia: '8 años',
-        productos: ['Planes de entrenamiento', 'Dietas personalizadas', 'Suplementos', 'Equipos de ejercicio']
+        productos: ['Planes de entrenamiento', 'Dietas personalizadas', 'Rutinas de ejercicio']
       },
       {
         id: '4',
         nombre: 'Belleza Natural Spa',
-        descripcion: 'Servicios de belleza y cuidado personal en la comodidad de tu hogar.',
-        descripcionCompleta: 'Spa y centro de belleza móvil que lleva todos los servicios de cuidado personal hasta tu hogar. Contamos con profesionales certificados en tratamientos faciales, corporales, manicure, pedicure y masajes relajantes. Utilizamos productos naturales y orgánicos de la más alta calidad.',
+        descripcion: 'Servicios de belleza y relajación con productos naturales y orgánicos.',
+        descripcionCompleta: 'Spa especializado en tratamientos de belleza con productos 100% naturales. Ofrecemos faciales, masajes relajantes, manicure, pedicure y tratamientos corporales en un ambiente tranquilo y profesional.',
         categoria: 'Belleza y Cuidado Personal',
-        propietario: 'Ana Sofia López',
+        propietario: 'Ana Sofía Martínez',
         contacto: {
-          telefono: '+57 305 111 2222',
-          whatsapp: '+57 305 111 2222',
-          email: 'belleza.natural@email.com'
+          telefono: '+57 305 789 1234',
+          whatsapp: '+57 305 789 1234',
+          email: 'bellezanatural.spa@email.com'
         },
-        ubicacion: 'Torre A - Apartamento 203',
+        ubicacion: 'Torre D - Apartamento 203',
         horarios: 'Martes a Domingo: 9:00 AM - 7:00 PM',
         imagenes: [
-          '/assets/images/spa1.jpg',
-          '/assets/images/spa2.jpg'
+          'https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1559599101-f09722fb4948?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1567721913486-6585f069b332?w=400&h=300&fit=crop'
         ],
-        fechaCreacion: new Date('2024-01-20'),
+        fechaCreacion: new Date('2024-02-20'),
         activo: true,
         rating: 4.6,
         precio: {
@@ -207,14 +259,84 @@ export class EmprendimientosService {
           max: 150000,
           moneda: 'COP'
         },
-        servicios: ['Tratamientos faciales', 'Masajes relajantes', 'Manicure y pedicure', 'Depilación', 'Limpieza facial'],
+        servicios: ['Faciales', 'Masajes', 'Manicure', 'Pedicure', 'Tratamientos corporales'],
         destacado: false,
         redSocial: {
-          instagram: '@belleza_natural_spa',
-          facebook: 'https://facebook.com/belleza.natural.spa'
+          instagram: '@bellezanatural_spa',
+          facebook: 'https://facebook.com/bellezanatural.spa'
         },
         experiencia: '12 años',
-        productos: ['Productos naturales', 'Cremas faciales', 'Aceites esenciales', 'Mascarillas']
+        productos: ['Productos naturales', 'Cremas artesanales', 'Aceites esenciales']
+      },
+      {
+        id: '5',
+        nombre: 'TechRepair Solutions',
+        descripcion: 'Reparación y mantenimiento de equipos electrónicos y celulares.',
+        descripcionCompleta: 'Servicio técnico especializado en reparación de smartphones, tablets, computadores y electrodomésticos. Contamos con técnicos certificados y repuestos originales para garantizar la calidad de nuestros servicios.',
+        categoria: 'Tecnología y Reparaciones',
+        propietario: 'Luis Fernando Castro',
+        contacto: {
+          telefono: '+57 304 567 8901',
+          whatsapp: '+57 304 567 8901',
+          email: 'techrepair.solutions@email.com'
+        },
+        ubicacion: 'Torre E - Apartamento 412',
+        horarios: 'Lunes a Viernes: 8:00 AM - 6:00 PM, Sábados: 9:00 AM - 4:00 PM',
+        imagenes: [
+          'https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1518717758536-85ae29035b6d?w=400&h=300&fit=crop'
+        ],
+        fechaCreacion: new Date('2024-03-05'),
+        activo: true,
+        rating: 4.5,
+        precio: {
+          min: 15000,
+          max: 400000,
+          moneda: 'COP'
+        },
+        servicios: ['Reparación de celulares', 'Reparación de computadores', 'Mantenimiento', 'Instalación de software'],
+        destacado: true,
+        redSocial: {
+          facebook: 'https://facebook.com/techrepair.solutions'
+        },
+        experiencia: '10 años',
+        productos: ['Repuestos originales', 'Accesorios', 'Protectores de pantalla']
+      },
+      {
+        id: '6',
+        nombre: 'Jardín Vertical Eco',
+        descripcion: 'Diseño y mantenimiento de jardines verticales y plantas ornamentales.',
+        descripcionCompleta: 'Especialistas en diseño de jardines verticales, mantenimiento de plantas y creación de espacios verdes para apartamentos y balcones. Promovemos la vida sostenible y el contacto con la naturaleza.',
+        categoria: 'Jardinería y Plantas',
+        propietario: 'Patricia Herrera',
+        contacto: {
+          telefono: '+57 306 234 5678',
+          whatsapp: '+57 306 234 5678',
+          email: 'jardinvertical.eco@email.com'
+        },
+        ubicacion: 'Torre F - Apartamento 601',
+        horarios: 'Lunes a Sábado: 7:00 AM - 5:00 PM',
+        imagenes: [
+          'https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400&h=300&fit=crop',
+          'https://images.unsplash.com/photo-1495954484750-af469f2f9be5?w=400&h=300&fit=crop'
+        ],
+        fechaCreacion: new Date('2024-01-30'),
+        activo: true,
+        rating: 4.8,
+        precio: {
+          min: 30000,
+          max: 250000,
+          moneda: 'COP'
+        },
+        servicios: ['Jardines verticales', 'Mantenimiento de plantas', 'Diseño de espacios', 'Asesoría en jardinería'],
+        destacado: false,
+        redSocial: {
+          instagram: '@jardinvertical_eco'
+        },
+        experiencia: '7 años',
+        productos: ['Plantas ornamentales', 'Sistemas de riego', 'Macetas decorativas', 'Fertilizantes orgánicos']
       }
     ];
   }

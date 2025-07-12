@@ -1,9 +1,13 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject, DestroyRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Subject, takeUntil } from 'rxjs';
-import { EmprendimientosService } from '../../services/emprendimientos.service';
+import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import { Emprendimiento, FiltrosEmprendimiento } from '../../models/emprendimiento.model';
+import { EmprendimientosService } from '../../services/emprendimientos.service';
+import { ToastService } from '../../services/toast.service';
+import { DatosEmprendimientos } from '../../resolvers/emprendimientos.resolver';
 
 @Component({
   selector: 'app-emprendimientos',
@@ -13,18 +17,23 @@ import { Emprendimiento, FiltrosEmprendimiento } from '../../models/emprendimien
   styleUrls: ['./emprendimientos.component.css']
 })
 export class EmprendimientosComponent implements OnInit, OnDestroy {
+  private destroyRef = inject(DestroyRef);
+  private route = inject(ActivatedRoute);
+  private busquedaSubject = new Subject<string>();
+
+  // Datos principales
   emprendimientos: Emprendimiento[] = [];
   emprendimientosFiltrados: Emprendimiento[] = [];
-  emprendimientoSeleccionado: Emprendimiento | null = null;
   categorias: string[] = [];
-  cargando = false;
+  emprendimientoSeleccionado: Emprendimiento | null = null;
   imagenActual = 0;
 
-  // Contadores para el banner
-  totalEmprendimientos = 0;
-  emprendimientosActivos = 0;
-  emprendimientosDestacados = 0;
+  // Estado de carga
+  cargando = false;
+  error: string | null = null;
+  datosInicializados = false;
 
+  // Filtros
   filtros: FiltrosEmprendimiento = {
     categoria: 'todas',
     busqueda: '',
@@ -33,54 +42,185 @@ export class EmprendimientosComponent implements OnInit, OnDestroy {
     soloDestacados: false
   };
 
-  private destroy$ = new Subject<void>();
+  // Contadores para el banner
+  totalEmprendimientos = 0;
+  emprendimientosActivos = 0;
+  emprendimientosDestacados = 0;
 
-  constructor(private emprendimientosService: EmprendimientosService) {}
+  constructor(
+    private emprendimientosService: EmprendimientosService,
+    private toastService: ToastService
+  ) {}
 
   ngOnInit(): void {
-    this.cargarCategorias();
-    this.cargarEmprendimientos();
+    this.inicializarBusqueda();
+    this.cargarDatosDesdeResolver();
+    this.suscribirACambiosDelServicio();
   }
 
   ngOnDestroy(): void {
-    this.destroy$.next();
-    this.destroy$.complete();
+    this.busquedaSubject.complete();
   }
 
-  cargarCategorias(): void {
-    this.categorias = this.emprendimientosService.obtenerCategorias();
+  /**
+   * Cargar datos que fueron pre-cargados por el resolver
+   */
+  private cargarDatosDesdeResolver(): void {
+    const datos = this.route.snapshot.data['datos'] as DatosEmprendimientos;
+
+    if (datos) {
+      if (datos.error) {
+        this.error = datos.error;
+        this.toastService.error(datos.error, 'Error de Carga');
+      } else {
+        // Datos de emprendimientos
+        this.emprendimientos = datos.emprendimientos.emprendimientos;
+        this.totalEmprendimientos = datos.emprendimientos.total;
+
+        // Categorías
+        this.categorias = datos.categorias;
+
+        // Aplicar filtros iniciales y actualizar estadísticas
+        this.aplicarFiltrosLocales();
+        this.actualizarContadores();
+        this.datosInicializados = true;
+      }
+    }
   }
 
-  cargarEmprendimientos(): void {
-    this.cargando = true;
-    this.emprendimientosService.obtenerEmprendimientos()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (emprendimientos) => {
-          this.emprendimientos = emprendimientos;
-          this.actualizarContadores();
-          this.aplicarFiltros();
-          this.cargando = false;
-        },
-        error: (error) => {
-          console.error('Error al cargar emprendimientos:', error);
-          this.cargando = false;
+  /**
+   * Suscribirse a cambios del servicio
+   */
+  private suscribirACambiosDelServicio(): void {
+    this.emprendimientosService.emprendimientos$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(emprendimientos => {
+      if (this.datosInicializados && emprendimientos.length > 0) {
+        this.emprendimientos = emprendimientos;
+        this.aplicarFiltrosLocales();
+        this.actualizarContadores();
+      }
+    });
+
+    this.emprendimientosService.categorias$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(categorias => {
+      if (this.datosInicializados && categorias.length > 0) {
+        this.categorias = categorias;
+      }
+    });
+
+    this.emprendimientosService.cargando$.pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(cargando => {
+      this.cargando = cargando;
+    });
+  }
+
+  /**
+   * Inicializar búsqueda con debounce
+   */
+  private inicializarBusqueda(): void {
+    this.busquedaSubject.pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(termino => {
+      this.filtros.busqueda = termino;
+      this.aplicarFiltros();
+    });
+  }
+
+  /**
+   * Aplicar filtros locales
+   */
+  private aplicarFiltrosLocales(): void {
+    let resultado = [...this.emprendimientos];
+
+    if (this.filtros.soloActivos) {
+      resultado = resultado.filter(emp => emp.activo);
+    }
+
+    if (this.filtros.soloDestacados) {
+      resultado = resultado.filter(emp => emp.destacado);
+    }
+
+    if (this.filtros.categoria && this.filtros.categoria !== 'todas') {
+      resultado = resultado.filter(emp =>
+        emp.categoria.toLowerCase() === this.filtros.categoria!.toLowerCase()
+      );
+    }
+
+    if (this.filtros.busqueda) {
+      const busqueda = this.filtros.busqueda.toLowerCase();
+      resultado = resultado.filter(emp =>
+        emp.nombre.toLowerCase().includes(busqueda) ||
+        emp.descripcion.toLowerCase().includes(busqueda) ||
+        emp.servicios.some(servicio => servicio.toLowerCase().includes(busqueda)) ||
+        emp.categoria.toLowerCase().includes(busqueda)
+      );
+    }
+
+    if (this.filtros.ordenarPor) {
+      resultado.sort((a, b) => {
+        switch (this.filtros.ordenarPor) {
+          case 'nombre':
+            return a.nombre.localeCompare(b.nombre);
+          case 'fecha':
+            return new Date(b.fechaCreacion).getTime() - new Date(a.fechaCreacion).getTime();
+          case 'rating':
+            return (b.rating || 0) - (a.rating || 0);
+          default:
+            return 0;
         }
       });
+    }
+
+    this.emprendimientosFiltrados = resultado;
   }
 
+  /**
+   * Aplicar filtros
+   */
   aplicarFiltros(): void {
-    this.emprendimientosService.obtenerEmprendimientosFiltrados(this.filtros)
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (emprendimientos) => {
-          this.emprendimientosFiltrados = emprendimientos;
-        }
-      });
+    if (this.emprendimientos.length > 0) {
+      this.aplicarFiltrosLocales();
+    } else {
+      this.aplicarFiltrosBackend();
+    }
   }
 
+  /**
+   * Aplicar filtros usando el backend
+   */
+  private aplicarFiltrosBackend(): void {
+    this.cargando = true;
+    this.emprendimientosService.obtenerEmprendimientos(this.filtros).pipe(
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe({
+      next: (response) => {
+        this.emprendimientosFiltrados = response.emprendimientos;
+        this.cargando = false;
+      },
+      error: (error) => {
+        this.error = 'Error al aplicar filtros. Por favor, intenta nuevamente.';
+        this.cargando = false;
+        this.toastService.error('Error al aplicar filtros', 'Error');
+      }
+    });
+  }
+
+  /**
+   * Actualizar contadores
+   */
+  private actualizarContadores(): void {
+    this.emprendimientosActivos = this.emprendimientos.filter(emp => emp.activo).length;
+    this.emprendimientosDestacados = this.emprendimientos.filter(emp => emp.destacado).length;
+  }
+
+  // Métodos de eventos del template
   onBusquedaChange(): void {
-    this.aplicarFiltros();
+    this.busquedaSubject.next(this.filtros.busqueda || '');
   }
 
   onCategoriaChange(): void {
@@ -129,6 +269,9 @@ export class EmprendimientosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Contactar emprendimiento
+   */
   contactarEmprendimiento(emprendimiento: Emprendimiento, metodo: 'telefono' | 'email' | 'whatsapp'): void {
     const contacto = emprendimiento.contacto;
 
@@ -153,6 +296,9 @@ export class EmprendimientosComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Obtener estrellas para rating
+   */
   obtenerEstrellas(rating: number | undefined): string[] {
     if (!rating) return [];
     const estrellas = [];
@@ -171,12 +317,16 @@ export class EmprendimientosComponent implements OnInit, OnDestroy {
     return estrellas;
   }
 
+  /**
+   * Formatear precio
+   */
   formatearPrecio(precio: { min: number; max: number; moneda: string } | undefined): string {
     if (!precio) return 'Precio a consultar';
 
     const formatoMoneda = new Intl.NumberFormat('es-CO', {
       style: 'currency',
-      currency: precio.moneda
+      currency: precio.moneda,
+      minimumFractionDigits: 0
     });
 
     if (precio.min === precio.max) {
@@ -186,16 +336,13 @@ export class EmprendimientosComponent implements OnInit, OnDestroy {
     return `${formatoMoneda.format(precio.min)} - ${formatoMoneda.format(precio.max)}`;
   }
 
+  /**
+   * Manejar error de imagen
+   */
   onImageError(event: Event): void {
     const target = event.target as HTMLImageElement;
     if (target) {
-      target.src = '/assets/images/emprendimiento-default.jpg';
+      target.src = '/assets/images/logo.png';
     }
-  }
-
-  private actualizarContadores(): void {
-    this.totalEmprendimientos = this.emprendimientos.length;
-    this.emprendimientosActivos = this.emprendimientos.filter(emp => emp.activo).length;
-    this.emprendimientosDestacados = this.emprendimientos.filter(emp => emp.destacado).length;
   }
 }
